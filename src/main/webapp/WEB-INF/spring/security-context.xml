@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+    
+    <!-- enable support for Expression-based annotations in Spring Security -->
+    <global-method-security pre-post-annotations="enabled" />
+
+    <http auto-config='true' entry-point-ref="customLoginUrlAuthenticationEntryPoint" use-expressions="true">
+        <intercept-url pattern="/admin/**" access="hasRole('Администратор геопортала')"/>
+        <intercept-url pattern="/utils/**" access="hasAnyRole('Администратор геопортала')"/>
+        <intercept-url pattern="/**/rest/**" access="hasRole('Администратор геопортала')"/>
+        <intercept-url pattern="/export/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/import/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/infor/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/**" access="permitAll"/>
+            
+        <form-login login-page="/unsec/login.html" authentication-success-handler-ref="ajaxAuthenticationSuccessHandler" authentication-failure-handler-ref="ajaxAuthenticationFailureHandler"/>
+        <logout logout-url="/logout" delete-cookies="JSESSIONID"/>
+    </http>
+
+    <beans:bean id="customLoginUrlAuthenticationEntryPoint" class="org.w2fc.geoportal.auth.CustomLoginUrlAuthenticationEntryPoint">
+        <beans:property name="loginFormUrl" value="/unsec/login.html"/>
+    </beans:bean>
+
+
+    <beans:bean id="userDetailsManager" class="org.w2fc.geoportal.user.CustomJdbcUserDetailsManager">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="serviceRegistry" ref="serviceRegistry"/>
+        <beans:property 
+            name="usersByUsernameQuery" 
+            value="Select login as username, password, enabled, last_name || ' ' || first_name as fullname, id from geo_user where login = ? "/>
+        <beans:property 
+            name="authoritiesByUsernameQuery" 
+            value="Select login as username, r.name as role, u.last_name || ' ' || u.first_name as fullname from geo_user u inner join geo_user_to_role rl on u.id = rl.user_id inner join geo_user_role r on r.id = rl.role_id where u.login =  ? "/>
+    </beans:bean>
+
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <authentication-manager alias="authenticationManager" erase-credentials="false">
+        
+        <authentication-provider user-service-ref="userDetailsManager">
+            <password-encoder ref="passwordEncoder" />
+        </authentication-provider>
+        
+        <!-- REMOVE AFTER EMBEDDED LDAP TEST -->
+        <!--ldap-authentication-provider 
+                user-search-filter="(uid={0})"
+                user-search-base="ou=users"
+                group-search-filter="(uniqueMember={0})"
+                group-search-base="ou=groups"
+                group-role-attribute="cn"
+                role-prefix="none">
+        </ldap-authentication-provider-->
+        
+        <!-- authentication-provider ref="ldapAuthenticationProvider" /-->
+        <!-- REMOVE AFTER EMBEDDED LDAP TEST -->
+        
+        <!-- authentication-provider ref="customAuthenticationProvider" /-->
+        
+    </authentication-manager>
+    
+    
+    <!-- REMOVE AFTER EMBEDDED LDAP TEST -->
+    <!-- ldap-server ldif="classpath:ldap.ldif"  root="o=mojo"/>
+
+    <beans:bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <beans:constructor-arg value="ldap://127.0.0.1:33389/o=mojo" />
+    </beans:bean>
+    
+    <beans:bean id="ldapAuthenticationProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+                <beans:constructor-arg ref="contextSource" />
+                <beans:property name="userSearch">
+                    <beans:bean class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+                        <beans:constructor-arg value="ou=users" />
+                        <beans:constructor-arg value="(uid={0})" />
+                        <beans:constructor-arg ref="contextSource" />
+                    </beans:bean>
+                </beans:property>
+            </beans:bean>
+        </beans:constructor-arg>
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+                <beans:constructor-arg ref="contextSource" />
+                <beans:constructor-arg value="ou=groups" />
+                <beans:property name="groupSearchFilter" value="(uniqueMember={0})" />
+                <beans:property name="groupRoleAttribute" value="cn" />
+                <beans:property name="convertToUpperCase" value="false" />
+                <beans:property name="rolePrefix" value="" />
+            </beans:bean>
+        </beans:constructor-arg>
+    </beans:bean-->
+    <!-- REMOVE AFTER EMBEDDED LDAP TEST -->
+    
+</beans:beans>

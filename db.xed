@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram version="1.0" type="POSTGRES" versionMajor="8" versionMinor="3">
+<Table id="0" name="GEO_LAYER" schema="" database="">
+<Column id="1" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="2" name="name" type="varchar" length="255" nulls="false"/>
+<Column id="3" name="parent_id" type="int8" length="25" nulls="true"/>
+<Column id="4" name="type_id" type="int8" length="25" nulls="false"/>
+<Column id="5" name="url" type="varchar" length="255" nulls="true"/>
+<Column id="6" name="icon" type="oid" length="25" nulls="true"/>
+<Column id="7" name="line_color" type="varchar" length="20" nulls="true"/>
+<Column id="8" name="line_weight" type="int" length="25" nulls="true"/>
+<Column id="9" name="fill_color" type="varchar" length="20" nulls="true"/>
+<Column id="10" name="fill_opacity" type="float" length="0" nulls="true"/>
+<Column id="11" name="tmpl_id" type="int8" length="25" nulls="true"/>
+<Column id="12" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="13" name="GEO_OBJECT" schema="" database="">
+<Column id="14" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="15" name="name" type="varchar" length="255" nulls="true"/>
+<Column id="16" name="created_by" type="int8" length="25" nulls="true"/>
+<Column id="17" name="changed_by" type="int8" length="25" nulls="true"/>
+<Column id="18" name="created" type="timestamp" length="25" nulls="true"/>
+<Column id="19" name="changed" type="timestamp" length="25" nulls="true"/>
+<Column id="20" name="fias_code" type="char" length="50" nulls="true"/>
+<Column id="21" name="the_geom" type="geometry" length="11" nulls="false"/>
+<Column id="22" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="23" name="GEO_OBJECT_TAG" schema="" database="">
+<Column id="24" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="25" name="object_id" type="int8" length="25" nulls="true"/>
+<Column id="26" name="key" type="varchar" length="255" nulls="true"/>
+<Column id="27" name="value" type="varchar" length="255" nulls="true"/>
+<Column id="28" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="29" name="GEO_LAYER_TYPE" schema="" database="">
+<Column id="30" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="31" name="name" type="varchar" length="255" nulls="false"/>
+<Column id="32" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="33" name="GEO_USER" schema="" database="">
+<Column id="34" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="35" name="ext_system" type="varchar" length="255" nulls="true"/>
+<Column id="36" name="login" type="varchar" length="255" nulls="true"/>
+<Column id="37" name="password" type="varchar" length="255" nulls="true"/>
+<Column id="38" name="enabled" type="boolean" length="25" nulls="true"/>
+<Column id="39" name="first_name" type="varchar" length="255" nulls="true"/>
+<Column id="40" name="last_name" type="varchar" length="255" nulls="true"/>
+<Column id="41" name="email" type="varchar" length="255" nulls="true"/>
+<Column id="42" name="phone" type="varchar" length="25" nulls="true"/>
+<Column id="43" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="44" name="GEO_ACL" schema="" database="">
+<Column id="45" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="46" name="object_id" type="int8" length="25" nulls="true"/>
+<Column id="47" name="name" type="varchar" length="255" nulls="true"/>
+<Column id="48" name="permissions" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+<Column id="49" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="50" name="AD_RATING" schema="" database="">
+<Column id="51" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="52" name="clicks" type="int8" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">1</CP>
+</Column>
+<Column id="53" name="likes" type="int8" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">1</CP>
+</Column>
+<Column id="54" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="55" name="GEO_LAYER_METADATA" schema="" database="">
+<Column id="56" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="57" name="created_by" type="int8" length="25" nulls="true"/>
+<Column id="58" name="created" type="timestamp" length="25" nulls="true"/>
+<Column id="59" name="changed_by" type="int8" length="25" nulls="true"/>
+<Column id="60" name="changed" type="timestamp" length="25" nulls="true"/>
+<Column id="61" name="view_by_object" type="boolean" length="25" nulls="true"/>
+<Column id="62" name="owner_company" type="varchar" length="255" nulls="true"/>
+<Column id="63" name="owner_name" type="varchar" length="255" nulls="true"/>
+<Column id="64" name="owner_email" type="varchar" length="255" nulls="true"/>
+<Column id="65" name="owner_phone" type="varchar" length="255" nulls="true"/>
+<Column id="66" name="desc_spatial_data" type="text" length="25" nulls="true"/>
+<Column id="67" name="source_spatial_data" type="varchar" length="255" nulls="true"/>
+<Column id="68" name="doc_regulation" type="varchar" length="255" nulls="true"/>
+<Column id="69" name="access_level" type="varchar" length="255" nulls="true"/>
+<Column id="70" name="access_conditions" type="text" length="25" nulls="true"/>
+<Column id="71" name="map_accuracy" type="varchar" length="255" nulls="true"/>
+<Column id="72" name="last_update_metadata" type="timestamp" length="255" nulls="true"/>
+<Column id="73" name="last_update_spatial_data" type="varchar" length="255" nulls="true"/>
+<Column id="74" name="update_frequency" type="varchar" length="255" nulls="true"/>
+<Column id="75" name="coordinate_system" type="varchar" length="255" nulls="true"/>
+<Column id="76" name="coverage_area" type="varchar" length="255" nulls="true"/>
+<Column id="77" name="data_amount" type="varchar" length="255" nulls="true"/>
+<Column id="78" name="export_format" type="varchar" length="255" nulls="true"/>
+<Column id="79" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="80" name="AD_POPUP_TMPL" schema="" database="">
+<Column id="81" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="82" name="name" type="varchar" length="255" nulls="false"/>
+<Column id="83" name="template" type="text" length="25" nulls="false"/>
+<Column id="84" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="85" name="GEO_OBJECT_AUD" schema="" database="">
+<Column id="86" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="87" name="name" type="varchar" length="255" nulls="true"/>
+<Column id="88" name="created_by" type="int8" length="25" nulls="true"/>
+<Column id="89" name="changed_by" type="int8" length="25" nulls="true"/>
+<Column id="90" name="created" type="timestamp" length="25" nulls="true"/>
+<Column id="91" name="changed" type="timestamp" length="25" nulls="true"/>
+<Column id="92" name="fias_code" type="char" length="50" nulls="true"/>
+<Column id="93" name="the_geom" type="geometry" length="11" nulls="true"/>
+<Column id="94" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+<Column id="95" name="REV" type="integer" length="25" nulls="false"/>
+<Column id="96" name="REVTYPE" type="int" length="25" nulls="true"/>
+</Table>
+<Table id="97" name="GEO_LAYER_METADATA_AUD" schema="" database="">
+<Column id="98" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="99" name="created_by" type="int8" length="25" nulls="true"/>
+<Column id="100" name="created" type="timestamp" length="25" nulls="true"/>
+<Column id="101" name="changed_by" type="int8" length="25" nulls="true"/>
+<Column id="102" name="changed" type="timestamp" length="25" nulls="true"/>
+<Column id="103" name="view_by_object" type="boolean" length="25" nulls="true"/>
+<Column id="104" name="owner_company" type="varchar" length="255" nulls="true"/>
+<Column id="105" name="owner_name" type="varchar" length="255" nulls="true"/>
+<Column id="106" name="owner_email" type="varchar" length="255" nulls="true"/>
+<Column id="107" name="owner_phone" type="varchar" length="255" nulls="true"/>
+<Column id="108" name="desc_spatial_data" type="text" length="25" nulls="true"/>
+<Column id="109" name="source_spatial_data" type="varchar" length="255" nulls="true"/>
+<Column id="110" name="doc_regulation" type="varchar" length="255" nulls="true"/>
+<Column id="111" name="access_level" type="varchar" length="255" nulls="true"/>
+<Column id="112" name="access_conditions" type="text" length="25" nulls="true"/>
+<Column id="113" name="map_accuracy" type="varchar" length="255" nulls="true"/>
+<Column id="114" name="last_update_metadata" type="timestamp" length="255" nulls="true"/>
+<Column id="115" name="last_update_spatial_data" type="varchar" length="255" nulls="true"/>
+<Column id="116" name="update_frequency" type="varchar" length="255" nulls="true"/>
+<Column id="117" name="coordinate_system" type="varchar" length="255" nulls="true"/>
+<Column id="118" name="coverage_area" type="varchar" length="255" nulls="true"/>
+<Column id="119" name="data_amount" type="varchar" length="255" nulls="true"/>
+<Column id="120" name="export_format" type="varchar" length="255" nulls="true"/>
+<Column id="121" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+<Column id="122" name="REV" type="integer" length="25" nulls="false"/>
+<Column id="123" name="REVTYPE" type="int" length="25" nulls="true"/>
+</Table>
+<Table id="124" name="GEO_LAYER_TO_OBJECT" schema="" database="">
+<Column id="125" name="layer_id" type="int8" length="25" nulls="false"/>
+<Column id="126" name="object_id" type="int8" length="25" nulls="false"/>
+</Table>
+<Table id="127" name="GEO_LAYER_TO_USER" schema="" database="">
+<Column id="128" name="layer_id" type="int8" length="25" nulls="false"/>
+<Column id="129" name="user_id" type="int8" length="25" nulls="false"/>
+<Column id="130" name="permissions" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="131" name="GEO_USER_TO_ACL" schema="" database="">
+<Column id="132" name="user_id" type="int8" length="25" nulls="false"/>
+<Column id="133" name="acl_id" type="int8" length="25" nulls="false"/>
+</Table>
+<Table id="134" name="GEO_OBJECT_TAG_AUD" schema="" database="">
+<Column id="135" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="136" name="object_id" type="int8" length="25" nulls="true"/>
+<Column id="137" name="key" type="varchar" length="255" nulls="true"/>
+<Column id="138" name="value" type="varchar" length="255" nulls="true"/>
+<Column id="139" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+<Column id="140" name="REV" type="integer" length="25" nulls="false"/>
+<Column id="141" name="REVTYPE" type="int" length="25" nulls="true"/>
+</Table>
+<Table id="142" name="GEO_USER_ROLE" schema="" database="">
+<Column id="143" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="144" name="name" type="varchar" length="255" nulls="false"/>
+<Column id="145" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="146" name="GEO_USER_TO_ROLE" schema="" database="">
+<Column id="147" name="user_id" type="int8" length="25" nulls="false"/>
+<Column id="148" name="role_id" type="int8" length="25" nulls="false"/>
+</Table>
+<Table id="149" name="AD_TAGS_DICT" schema="" database="">
+<Column id="150" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="151" name="key" type="varchar" length="255" nulls="true"/>
+<Column id="152" name="alias" type="varchar" length="255" nulls="true"/>
+<Column id="153" name="type" type="varchar" length="255" nulls="true"/>
+<Column id="154" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="155" name="AD_TAGS_DICT_VALUES" schema="" database="">
+<Column id="156" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="157" name="tags_dict_id" type="int8" length="25" nulls="false"/>
+<Column id="158" name="value" type="varchar" length="255" nulls="true"/>
+<Column id="159" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="160" name="REVINFO" schema="" database="">
+<Column id="161" name="REV" type="bigserial" length="25" nulls="false"/>
+<Column id="162" name="REVTSTMP" type="bigint" length="25" nulls="true"/>
+</Table>
+<Table id="163" name="GEO_LAYER_TO_ROLE" schema="" database="">
+<Column id="164" name="layer_id" type="int8" length="25" nulls="false"/>
+<Column id="165" name="role_id" type="int8" length="25" nulls="false"/>
+<Column id="166" name="permissions" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Table id="167" name="GEO_ROLE_TO_ACL" schema="" database="">
+<Column id="168" name="role_id" type="int8" length="25" nulls="false"/>
+<Column id="169" name="acl_id" type="int8" length="25" nulls="false"/>
+</Table>
+<Table id="170" name="GEO_OBJECT_PROPERTIES" schema="" database="">
+<Column id="171" name="id" type="bigserial" length="25" nulls="false"/>
+<Column id="172" name="icon" type="oid" length="25" nulls="true"/>
+<Column id="173" name="line_color" type="varchar" length="20" nulls="true"/>
+<Column id="174" name="line_weight" type="int" length="25" nulls="true"/>
+<Column id="175" name="fill_color" type="varchar" length="20" nulls="true"/>
+<Column id="176" name="fill_opacity" type="float" length="0" nulls="true"/>
+<Column id="177" name="VERSION" type="int" length="25" nulls="false">
+<CP name="DEFAULT_VALUE">0</CP>
+</Column>
+</Table>
+<Relation id="178" name="rlt_many_to_many_layer_object" cardinality="-2" identifying="true" nulls="false">
+<FK>1</FK>
+<PK>125</PK>
+</Relation>
+<Relation id="179" name="rlt_many_to_many_object_layer" cardinality="-2" identifying="true" nulls="false">
+<FK>14</FK>
+<PK>126</PK>
+</Relation>
+<Relation id="180" name="rlt_many_to_many_layer_user" cardinality="-2" identifying="true" nulls="false">
+<FK>1</FK>
+<PK>128</PK>
+</Relation>
+<Relation id="181" name="rlt_many_to_many_user_layer" cardinality="-2" identifying="true" nulls="false">
+<FK>34</FK>
+<PK>129</PK>
+</Relation>
+<Relation id="182" name="rlt_many_to_many_user_acl" cardinality="-2" identifying="true" nulls="false">
+<FK>34</FK>
+<PK>132</PK>
+</Relation>
+<Relation id="183" name="rlt_many_to_many_acl_user" cardinality="-2" identifying="true" nulls="false">
+<FK>45</FK>
+<PK>133</PK>
+</Relation>
+<Relation id="184" name="rlt_object_to_tag" cardinality="-2" identifying="true" nulls="false">
+<FK>14</FK>
+<PK>25</PK>
+</Relation>
+<Relation id="185" name="rlt_layer_metadata" cardinality="-2" identifying="true" nulls="false">
+<FK>1</FK>
+<PK>56</PK>
+</Relation>
+<Relation id="186" name="rlt_layer_to_type" cardinality="-2" identifying="true" nulls="false">
+<FK>30</FK>
+<PK>4</PK>
+</Relation>
+<Relation id="187" name="rlt_object_to_acl" cardinality="-2" identifying="true" nulls="false">
+<FK>14</FK>
+<PK>46</PK>
+</Relation>
+<Relation id="188" name="rlt_user_to_object" cardinality="-2" identifying="true" nulls="false">
+<FK>34</FK>
+<PK>16</PK>
+<PK>17</PK>
+</Relation>
+<Relation id="189" name="rlt_many_to_many_user_role" cardinality="-2" identifying="true" nulls="false">
+<FK>34</FK>
+<PK>147</PK>
+</Relation>
+<Relation id="190" name="rlt_many_to_many_role_user" cardinality="-2" identifying="true" nulls="false">
+<FK>143</FK>
+<PK>148</PK>
+</Relation>
+<Relation id="191" name="rlt_tags_dist_to_values" cardinality="-2" identifying="true" nulls="false">
+<FK>150</FK>
+<PK>157</PK>
+</Relation>
+<Relation id="192" name="rlt_geo_user_to_metadata" cardinality="-2" identifying="true" nulls="false">
+<FK>34</FK>
+<PK>59</PK>
+</Relation>
+<Relation id="193" name="rlt_geo_layer_to_layer" cardinality="-2" identifying="true" nulls="false">
+<FK>1</FK>
+<PK>3</PK>
+</Relation>
+<Relation id="194" name="rlt_many_to_many_role_layer" cardinality="-2" identifying="true" nulls="false">
+<FK>143</FK>
+<PK>165</PK>
+</Relation>
+<Relation id="195" name="rlt_many_to_many_layer_role" cardinality="-2" identifying="true" nulls="false">
+<FK>1</FK>
+<PK>164</PK>
+</Relation>
+<Relation id="196" name="rlt_many_to_many_role_acl" cardinality="-2" identifying="true" nulls="false">
+<FK>143</FK>
+<PK>168</PK>
+</Relation>
+<Relation id="197" name="rlt_many_to_many_acl_role" cardinality="-2" identifying="true" nulls="false">
+<FK>45</FK>
+<PK>169</PK>
+</Relation>
+<Relation id="198" name="rlt_template_to_layer" cardinality="-2" identifying="true" nulls="false">
+<FK>81</FK>
+<PK>11</PK>
+</Relation>
+<Relation id="199" name="rlt_object_to_property" cardinality="-2" identifying="true" nulls="false">
+<FK>14</FK>
+<PK>171</PK>
+</Relation>
+<Index table="33" name="indx_unique_user_externalId" schema="" database="">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="35" sequence="0" ascending="true"/>
+<IndexColumn id="36" sequence="1" ascending="true"/>
+</Index>
+<Index table="44" name="indx_unique_geoacl_objectid" schema="" database="">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="46" sequence="0" ascending="true"/>
+</Index>
+<Constraint table="0" name="pk_geo_layer" type="PrimKey">
+<ConstraintColumn id="1"/>
+</Constraint>
+<Constraint table="13" name="pk_geo_object" type="PrimKey">
+<ConstraintColumn id="14"/>
+</Constraint>
+<Constraint table="23" name="pk_geo_object_tag" type="PrimKey">
+<ConstraintColumn id="24"/>
+</Constraint>
+<Constraint table="29" name="pk_geo_layer_type" type="PrimKey">
+<ConstraintColumn id="30"/>
+</Constraint>
+<Constraint table="33" name="pk_geo_user" type="PrimKey">
+<ConstraintColumn id="34"/>
+</Constraint>
+<Constraint table="44" name="pk_geo_user_acl" type="PrimKey">
+<ConstraintColumn id="45"/>
+</Constraint>
+<Constraint table="50" name="pk_ad_rating" type="PrimKey">
+<ConstraintColumn id="51"/>
+</Constraint>
+<Constraint table="55" name="pk_geo_layer_metadata" type="PrimKey">
+<ConstraintColumn id="56"/>
+</Constraint>
+<Constraint table="80" name="pk_ad_popup_tmpl" type="PrimKey">
+<ConstraintColumn id="81"/>
+</Constraint>
+<Constraint table="85" name="pk_object_aud" type="PrimKey">
+<ConstraintColumn id="86"/>
+<ConstraintColumn id="95"/>
+</Constraint>
+<Constraint table="97" name="pk_layer_aud" type="PrimKey">
+<ConstraintColumn id="98"/>
+<ConstraintColumn id="122"/>
+</Constraint>
+<Constraint table="124" name="pk_many_to_many_layer_object" type="PrimKey">
+<ConstraintColumn id="125"/>
+<ConstraintColumn id="126"/>
+</Constraint>
+<Constraint table="127" name="pk_many_to_many_layer_to_user" type="PrimKey">
+<ConstraintColumn id="128"/>
+<ConstraintColumn id="129"/>
+</Constraint>
+<Constraint table="131" name="pk_geo_acl" type="PrimKey">
+<ConstraintColumn id="132"/>
+<ConstraintColumn id="133"/>
+</Constraint>
+<Constraint table="134" name="pk_object_tag_aud" type="PrimKey">
+<ConstraintColumn id="135"/>
+<ConstraintColumn id="140"/>
+</Constraint>
+<Constraint table="142" name="pk_geo_role" type="PrimKey">
+<ConstraintColumn id="143"/>
+</Constraint>
+<Constraint table="146" name="pk_geo_user_role" type="PrimKey">
+<ConstraintColumn id="147"/>
+<ConstraintColumn id="148"/>
+</Constraint>
+<Constraint table="149" name="pk_geo_tags_dict_values" type="PrimKey">
+<ConstraintColumn id="150"/>
+</Constraint>
+<Constraint table="155" name="pk_geo_tags_dict" type="PrimKey">
+<ConstraintColumn id="156"/>
+</Constraint>
+<Constraint table="160" name="pk_revinfo" type="PrimKey">
+<ConstraintColumn id="161"/>
+</Constraint>
+<Constraint table="163" name="pk_layer_to_role" type="PrimKey">
+<ConstraintColumn id="164"/>
+<ConstraintColumn id="165"/>
+</Constraint>
+<Constraint table="167" name="pk_role_to_acl" type="PrimKey">
+<ConstraintColumn id="168"/>
+<ConstraintColumn id="169"/>
+</Constraint>
+<Constraint table="170" name="pk_geo_object_property" type="PrimKey">
+<ConstraintColumn id="171"/>
+</Constraint>
+<Sheet name="GeoPortal" id="200" disp_at="true" disp_ph="true" disp_co="true">
+<Place id="149" visible="false">830,560,130,110</Place>
+<Place id="188" visible="true" options="700.0,210.0,161.0,211.0,700.0,10.0,161.0,181.0,4,861.0,310.0,880.0,310.0,880.0,180.0,861.0,180.0">500,0,0,0</Place>
+<Place id="189" visible="true" options="700.0,210.0,161.0,211.0,700.0,450.0,161.0,61.0,2,780.0,421.0,780.0,450.0">500,0,0,0</Place>
+<Place id="131" visible="true">910,340,141,61</Place>
+<Place id="29" visible="true">290,360,161,81</Place>
+<Place id="197" visible="true" options="1090.0,410.0,141.0,111.0,910.0,530.0,141.0,60.0,3,1160.0,521.0,1160.0,560.0,1051.0,560.0">500,0,0,0</Place>
+<Place id="0" visible="true">290,30,161,261</Place>
+<Place id="183" visible="true" options="1090.0,410.0,141.0,111.0,910.0,340.0,141.0,61.0,3,1150.0,410.0,1150.0,370.0,1051.0,370.0">500,0,0,0</Place>
+<Place id="155" visible="false">1010,560,161,111</Place>
+<Place id="192" visible="true" options="700.0,210.0,161.0,211.0,10.0,40.0,231.0,441.0,4,700.0,280.0,680.0,280.0,680.0,460.0,241.0,460.0">500,0,0,0</Place>
+<Place id="124" visible="true">500,60,151,61</Place>
+<Place id="179" visible="true" options="700.0,10.0,161.0,181.0,500.0,60.0,151.0,61.0,2,700.0,90.0,651.0,90.0">1000,1,-82,0</Place>
+<Place id="195" visible="true" options="290.0,30.0,161.0,261.0,490.0,530.0,160.0,81.0,4,400.0,291.0,400.0,340.0,570.0,340.0,570.0,530.0">500,0,0,0</Place>
+<Place id="80" visible="false">640,560,141,111</Place>
+<Place id="134" visible="false">910,130,151,40</Place>
+<Place id="44" visible="true">1090,410,141,111</Place>
+<Place id="146" visible="true">700,450,161,61</Place>
+<Place id="163" visible="true">490,530,160,81</Place>
+<Place id="194" visible="true" options="700.0,530.0,161.0,81.0,490.0,530.0,160.0,81.0,2,700.0,570.0,650.0,570.0">500,0,0,0</Place>
+<Place id="187" visible="true" options="700.0,10.0,161.0,181.0,1090.0,410.0,141.0,111.0,5,861.0,170.0,890.0,170.0,890.0,310.0,1160.0,310.0,1160.0,410.0">500,0,0,0</Place>
+<Place id="33" visible="true">700,210,161,211</Place>
+<Place id="167" visible="true">910,530,141,60</Place>
+<Place id="180" visible="true" options="290.0,30.0,161.0,261.0,500.0,190.0,151.0,81.0,2,451.0,230.0,500.0,230.0">500,0,0,0</Place>
+<Place id="170" visible="true">910,130,161,151</Place>
+<Place id="23" visible="true">910,10,161,111</Place>
+<Place id="127" visible="true">500,190,151,81</Place>
+<Place id="50" visible="false">460,560,130,111</Place>
+<Place id="97" visible="false">10,520,231,40</Place>
+<Place id="191" visible="false">500,0,0,0</Place>
+<Place id="193" visible="true" options="290.0,30.0,161.0,261.0,290.0,30.0,161.0,261.0,5,451.0,281.0,481.0,281.0,481.0,320.0,441.0,320.0,441.0,291.0">500,-31,0,7</Place>
+<Place id="181" visible="true" options="700.0,210.0,161.0,211.0,500.0,190.0,151.0,81.0,4,700.0,270.0,680.0,270.0,680.0,230.0,651.0,230.0">500,0,0,0</Place>
+<Place id="182" visible="true" options="700.0,210.0,161.0,211.0,910.0,340.0,141.0,61.0,2,861.0,370.0,910.0,370.0">500,0,0,0</Place>
+<Place id="186" visible="true" options="290.0,360.0,161.0,81.0,290.0,30.0,161.0,261.0,2,370.0,360.0,370.0,291.0">500,0,0,0</Place>
+<Place id="178" visible="true" options="290.0,30.0,161.0,261.0,500.0,60.0,151.0,61.0,2,451.0,90.0,500.0,90.0">500,0,0,0</Place>
+<Place id="184" visible="true" options="700.0,10.0,161.0,181.0,910.0,10.0,161.0,111.0,4,861.0,80.0,861.0,75.0,910.0,75.0,910.0,70.0">500,0,0,0</Place>
+<Place id="185" visible="true" options="290.0,30.0,161.0,261.0,10.0,40.0,231.0,441.0,4,290.0,180.0,270.0,180.0,270.0,180.0,241.0,180.0">500,0,0,0</Place>
+<Place id="55" visible="true">10,40,231,441</Place>
+<Place id="142" visible="true">700,530,161,81</Place>
+<Place id="13" visible="true">700,10,161,181</Place>
+<Place id="196" visible="true" options="700.0,530.0,161.0,81.0,910.0,530.0,141.0,60.0,4,861.0,570.0,890.0,570.0,890.0,560.0,910.0,560.0">500,0,0,0</Place>
+<Place id="190" visible="true" options="700.0,530.0,161.0,81.0,700.0,450.0,161.0,61.0,2,780.0,530.0,780.0,511.0">500,0,0,0</Place>
+<Place id="199" visible="true" options="700.0,10.0,161.0,181.0,910.0,130.0,161.0,151.0,2,861.0,160.0,910.0,160.0">500,0,0,0</Place>
+</Sheet>
+<Sheet name="Audit" id="201" disp_at="true" disp_ph="true" disp_co="true" disp_rn="true">
+<Place id="23" visible="true">700,290,151,111</Place>
+<Place id="160" visible="true">10,10,120,60</Place>
+<Place id="134" visible="true">870,290,150,151</Place>
+<Place id="184" visible="true" options="700.0,10.0,151.0,181.0,700.0,290.0,151.0,111.0,2,770.0,191.0,770.0,290.0">500,0,0,0</Place>
+<Place id="97" visible="true">420,10,231,471</Place>
+<Place id="85" visible="true">870,10,151,210</Place>
+<Place id="55" visible="true">170,10,230,441</Place>
+<Place id="13" visible="true">700,10,151,181</Place>
+</Sheet>
+<Sheet name="Add-ons" id="202" disp_at="true" disp_ph="true" disp_co="true" disp_rn="true">
+<Place id="149" visible="true">350,300,141,110</Place>
+<Place id="50" visible="true">350,30,141,111</Place>
+<Place id="80" visible="true">350,180,141,90</Place>
+<Place id="198" visible="true" options="350.0,180.0,141.0,90.0,40.0,40.0,150.0,301.0,4,350.0,230.0,260.0,230.0,260.0,230.0,190.0,230.0">500,0,0,0</Place>
+<Place id="0" visible="true">40,40,150,301</Place>
+<Place id="191" visible="true">500,0,0,0</Place>
+<Place id="155" visible="true">560,300,150,111</Place>
+<Place id="193" visible="true" options="40.0,40.0,150.0,301.0,40.0,40.0,150.0,301.0,5,190.0,320.0,220.0,320.0,220.0,370.0,160.0,370.0,160.0,341.0">500,0,0,0</Place>
+</Sheet>
+<Sheet name="Access control" id="203" disp_at="true" disp_ph="true" disp_co="true" disp_rn="true">
+<Place id="182" visible="true" options="30.0,30.0,170.0,190.0,260.0,90.0,121.0,61.0,2,200.0,120.0,260.0,120.0">500,0,0,0</Place>
+<Place id="131" visible="true">260,90,121,61</Place>
+<Place id="189" visible="true" options="30.0,30.0,170.0,190.0,50.0,270.0,130.0,60.0,4,110.0,220.0,110.0,240.0,110.0,240.0,110.0,270.0">500,0,0,0</Place>
+<Place id="44" visible="true">400,210,161,111</Place>
+<Place id="197" visible="true" options="400.0,210.0,161.0,111.0,270.0,400.0,120.0,60.0,3,480.0,321.0,480.0,430.0,390.0,430.0">500,0,0,0</Place>
+<Place id="146" visible="true">50,270,130,60</Place>
+<Place id="33" visible="true">30,30,170,190</Place>
+<Place id="142" visible="true">30,390,171,91</Place>
+<Place id="196" visible="true" options="30.0,390.0,171.0,91.0,270.0,400.0,120.0,60.0,2,201.0,430.0,270.0,430.0">677,-3,9,0</Place>
+<Place id="167" visible="true">270,400,120,60</Place>
+<Place id="183" visible="true" options="400.0,210.0,161.0,111.0,260.0,90.0,121.0,61.0,3,480.0,210.0,480.0,120.0,381.0,120.0">500,0,0,0</Place>
+<Place id="190" visible="true" options="30.0,390.0,171.0,91.0,50.0,270.0,130.0,60.0,2,110.0,390.0,110.0,330.0">542,12,0,0</Place>
+</Sheet>
+<Sheet name="Geo objects" id="204" disp_at="true" disp_ph="true" disp_co="true" disp_rn="true">
+<Place id="179" visible="true" options="430.0,90.0,140.0,180.0,230.0,140.0,150.0,60.0,2,430.0,170.0,380.0,170.0">300,1,-1,0</Place>
+<Place id="23" visible="true">430,330,140,110</Place>
+<Place id="178" visible="true" options="20.0,20.0,150.0,300.0,230.0,140.0,150.0,60.0,2,170.0,170.0,230.0,170.0">500,0,0,0</Place>
+<Place id="184" visible="true" options="430.0,90.0,140.0,180.0,430.0,330.0,140.0,110.0,2,500.0,270.0,500.0,330.0">500,0,0,0</Place>
+<Place id="0" visible="true">20,20,150,300</Place>
+<Place id="13" visible="true">430,90,140,180</Place>
+<Place id="170" visible="true">630,90,160,140</Place>
+<Place id="199" visible="true" options="430.0,90.0,140.0,180.0,630.0,90.0,160.0,140.0,2,570.0,180.0,630.0,180.0">500,0,0,0</Place>
+<Place id="124" visible="true">230,140,150,60</Place>
+<Place id="193" visible="true" options="20.0,20.0,150.0,300.0,20.0,20.0,150.0,300.0,5,170.0,300.0,200.0,300.0,200.0,350.0,150.0,350.0,150.0,320.0">500,0,0,0</Place>
+</Sheet>
+<Settings sheet="200" zoom="1.0"/>
+</Diagram>

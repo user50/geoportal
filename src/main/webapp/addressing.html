@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Геокодирование CSV</title>
+
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://papaparse.com/resources/js/papaparse.js"></script>
+</head>
+<body>
+<div>
+<label>Поле с адресом:</label>
+<input id="address_field" type="text"/>
+</div>
+<div>
+<label>CSV:</label><input id="csv_file" type="file"/>
+</div>
+<div id="result"></div>
+<script>
+document.getElementById("csv_file").addEventListener("change", function(e){ 		
+	var file = this.files ? this.files[0] : {name: this.value}, 			
+		result = document.getElementById("result"),
+		fileReader = window.FileReader ? new FileReader() : null; 			
+	
+	var geocoding = function(fields, row){
+		var address_field_name = $('#address_field').val();
+		var search = row[address_field_name];
+		$.ajax({
+		    type: 'GET',
+		    url: 'http://search.maps.sputnik.ru/search',
+		    dataType: 'jsonp',
+		    data: {q:search, limit:1},
+		    success: function(geo){
+		    	console.log(geo);
+		    	for(var key in fields){
+					result.innerHTML += row[fields[key]] + ';';
+				}
+				result.innerHTML += 'POINT('+ geo.result[0].position.lat + ' '+ geo.result[0].position.lon + ')<br/>';
+		    }
+		});
+	};
+		
+	if (file) { 				
+		if (fileReader){ 					
+				fileReader.addEventListener("loadend", function(e){ 							
+					Papa.parse(file, {
+						header :true,
+						delimiter : ';',
+						complete: function(results) {
+							console.log("Parsing complete:", results);
+							for(var key in results.meta.fields){
+								result.innerHTML += results.meta.fields[key] + ';';
+							}
+							result.innerHTML += 'geometry<br/>';
+							for(var inx in results.data){
+								var row = results.data[inx];
+								geocoding(results.meta.fields, row);
+								/*for(var key in results.meta.fields){
+									result.innerHTML += row[results.meta.fields[key]] + ';';
+								}
+								result.innerHTML += 'geometry<br/>';*/
+							}
+						}
+					});
+				}, false); 						
+				fileReader.readAsText(file);
+		} else { 					
+			alert("Извините, но ваш браузер не достаточно умный( Попробуйте Chrome"); 				
+		} 			
+	} 	
+}, false);
+			
+</script>
+</body>
+</html>

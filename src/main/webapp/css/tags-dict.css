@@ -1,0 +1,115 @@
+header, footer, article, section, hgroup, nav, figure{
+    /* Giving a display value to the HTML5 rendered elements: */
+    display:block;
+}
+
+html {overflow-y: scroll;}
+
+h1 {
+    margin-left: 60px;
+    margin-top: 100px;
+    font-size: 34px
+}
+
+div.popup1{
+    border:1px solid #e7e7e7;
+    margin:  0px 60px 90px 60px;
+    
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    
+    -moz-box-shadow:0 1px 1px #c7c7c7;
+    -webkit-box-shadow:0 1px 1px #c7c7c7;
+    box-shadow:0 0px 30px #c7c7c7;
+}
+div.popup2{
+    margin: 14px 20px 14px 20px;
+    padding: 0px;
+}
+
+div.line{
+     background-color: #e7e7e7;
+     border-bottom-color:#e7e7e7;
+     height: 1px;
+}
+
+input, select{
+    width: 100%;
+    height: 25px;
+    border: 1px solid #e7e7e7;
+    font-size: 12px;
+    font-family: inherit;
+    padding: 0px 5px 0px 5px;
+    
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:3px;
+}
+
+#exTableFilter{
+    width: 46%;
+    margin-right: 14px;
+}
+
+button.ui-button{
+    width: 80px;
+    border: 1px solid #e9e9e9;
+    
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius: 3px;
+    
+    background: #f1f1f1;
+    background: linear-gradient(to top, #d2d2d2, #f1f1f1 50%);
+    font-size: 11px;
+    color: black;
+}
+
+#addNew{
+    width: 160px;
+    height: 38px;
+}
+
+table{
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 7px 30px 7px 0px;
+    vertical-align: top;
+}
+
+
+.column1{
+    width: 20%;
+    font-size: 14px;
+}
+.column2{
+    width: 25%;
+    font-size: 14px;
+}
+.column3{
+    width: 15%;
+}
+td.tagEntryValuesClass{
+    padding-right: 0px;
+    text-align: center;
+}
+.values1{
+    padding: 0px;
+}
+
+.addValueButton{
+	color: #9dc741;
+	cursor: hand;
+	font-size: 24px;	
+}
+
+.deleteValueButton{
+	color: red;
+	cursor: hand;
+	font-size: 18px;	
+}

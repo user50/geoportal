@@ -1,0 +1,83 @@
+version: 1
+
+dn: o=mojo
+objectClass: organization
+objectClass: extensibleObject
+objectClass: top
+o: mojo
+
+dn: ou=users,o=mojo
+objectClass: extensibleObject
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+
+dn: ou=groups,o=mojo
+objectClass: extensibleObject
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+dn: cn=User,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: User
+uniqueMember: cn=John Milton,ou=users,o=mojo
+uniqueMember: cn=Robert Browning,ou=users,o=mojo
+uniqueMember: cn=Hugo Williams,ou=users,o=mojo
+uniqueMember: cn=John Keats,ou=users,o=mojo
+
+dn: cn=Admin,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: Admin
+uniqueMember: cn=Hugo Williams,ou=users,o=mojo
+uniqueMember: cn=John Keats,ou=users,o=mojo
+
+dn: cn=Администратор геопортала,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: Администратор геопортала
+uniqueMember: cn=Hugo Williams,ou=users,o=mojo
+uniqueMember: cn=John Keats,ou=users,o=mojo
+
+dn: cn=Robert Browning,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: Robert Browning
+sn: Browning
+uid: rbrowning
+userPassword:: cGFzcw==
+
+dn: cn=John Keats,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: John Keats
+sn: Keats
+uid: jkeats
+userPassword:: cGFzcw==
+
+dn: cn=Hugo Williams,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: Hugo Williams
+sn: Williams
+uid: hwilliams
+userPassword:: cGFzcw==
+
+dn: cn=John Milton,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: John Milton
+sn: Milton
+uid: jmilton
+userPassword:: cGFzcw==
+

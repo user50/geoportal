@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
+    <defaultCache eternal="true" maxElementsInMemory="500" overflowToDisk="false" />
+    <cache name="wsInforUserServiceCache" eternal="true" maxElementsInMemory="500" overflowToDisk="false" />
+    <cache name="GeoPortalCache" eternal="true" maxElementsInMemory="500" overflowToDisk="true" maxElementsOnDisk="10000"/>
+    <cache name="objectPermanent" eternal="true" maxElementsInMemory="500" overflowToDisk="false" />
+    <cache name="layerPermanent" eternal="true" maxElementsInMemory="500" overflowToDisk="false" />
+    <cache name="objectIconPermanent" eternal="true" maxElementsInMemory="500" overflowToDisk="false" />
+    <cache name="layerIconPermanent" eternal="true" maxElementsInMemory="500" overflowToDisk="false" />
+    <cache name="WMSCache" eternal="true" maxElementsInMemory="500"  maxElementsOnDisk="10000" overflowToDisk="true" />
+</ehcache>
+
+<!-- ehcache>
+    <cache name="sampleCacheFromEhcacheXml"
+        maxElementsInMemory="500"
+        eternal="false"
+        timeToIdleSeconds="300"
+        timeToLiveSeconds="300"
+        overflowToDisk="false">
+     </cache>
+</ehcache-->

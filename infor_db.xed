@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram version="1.0" type="POSTGRES" versionMajor="9" versionMinor="1">
+<Table id="0" name="map_node_tag" schema="public" database="cartography">
+<Column id="1" name="id" type="int8" length="0" nulls="false"/>
+<Column id="2" name="key" type="varchar" length="255" nulls="true"/>
+<Column id="3" name="owner_id" type="int8" length="0" nulls="true"/>
+<Column id="4" name="value" type="varchar" length="255" nulls="true"/>
+</Table>
+<Table id="5" name="map_nodes" schema="public" database="cartography">
+<Column id="6" name="id" type="int8" length="0" nulls="false"/>
+<Column id="7" name="lat" type="float8" length="0" nulls="false"/>
+<Column id="8" name="lon" type="float8" length="0" nulls="false"/>
+<Column id="9" name="currentversion" type="int4" length="0" nulls="true"/>
+<Column id="10" name="rootid" type="int8" length="0" nulls="true"/>
+<Column id="11" name="geom" type="geometry" length="0" nulls="true"/>
+<Column id="12" name="sourcex" type="float8" length="0" nulls="true"/>
+<Column id="13" name="sourcey" type="float8" length="0" nulls="true"/>
+<Column id="14" name="localcs_id" type="int8" length="0" nulls="true"/>
+<Column id="15" name="objectid" type="int8" length="0" nulls="true"/>
+<Column id="16" name="datasourceid" type="int8" length="0" nulls="true"/>
+<Column id="17" name="isdeleted" type="int4" length="0" nulls="true"/>
+<Column id="18" name="uniquekey" type="varchar" length="255" nulls="true"/>
+<Column id="19" name="changeddatetime" type="timestamp" length="0" nulls="true"/>
+<Column id="20" name="createddatetime" type="timestamp" length="0" nulls="true"/>
+<Column id="21" name="createdby_id" type="int8" length="0" nulls="true"/>
+<Column id="22" name="changedby_id" type="int8" length="0" nulls="true"/>
+<Column id="23" name="acceptedentry" type="int4" length="0" nulls="true"/>
+<Column id="24" name="havetags" type="int4" length="0" nulls="true"/>
+<Column id="25" name="name" type="varchar" length="255" nulls="true"/>
+</Table>
+<Table id="26" name="map_way_nodes" schema="public" database="cartography">
+<Column id="27" name="id" type="int8" length="0" nulls="false"/>
+<Column id="28" name="orderindex" type="int4" length="0" nulls="false"/>
+<Column id="29" name="wayid" type="int8" length="0" nulls="true"/>
+<Column id="30" name="node_id" type="int8" length="0" nulls="true"/>
+</Table>
+<Table id="31" name="map_way_tag" schema="public" database="cartography">
+<Column id="32" name="id" type="int8" length="0" nulls="false"/>
+<Column id="33" name="key" type="varchar" length="255" nulls="true"/>
+<Column id="34" name="owner_id" type="int8" length="0" nulls="true"/>
+<Column id="35" name="value" type="varchar" length="255" nulls="true"/>
+</Table>
+<Table id="36" name="map_ways" schema="public" database="cartography">
+<Column id="37" name="id" type="int8" length="0" nulls="false"/>
+<Column id="38" name="currentversion" type="int4" length="0" nulls="true"/>
+<Column id="39" name="rootid" type="int8" length="0" nulls="true"/>
+<Column id="40" name="geom" type="geometry" length="0" nulls="true"/>
+<Column id="41" name="objectid" type="int8" length="0" nulls="true"/>
+<Column id="42" name="datasourceid" type="int8" length="0" nulls="true"/>
+<Column id="43" name="isdeleted" type="int4" length="0" nulls="true"/>
+<Column id="44" name="uniquekey" type="varchar" length="255" nulls="true"/>
+<Column id="45" name="changeddatetime" type="timestamp" length="0" nulls="true"/>
+<Column id="46" name="createddatetime" type="timestamp" length="0" nulls="true"/>
+<Column id="47" name="changedby_id" type="int8" length="0" nulls="true"/>
+<Column id="48" name="createdby_id" type="int8" length="0" nulls="true"/>
+<Column id="49" name="acceptedentry" type="int4" length="0" nulls="true"/>
+<Column id="50" name="havetags" type="int4" length="0" nulls="true"/>
+<Column id="51" name="name" type="varchar" length="255" nulls="true"/>
+</Table>
+<Relation id="52" name="fk_node_tag_nodes_id" cardinality="-2" identifying="false" nulls="false">
+<Option name="initially" class="String" value="IMMEDIATE"/>
+<Option name="deferrable" class="Boolean" value="false"/>
+<Option name="match" class="String" value="SIMPLE"/>
+<Option name="onDelete" class="String" value="NO ACTION"/>
+<Option name="onUpdate" class="String" value="NO ACTION"/>
+<FK>6</FK>
+<PK>3</PK>
+</Relation>
+<Relation id="53" name="fk34baae3ea9ae407c" cardinality="-2" identifying="false" nulls="false">
+<Option name="initially" class="String" value="IMMEDIATE"/>
+<Option name="deferrable" class="Boolean" value="false"/>
+<Option name="match" class="String" value="SIMPLE"/>
+<Option name="onDelete" class="String" value="NO ACTION"/>
+<Option name="onUpdate" class="String" value="NO ACTION"/>
+<FK>6</FK>
+<PK>30</PK>
+</Relation>
+<Relation id="54" name="fk_way_tag_ways_id" cardinality="-2" identifying="false" nulls="false">
+<Option name="initially" class="String" value="IMMEDIATE"/>
+<Option name="deferrable" class="Boolean" value="false"/>
+<Option name="match" class="String" value="SIMPLE"/>
+<Option name="onDelete" class="String" value="NO ACTION"/>
+<Option name="onUpdate" class="String" value="NO ACTION"/>
+<FK>37</FK>
+<PK>34</PK>
+</Relation>
+<Relation id="55" name="fk_ways_tags" cardinality="-2" identifying="false" nulls="false">
+<FK>37</FK>
+<PK>29</PK>
+<Text/>
+</Relation>
+<Index table="0" name="fki_node_tag_nodes_id" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="3" sequence="0" ascending="true"/>
+</Index>
+<Index table="0" name="idx_map_node_tag_value" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="4" sequence="0" ascending="true"/>
+</Index>
+<Index table="0" name="idx_map_node_tag_key" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="2" sequence="0" ascending="true"/>
+</Index>
+<Index table="0" name="map_node_tag_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="1" sequence="0" ascending="true"/>
+</Index>
+<Index table="5" name="idx_map_nodes_datasourceid" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="16" sequence="0" ascending="true"/>
+</Index>
+<Index table="5" name="fki_map_nodes_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="6" sequence="0" ascending="true"/>
+</Index>
+<Index table="5" name="map_nodes_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="6" sequence="0" ascending="true"/>
+</Index>
+<Index table="5" name="idx_map_nodes_geom" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="11" sequence="0" ascending="true"/>
+</Index>
+<Index table="26" name="idx_map_way_nodes_wayid" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="29" sequence="0" ascending="true"/>
+</Index>
+<Index table="26" name="idx_map_way_nodes_nodeid" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="30" sequence="0" ascending="true"/>
+</Index>
+<Index table="26" name="fki_map_way_nodes_node_id" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="30" sequence="0" ascending="true"/>
+</Index>
+<Index table="26" name="map_way_nodes_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="27" sequence="0" ascending="true"/>
+</Index>
+<Index table="31" name="map_way_tag_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="32" sequence="0" ascending="true"/>
+</Index>
+<Index table="31" name="idx_map_way_tag_key" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="33" sequence="0" ascending="true"/>
+</Index>
+<Index table="31" name="fki_way_tag_ways_id" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="34" sequence="0" ascending="true"/>
+</Index>
+<Index table="31" name="idx_map_way_tag_value" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="35" sequence="0" ascending="true"/>
+</Index>
+<Index table="36" name="idx_map_ways_isdeleted" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="43" sequence="0" ascending="true"/>
+</Index>
+<Index table="36" name="idx_map_ways_geom" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="40" sequence="0" ascending="true"/>
+</Index>
+<Index table="36" name="map_ways_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="true"/>
+<IndexColumn id="37" sequence="0" ascending="true"/>
+</Index>
+<Index table="36" name="fki_map_way_pkey" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="37" sequence="0" ascending="true"/>
+</Index>
+<Index table="36" name="idx_map_ways_datasourceid" schema="public" database="cartography">
+<Option name="unique" class="Boolean" value="false"/>
+<IndexColumn id="42" sequence="0" ascending="true"/>
+</Index>
+<Constraint table="0" name="map_node_tag_pkey" type="PrimKey">
+<Option name="tablespace" class="String" value="&lt;DEFAULT&gt;"/>
+<ConstraintColumn id="1"/>
+</Constraint>
+<Constraint table="5" name="map_nodes_pkey" type="PrimKey">
+<Option name="tablespace" class="String" value="&lt;DEFAULT&gt;"/>
+<ConstraintColumn id="6"/>
+</Constraint>
+<Constraint table="5" name="enforce_srid_geom" type="Check" condition="(srid(geom) = 4326)"/>
+<Constraint table="5" name="enforce_geotype_geom" type="Check" condition="((geometrytype(geom) = 'POINT'::text) OR (geom IS NULL))"/>
+<Constraint table="5" name="enforce_dims_geom" type="Check" condition="(ndims(geom) = 2)"/>
+<Constraint table="26" name="map_way_nodes_pkey" type="PrimKey">
+<Option name="tablespace" class="String" value="&lt;DEFAULT&gt;"/>
+<ConstraintColumn id="27"/>
+</Constraint>
+<Constraint table="31" name="map_way_tag_pkey" type="PrimKey">
+<Option name="tablespace" class="String" value="&lt;DEFAULT&gt;"/>
+<ConstraintColumn id="32"/>
+</Constraint>
+<Constraint table="36" name="map_ways_pkey" type="PrimKey">
+<Option name="tablespace" class="String" value="&lt;DEFAULT&gt;"/>
+<ConstraintColumn id="37"/>
+</Constraint>
+<Constraint table="36" name="enforce_srid_geom" type="Check" condition="(srid(geom) = 4326)"/>
+<Constraint table="36" name="enforce_geotype_geom" type="Check" condition="(((((geometrytype(geom) = 'MULTILINESTRING'::text) OR (geometrytype(geom) = 'LINESTRING'::text)) OR (geometrytype(geom) = 'MULTIPOLYGON'::text)) OR (geometrytype(geom) = 'POLYGON'::text)) OR (geom IS NULL))"/>
+<Constraint table="36" name="enforce_dims_geom" type="Check" condition="(ndims(geom) = 2)"/>
+<Sheet name="cartography_prom" id="56" disp_at="true" disp_ph="true" disp_co="true" disp_rn="true">
+<Place id="53" visible="true" options="21.0,19.0,180.0,360.0,261.0,149.0,120.0,90.0,2,201.0,200.0,261.0,200.0">500,0,0,0</Place>
+<Place id="5" visible="true">21,19,180,360</Place>
+<Place id="31" visible="true">471,429,140,90</Place>
+<Place id="26" visible="true">261,149,120,90</Place>
+<Place id="52" visible="true" options="21.0,19.0,180.0,360.0,21.0,439.0,140.0,90.0,2,90.0,379.0,90.0,439.0">500,0,0,0</Place>
+<Place id="54" visible="true" options="451.0,39.0,180.0,280.0,471.0,429.0,140.0,90.0,4,540.0,319.0,540.0,380.0,540.0,380.0,540.0,429.0">500,0,0,0</Place>
+<Place id="55" visible="true" options="451.0,39.0,180.0,280.0,261.0,149.0,120.0,90.0,2,451.0,200.0,381.0,200.0">500,0,0,0</Place>
+<Place id="36" visible="true">451,39,180,280</Place>
+<Place id="0" visible="true">21,439,140,90</Place>
+</Sheet>
+<Settings sheet="56" zoom="1.0"/>
+</Diagram>
