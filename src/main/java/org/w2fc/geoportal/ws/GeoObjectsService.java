@@ -65,14 +65,28 @@ public class GeoObjectsService {
         updateGeoObject(id, request, new PolygonGeometryBuilder());
     }
 
-    private <T extends GeometryParameter > Long createGeoObject(T parameters, GeometryBuilder<T> geometryBuilder) {
-        GeoLayer layer = serviceRegistry.getLayerDao().get(parameters.getLayerId());
+    private <T extends GeometryParameter > Long createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
+        GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());
 
-        Geometry geometry = geometryBuilder.create(parameters);
+        Geometry geometry = geometryBuilder.create(params);
 
-        GeoObject gisObject = ObjectFactory.createGeoObject(parameters.getName(), geometry);
+        GeoObject gisObject = ObjectFactory.createGeoObject(params.getName(), geometry);
 
         checkArea(gisObject);
+
+        if(params.getTags() != null && params.getTags().size() > 0){
+            for(GeoObjectTag tag : params.getTags()){
+                tag.setGeoObject(gisObject);
+            }
+            gisObject.setTags(params.getTags());
+        }
+        if(params.getTimetick() != null){
+            try {
+                ObjectFactory.createGeoObjectTag(gisObject, "timetick", new DateAdapter().marshal(params.getTimetick()));
+            } catch (Exception e) {
+                logger.error(e.getLocalizedMessage(), e);
+            }
+        }
 
         Set<GeoLayer> geoLayers = new HashSet<GeoLayer>();
         geoLayers.add(layer);
@@ -94,22 +108,7 @@ public class GeoObjectsService {
 
         gisObject.setName(params.getName());
 
-        if(params.getTags() != null && params.getTags().size() > 0){
-            for(GeoObjectTag tag : params.getTags()){
-                tag.setGeoObject(gisObject);
-            }
-            gisObject.setTags(params.getTags());
-        }
-
         gisObject.setTheGeom(geometryBuilder.create(params));
-
-        if(params.getTimetick() != null){
-            try {
-                ObjectFactory.createGeoObjectTag(gisObject, "timetick", new DateAdapter().marshal(params.getTimetick()));
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage(), e);
-            }
-        }
 
         serviceRegistry.getGeoObjectDao().update(gisObject);
     }
