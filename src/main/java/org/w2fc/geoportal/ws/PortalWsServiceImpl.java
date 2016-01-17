@@ -179,6 +179,27 @@ public class PortalWsServiceImpl implements PortalWsService {
 	}
 
 	@Override
+	@PreAuthorize("@geoportalSecurity.isLayerEditor(#request.layerId)")
+	@Transactional
+	public void updatePoint(Long id, RequestPoint request) {
+		geoObjectsService.updatePoint(id, request);
+	}
+
+	@Override
+	@PreAuthorize("@geoportalSecurity.isLayerEditor(#request.layerId)")
+	@Transactional
+	public void updateLine(Long id, RequestLine request) {
+		geoObjectsService.updateLine(id, request);
+	}
+
+	@Override
+	@PreAuthorize("@geoportalSecurity.isLayerEditor(#request.layerId)")
+	@Transactional
+	public void updatePolygon(Long id, RequestPolygon request) {
+		geoObjectsService.updatePolygon(id, request);
+	}
+
+	@Override
 	@Transactional
 	public void delete(Long layerId, Long id) {
 		geoObjectsService.delete(layerId, id);

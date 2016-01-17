@@ -50,28 +50,29 @@ public class GeoObjectsService {
         return createGeoObject(rp, new PolygonGeometryBuilder());
     }
 
+    public void updatePoint(Long id, RequestPoint rp)
+    {
+        updateGeoObject(id, rp, new PointGeometryBuilder());
+    }
+
+    public void updateLine(Long id, RequestLine request)
+    {
+        updateGeoObject(id, request, new LineGeometryBuilder());
+    }
+
+    public void updatePolygon(Long id, RequestPolygon request)
+    {
+        updateGeoObject(id, request, new PolygonGeometryBuilder());
+    }
+
     private <T extends GeometryParameter > Long createGeoObject(T parameters, GeometryBuilder<T> geometryBuilder) {
         GeoLayer layer = serviceRegistry.getLayerDao().get(parameters.getLayerId());
 
-        Geometry p = geometryBuilder.create(parameters);
+        Geometry geometry = geometryBuilder.create(parameters);
 
-        GeoObject gisObject = ObjectFactory.createGeoObject(parameters.getName(), p);
+        GeoObject gisObject = ObjectFactory.createGeoObject(parameters.getName(), geometry);
 
         checkArea(gisObject);
-
-        if(parameters.getTags() != null && parameters.getTags().size() > 0){
-            for(GeoObjectTag tag : parameters.getTags()){
-                tag.setGeoObject(gisObject);
-            }
-            gisObject.setTags(parameters.getTags());
-        }
-        if(parameters.getTimetick() != null){
-            try {
-                ObjectFactory.createGeoObjectTag(gisObject, "timetick", new DateAdapter().marshal(parameters.getTimetick()));
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage(), e);
-            }
-        }
 
         Set<GeoLayer> geoLayers = new HashSet<GeoLayer>();
         geoLayers.add(layer);
@@ -82,6 +83,35 @@ public class GeoObjectsService {
         gisObject.setCreated(Calendar.getInstance().getTime());
         GeoObject res = serviceRegistry.getGeoObjectDao().add(gisObject);
         return res.getId();
+    }
+
+    public <T extends GeometryParameter> void updateGeoObject(long id, T params, GeometryBuilder<T> geometryBuilder)
+    {
+        GeoObject gisObject = serviceRegistry.getGeoObjectDao().get(id);
+
+        if (gisObject == null)
+            throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");
+
+        gisObject.setName(params.getName());
+
+        if(params.getTags() != null && params.getTags().size() > 0){
+            for(GeoObjectTag tag : params.getTags()){
+                tag.setGeoObject(gisObject);
+            }
+            gisObject.setTags(params.getTags());
+        }
+
+        gisObject.setTheGeom(geometryBuilder.create(params));
+
+        if(params.getTimetick() != null){
+            try {
+                ObjectFactory.createGeoObjectTag(gisObject, "timetick", new DateAdapter().marshal(params.getTimetick()));
+            } catch (Exception e) {
+                logger.error(e.getLocalizedMessage(), e);
+            }
+        }
+
+        serviceRegistry.getGeoObjectDao().update(gisObject);
     }
 
     public void delete(Long layerId, Long id) {

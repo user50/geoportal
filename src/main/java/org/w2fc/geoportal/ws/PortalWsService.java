@@ -30,5 +30,11 @@ public interface PortalWsService {
 
 	Long createPolygon(RequestPolygon requestLine);
 
+	void updatePoint(Long id, RequestPoint requestPoint);
+
+	void updateLine(Long id, RequestLine requestLine);
+
+	void updatePolygon(Long id, RequestPolygon requestPolygon);
+
 	public void delete(Long layerId, Long id);
 }

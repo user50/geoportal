@@ -112,6 +112,21 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     }
 
     @WebMethod
+    public void updatePoint(Long id, RequestPoint request){
+        portalWsService.updatePoint(id, request );
+    }
+
+    @WebMethod
+    public void updateLine(Long id, RequestLine request){
+        portalWsService.updateLine(id, request);
+    }
+
+    @WebMethod
+    public void updatePolygon(Long id, RequestPolygon request){
+        portalWsService.updatePolygon(id, request);
+    }
+
+    @WebMethod
     public void deletePoint(Long layerId, Long id){
         portalWsService.delete(layerId, id);
     }
