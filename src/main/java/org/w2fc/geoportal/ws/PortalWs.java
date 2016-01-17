@@ -101,7 +101,6 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     	return portalWsService.createPoint(rp);
     }
 
-
     @WebMethod
     public Long createLine(RequestLine rp){
         return portalWsService.createLine(rp);
@@ -110,6 +109,21 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     @WebMethod
     public Long createPolygon(RequestPolygon rp){
         return portalWsService.createPolygon(rp);
+    }
+
+    @WebMethod
+    public void updatePoint(Long id, RequestPoint request){
+        portalWsService.updatePoint(id, request );
+    }
+
+    @WebMethod
+    public void updateLine(Long id, RequestLine request){
+        portalWsService.updateLine(id, request);
+    }
+
+    @WebMethod
+    public void updatePolygon(Long id, RequestPolygon request){
+        portalWsService.updatePolygon(id, request);
     }
 
     @WebMethod
