@@ -3,6 +3,7 @@ package org.w2fc.geoportal.ws.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,6 +12,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 
@@ -30,6 +32,7 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	private Double lon;
 	@XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
 	@XmlJavaTypeAdapter(DateAdapter.class)
+	@JsonDeserialize(using = DateDeserializer.class)
 	private Date timetick;
 	@XmlElement(name = "calibrate", required=false, defaultValue="false")
 	private Boolean calibrate;
@@ -38,7 +41,7 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	
 	@XmlElementWrapper(name="tags")
     @XmlElement(name="tag")
-    HashSet<GeoObjectTag> tags;
+	Set<GeoObjectTag> tags;
     
 	
 	public Double getLat() {
@@ -71,10 +74,10 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	public void setLayerId(Long layerId) {
 		this.layerId = layerId;
 	}
-	public HashSet<GeoObjectTag> getTags() {
+	public Set<GeoObjectTag> getTags() {
 		return tags;
 	}
-	public void setTags(HashSet<GeoObjectTag> tags) {
+	public void setTags(Set<GeoObjectTag> tags) {
 		this.tags = tags;
 	}
 	public String getName() {

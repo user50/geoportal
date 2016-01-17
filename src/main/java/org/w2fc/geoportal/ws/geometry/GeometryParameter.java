@@ -3,13 +3,13 @@ package org.w2fc.geoportal.ws.geometry;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 
 import java.util.Date;
-import java.util.HashSet;
+import java.util.Set;
 
 public interface GeometryParameter {
 
     String getName();
 
-    HashSet<GeoObjectTag> getTags();
+    Set<GeoObjectTag> getTags();
 
     Date getTimetick();
 

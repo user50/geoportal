@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 
@@ -37,6 +38,7 @@ public class RequestLine implements Serializable, GeometryParameter{
 
     @XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
     @XmlJavaTypeAdapter(DateAdapter.class)
+    @JsonDeserialize(using = DateDeserializer.class)
     private Date timetick;
     @XmlElement(name = "calibrate", required=false, defaultValue="false")
     private Boolean calibrate;

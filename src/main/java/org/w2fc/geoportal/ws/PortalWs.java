@@ -101,6 +101,7 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     	return portalWsService.createPoint(rp);
     }
 
+
     @WebMethod
     public Long createLine(RequestLine rp){
         return portalWsService.createLine(rp);
@@ -112,7 +113,8 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     }
 
     @WebMethod
-    public void deletePoint(Long layerId, Long id){
+    public void deletePoint(@XmlElement(required=true, name="layerId") Long layerId,
+                            @XmlElement(required=true, name="id") Long id){
         portalWsService.delete(layerId, id);
     }
     
