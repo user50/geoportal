@@ -283,7 +283,12 @@
             <artifactId>httpcore</artifactId>
             <version>4.2.2</version>
         </dependency>
-        <dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2.2</version>
+		</dependency>
+		<dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
             <version>3.4.2.Final</version>

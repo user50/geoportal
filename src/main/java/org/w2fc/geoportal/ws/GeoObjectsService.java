@@ -125,7 +125,7 @@ public class GeoObjectsService {
             if(((CustomUserDetails)user).getPermissionArea() == null)return;
             permArea = ((CustomUserDetails)user).getPermissionArea().get("area");
             if(permArea == null)return;
-            if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("Область редактирования недоступна");
+            if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
         }
     }
 }
