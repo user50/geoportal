@@ -11,7 +11,7 @@ import java.net.URLEncoder;
  */
 public class GeocodeAddressYandexApiRequest implements HttpRequestProvider {
 
-    private static final String BASE_URI = "/1.x/?format=json&geocode=";
+    private static final String BASE_URI = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=";
     private static final String UTF8_ENCODING = "UTF-8";
 
     private String address;

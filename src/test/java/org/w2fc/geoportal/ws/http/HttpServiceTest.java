@@ -25,7 +25,7 @@ public class HttpServiceTest {
 
         HttpClient httpClient = new DefaultHttpClient(cm);
 
-        HttpService httpService = new HttpService(httpClient, yandexGeocoder);
+        HttpService httpService = new HttpService(httpClient);
         Coordinate coordinate = httpService.execute(new GeocodeAddressYandexApiRequest("Тверская 6"),
                             new DecodedAddressYandexApiResponseHandler());
 
