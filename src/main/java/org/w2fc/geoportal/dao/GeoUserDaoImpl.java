@@ -42,13 +42,15 @@ public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> impleme
     
     @Override
     public GeoUser getCurrentGeoUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth instanceof AnonymousAuthenticationToken){
-            return get(Constants.GEOPORTAL_USER_ANONYMOUS_ID);
-        }
+		return get(1l);
 
-        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
-        return get(ud.getId());
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if(auth instanceof AnonymousAuthenticationToken){
+//            return get(Constants.GEOPORTAL_USER_ANONYMOUS_ID);
+//        }
+//
+//        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
+//        return get(ud.getId());
     }
     
     

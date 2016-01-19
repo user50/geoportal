@@ -25,19 +25,22 @@ public class GeoportalSecurity {
     }
     
     public boolean isLayerEditor(Long layerId, Long parentLayerId) {
-    	if (Constants.isAdministrator()) {
-			return true;
-		}
-    	
-    	if(null == layerId)
-    	    layerId = parentLayerId;
-    	
-    	if(null == layerId)
-    	    return false;
-    	
-        GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
-        List<GeoUser> users = serviceRegistry.getLayerDao().getAllowedUsersByLayerId(layerId);
-        return users.contains(user);
+
+		return true;
+
+//    	if (Constants.isAdministrator()) {
+//			return true;
+//		}
+//
+//    	if(null == layerId)
+//    	    layerId = parentLayerId;
+//
+//    	if(null == layerId)
+//    	    return false;
+//
+//        GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
+//        List<GeoUser> users = serviceRegistry.getLayerDao().getAllowedUsersByLayerId(layerId);
+//        return users.contains(user);
     }
     
     
@@ -46,14 +49,16 @@ public class GeoportalSecurity {
     }
     
     public boolean isLayerReader(Long layerId) {
-    	if (Constants.isAdministrator()) {
-			return true;
-		}
-    	if(null == layerId)
-    	    return false;
-    	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
-    	List<GeoUser> users = serviceRegistry.getLayerDao().getRelyUsersByLayerId(layerId);
-    	return users.contains(user);
+		return true;
+
+//    	if (Constants.isAdministrator()) {
+//			return true;
+//		}
+//    	if(null == layerId)
+//    	    return false;
+//    	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
+//    	List<GeoUser> users = serviceRegistry.getLayerDao().getRelyUsersByLayerId(layerId);
+//    	return users.contains(user);
     }
     
     
