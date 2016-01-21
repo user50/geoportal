@@ -13,6 +13,7 @@ import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.geocoder.GeoCoder;
 import org.w2fc.geoportal.ws.geometry.*;
 import org.w2fc.geoportal.ws.model.DateAdapter;
 import org.w2fc.geoportal.ws.model.RequestLine;
@@ -37,7 +38,7 @@ public class GeoObjectsService {
 
     public Long createPoint(RequestPoint rp)
     {
-        return createGeoObject(rp, new PointGeometryBuilder());
+        return createGeoObject(rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 
     public Long createLine(RequestLine rp)
@@ -52,7 +53,7 @@ public class GeoObjectsService {
 
     public void updatePoint(Long id, RequestPoint rp)
     {
-        updateGeoObject(id, rp, new PointGeometryBuilder());
+        updateGeoObject(id, rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 
     public void updateLine(Long id, RequestLine request)

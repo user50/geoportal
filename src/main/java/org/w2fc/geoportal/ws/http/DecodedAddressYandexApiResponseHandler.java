@@ -27,8 +27,8 @@ public class DecodedAddressYandexApiResponseHandler implements HttpResponseHandl
 
         String[] coords = point.split(" ");
 
-        double latitude = Double.parseDouble(coords[0]);
-        double longitude = Double.parseDouble(coords[1]);
+        double latitude = Double.parseDouble(coords[1]);
+        double longitude = Double.parseDouble(coords[0]);
 
         return new Coordinate(longitude, latitude);
     }

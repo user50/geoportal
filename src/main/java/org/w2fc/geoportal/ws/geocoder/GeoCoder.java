@@ -5,10 +5,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * @author Yevhen
  */
-public class GeoCoder {
-
-
-    public Coordinate getCoordinatesByAddress(String address){
-        return null;
-    }
+public interface GeoCoder {
+    public Coordinate getCoordinatesByAddress(String address);
 }
