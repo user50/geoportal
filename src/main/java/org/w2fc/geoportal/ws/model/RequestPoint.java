@@ -26,9 +26,9 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	
 	@XmlElement(name = "name", required=true)
 	private String name;
-	@XmlElement(name = "lat", required=true)
+	@XmlElement(name = "lat", required=false)
 	private Double lat;
-	@XmlElement(name = "lon", required=true)
+	@XmlElement(name = "lon", required=false)
 	private Double lon;
 	@XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
 	@XmlJavaTypeAdapter(DateAdapter.class)
@@ -38,7 +38,9 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	private Boolean calibrate;
 	@XmlElement(name = "layerId", required=true)
 	private Long layerId;
-	
+	@XmlElement(name = "address", required=false)
+	private String address;
+
 	@XmlElementWrapper(name="tags")
     @XmlElement(name="tag")
 	Set<GeoObjectTag> tags;
@@ -86,5 +88,12 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }

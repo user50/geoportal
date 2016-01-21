@@ -17,6 +17,7 @@ import org.w2fc.geoportal.dao.GeoUserRoleDao;
 import org.w2fc.geoportal.dao.ReferenceSystemProjDao;
 import org.w2fc.geoportal.user.CustomJdbcUserDetailsManager;
 import org.w2fc.geoportal.wms.WMSService;
+import org.w2fc.geoportal.ws.geocoder.GeoCoder;
 
 
 @Service
@@ -63,7 +64,10 @@ public class ServiceRegistry {
     
     @Autowired
     private GeoSettingsDao geoSettingsDao;
-    
+
+    @Autowired
+    private GeoCoder geoCoder;
+
     //==========================================
     
     public GeoLayerDao getLayerDao() {
@@ -130,6 +134,8 @@ public class ServiceRegistry {
 	public void setGeoSettingsDao(GeoSettingsDao geoSettingsDao) {
 		this.geoSettingsDao = geoSettingsDao;
 	}
-    
-    
+
+    public GeoCoder getGeoCoder() {
+        return geoCoder;
+    }
 }
