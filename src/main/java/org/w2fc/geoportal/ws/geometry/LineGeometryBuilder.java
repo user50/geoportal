@@ -9,9 +9,12 @@ public class LineGeometryBuilder implements GeometryBuilder<RequestLine> {
     public LineString create(RequestLine parameters) {
         GeometryFactory factory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);//SRID
 
-        Coordinate[] coordinates = new Coordinate[2];
-        coordinates[0] = new Coordinate(parameters.getFirstLon(), parameters.getFirstLat());
-        coordinates[1] = new Coordinate(parameters.getSecondLon(), parameters.getSecondLat());
+        int countOfPoints = parameters.getLats().length;
+        Coordinate[] coordinates = new Coordinate[countOfPoints];
+
+        for (int i = 0; i < countOfPoints; i++) {
+            coordinates[i] = new Coordinate(parameters.getLons()[i], parameters.getLats()[i]);
+        }
 
         return factory.createLineString(coordinates);
     }

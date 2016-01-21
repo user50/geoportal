@@ -26,15 +26,13 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name = "name", required=true)
     private String name;
 
-    @XmlElement(name = "firstLat", required=true)
-    private Double firstLat;
-    @XmlElement(name = "firstLon", required=true)
-    private Double firstLon;
+    @XmlElementWrapper(name = "lats", required = true)
+    @XmlElement(name = "lat")
+    private Double[] lats;
 
-    @XmlElement(name = "secondLat", required=true)
-    private Double secondLat;
-    @XmlElement(name = "secondLon", required=true)
-    private Double secondLon;
+    @XmlElementWrapper(name = "lons", required=true)
+    @XmlElement(name = "lon")
+    private Double[] lons;
 
     @XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
     @XmlJavaTypeAdapter(DateAdapter.class)
@@ -49,36 +47,20 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name="tag")
     HashSet<GeoObjectTag> tags;
 
-    public Double getFirstLat() {
-        return firstLat;
+    public Double[] getLats() {
+        return lats;
     }
 
-    public void setFirstLat(Double firstLat) {
-        this.firstLat = firstLat;
+    public void setLats(Double[] lats) {
+        this.lats = lats;
     }
 
-    public Double getFirstLon() {
-        return firstLon;
+    public Double[] getLons() {
+        return lons;
     }
 
-    public void setFirstLon(Double firstLon) {
-        this.firstLon = firstLon;
-    }
-
-    public Double getSecondLat() {
-        return secondLat;
-    }
-
-    public void setSecondLat(Double secondLat) {
-        this.secondLat = secondLat;
-    }
-
-    public Double getSecondLon() {
-        return secondLon;
-    }
-
-    public void setSecondLon(Double secondLon) {
-        this.secondLon = secondLon;
+    public void setLons(Double[] lons) {
+        this.lons = lons;
     }
 
     public Date getTimetick() {
