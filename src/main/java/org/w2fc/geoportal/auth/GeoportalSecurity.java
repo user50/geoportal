@@ -13,6 +13,7 @@ import org.w2fc.geoportal.gis.model.DeleteObjectsModel;
 import org.w2fc.geoportal.gis.model.GeoObjectJSONModel;
 import org.w2fc.geoportal.gis.model.PortalObjectModel;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 
 @Component
 public class GeoportalSecurity {
@@ -107,6 +108,9 @@ public class GeoportalSecurity {
     	List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
     	
     	GeoObject obj = serviceRegistry.getGeoObjectDao().get(id);
+		if (obj == null)
+			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
+
     	for(GeoLayer l : obj.getGeoLayers()){
     		if(layers.contains(l)){
     			return true;

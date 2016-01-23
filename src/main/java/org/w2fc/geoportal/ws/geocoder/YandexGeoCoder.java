@@ -1,6 +1,8 @@
 package org.w2fc.geoportal.ws.geocoder;
 
+import com.jayway.jsonpath.PathNotFoundException;
 import com.vividsolutions.jts.geom.Coordinate;
+import org.w2fc.geoportal.ws.exception.GeocodeException;
 import org.w2fc.geoportal.ws.http.DecodedAddressYandexApiResponseHandler;
 import org.w2fc.geoportal.ws.http.GeocodeAddressYandexApiRequest;
 import org.w2fc.geoportal.ws.http.HttpService;
@@ -23,8 +25,10 @@ public class YandexGeoCoder implements GeoCoder{
         try {
             coordinate = httpService.execute(new GeocodeAddressYandexApiRequest(address),
                     new DecodedAddressYandexApiResponseHandler());
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to geocode address");
+        } catch (PathNotFoundException e) {
+            throw new GeocodeException("No results are found for address " + address);
+        } catch (Exception e){
+            throw new GeocodeException("Unable to geocode address. Cause: " + e.getMessage());
         }
 
         return coordinate;

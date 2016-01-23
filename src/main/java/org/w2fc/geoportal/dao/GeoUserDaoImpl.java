@@ -32,19 +32,13 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 
-//@Repository
-//@Service
+@Repository
+@Service
 public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> implements GeoUserDao {
 
-    public GeoUserDaoImpl() {
+    protected GeoUserDaoImpl() {
         super(GeoUser.class);
     }
-
-	public GeoUserDaoImpl(SessionFactory sessionFactory, SessionFactory sessionFactoryCartography) {
-		super(GeoUser.class);
-		super.sessionFactory = sessionFactory;
-		super.sessionFactoryCartography = sessionFactoryCartography;
-	}
 
 	@Override
     public GeoUser getCurrentGeoUser() {

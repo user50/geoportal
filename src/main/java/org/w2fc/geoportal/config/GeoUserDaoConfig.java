@@ -12,11 +12,11 @@ import org.w2fc.geoportal.dao.TokenizedGeoUserDao;
 @Configuration
 public class GeoUserDaoConfig {
 
-    @Bean
-    public GeoUserDao geoUserDao(@Qualifier("sessionFactory") SessionFactory sessionFactory,
-                                 @Qualifier("sessionFactoryCartography") SessionFactory sessionFactoryCartography) {
+    @Bean(name = "tokenizedGeoUserDao")
+    public GeoUserDao tokenizedGeoUserDao(@Qualifier("sessionFactory") SessionFactory sessionFactory,
+                                 GeoUserDao geoUserDao) {
 
-        return new TokenizedGeoUserDao(new GeoUserDaoImpl(sessionFactory, sessionFactoryCartography), sessionFactory);
+        return new TokenizedGeoUserDao(geoUserDao, sessionFactory);
     }
 }
 
