@@ -23,7 +23,7 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	 * 
 	 */
 	private static final long serialVersionUID = -3250784736508978802L;
-	
+
 	@XmlElement(name = "name", required=true)
 	private String name;
 	@XmlElement(name = "lat", required=false)

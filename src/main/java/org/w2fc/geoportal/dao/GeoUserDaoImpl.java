@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernatespatial.GeometryUserType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -31,26 +32,29 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 
-@Repository
-@Service
+//@Repository
+//@Service
 public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> implements GeoUserDao {
 
-    protected GeoUserDaoImpl() {
+    public GeoUserDaoImpl() {
         super(GeoUser.class);
     }
 
-    
-    @Override
-    public GeoUser getCurrentGeoUser() {
-		return get(1l);
+	public GeoUserDaoImpl(SessionFactory sessionFactory, SessionFactory sessionFactoryCartography) {
+		super(GeoUser.class);
+		super.sessionFactory = sessionFactory;
+		super.sessionFactoryCartography = sessionFactoryCartography;
+	}
 
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if(auth instanceof AnonymousAuthenticationToken){
-//            return get(Constants.GEOPORTAL_USER_ANONYMOUS_ID);
-//        }
-//
-//        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
-//        return get(ud.getId());
+	@Override
+    public GeoUser getCurrentGeoUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth instanceof AnonymousAuthenticationToken){
+            return get(Constants.GEOPORTAL_USER_ANONYMOUS_ID);
+        }
+
+        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
+        return get(ud.getId());
     }
     
     

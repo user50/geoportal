@@ -152,7 +152,7 @@ public class PortalWsServiceImpl implements PortalWsService {
 
 	@Override
 	@Transactional(readOnly=true)
-	//@PreAuthorize("@geoportalSecurity.isObjectAllowed(#id)")
+	@PreAuthorize("@geoportalSecurity.isObjectAllowed(#id)")
 	public GeoObjectFullAdapter getObject(Long id) {
 		return new GeoObjectFullAdapter(serviceRegistry.getGeoObjectDao().get(id));
 	}

@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.user;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.w2fc.geoportal.domain.GeoUser;
 
@@ -27,6 +28,7 @@ public class GeoUserUIAdapter {
     
     public GeoUserUIAdapter(GeoUser geoUser){
         this.geoUser = geoUser;
+        geoUser.setToken(UUID.randomUUID().toString());
     }
 
 
