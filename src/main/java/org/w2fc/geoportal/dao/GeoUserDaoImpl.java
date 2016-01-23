@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernatespatial.GeometryUserType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -39,18 +40,15 @@ public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> impleme
         super(GeoUser.class);
     }
 
-    
-    @Override
+	@Override
     public GeoUser getCurrentGeoUser() {
-		return get(1l);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth instanceof AnonymousAuthenticationToken){
+            return get(Constants.GEOPORTAL_USER_ANONYMOUS_ID);
+        }
 
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if(auth instanceof AnonymousAuthenticationToken){
-//            return get(Constants.GEOPORTAL_USER_ANONYMOUS_ID);
-//        }
-//
-//        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
-//        return get(ud.getId());
+        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
+        return get(ud.getId());
     }
     
     

@@ -13,6 +13,8 @@ import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
+import org.w2fc.geoportal.ws.exception.MissingParameterException;
 import org.w2fc.geoportal.ws.geocoder.GeoCoder;
 import org.w2fc.geoportal.ws.geometry.*;
 import org.w2fc.geoportal.ws.model.DateAdapter;
@@ -38,6 +40,9 @@ public class GeoObjectsService {
 
     public Long createPoint(RequestPoint rp)
     {
+        if ((rp.getLat() == null|| rp.getLon() == null)&& rp.getAddress() == null)
+            throw new MissingParameterException("Coordinates or address must be present");
+
         return createGeoObject(rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 
@@ -53,17 +58,25 @@ public class GeoObjectsService {
 
     public void updatePoint(Long id, RequestPoint rp)
     {
+        checkExists(id);
         updateGeoObject(id, rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 
     public void updateLine(Long id, RequestLine request)
     {
+        checkExists(id);
         updateGeoObject(id, request, new LineGeometryBuilder());
     }
 
     public void updatePolygon(Long id, RequestPolygon request)
     {
+        checkExists(id);
         updateGeoObject(id, request, new PolygonGeometryBuilder());
+    }
+
+    public void delete(Long layerId, Long id) {
+        checkExists(id);
+        serviceRegistry.getGeoObjectDao().remove(id);
     }
 
     private <T extends GeometryParameter > Long createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
@@ -114,10 +127,6 @@ public class GeoObjectsService {
         serviceRegistry.getGeoObjectDao().update(gisObject);
     }
 
-    public void delete(Long layerId, Long id) {
-        serviceRegistry.getGeoObjectDao().remove(id);
-    }
-
     private void checkArea(GeoObject gisObject) {
         Geometry permArea = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -128,5 +137,11 @@ public class GeoObjectsService {
             if(permArea == null)return;
             if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
         }
+    }
+
+    private void checkExists(Long id){
+        GeoObject geoObject = serviceRegistry.getGeoObjectDao().get(id);
+        if (geoObject == null)
+            throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
     }
 }

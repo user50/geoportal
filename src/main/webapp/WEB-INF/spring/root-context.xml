@@ -52,6 +52,11 @@
 			    </props>
 			</property>
 		</bean>
+        <mvc:interceptor>
+            <mvc:mapping path="/geoobjects/*"/>
+            <bean id="tokenHolderInterceptor" class="org.w2fc.geoportal.config.TokenHolderInterceptor">
+            </bean>
+        </mvc:interceptor>
 	</mvc:interceptors>
     
     <mvc:resources mapping="/*.htm" location="/*.htm" />

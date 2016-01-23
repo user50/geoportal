@@ -3,6 +3,7 @@ package org.w2fc.geoportal.utils;
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.w2fc.geoportal.dao.AddnsPopupTemplateDao;
 import org.w2fc.geoportal.dao.AddnsRatingDao;
@@ -36,6 +37,7 @@ public class ServiceRegistry {
     private GeoObjectDao geoObjectDao;
 
     @Autowired
+    @Qualifier("tokenizedGeoUserDao")
     private GeoUserDao geoUserDao;
     
     @Autowired

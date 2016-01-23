@@ -23,6 +23,7 @@ import org.w2fc.geoportal.layer.GeoLayerUI;
 import org.w2fc.geoportal.layer.GeoLayerUIAdapter;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.model.*;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -152,8 +153,12 @@ public class PortalWsServiceImpl implements PortalWsService {
 
 	@Override
 	@Transactional(readOnly=true)
-	//@PreAuthorize("@geoportalSecurity.isObjectAllowed(#id)")
+	@PreAuthorize("@geoportalSecurity.isObjectAllowed(#id)")
 	public GeoObjectFullAdapter getObject(Long id) {
+		GeoObject geoObject = serviceRegistry.getGeoObjectDao().get(id);
+		if (geoObject == null)
+			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
+
 		return new GeoObjectFullAdapter(serviceRegistry.getGeoObjectDao().get(id));
 	}
 

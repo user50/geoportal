@@ -48,7 +48,10 @@ public class GeoUser extends AbstractDomain<GeoUser>{
     
     @Column (name = "first_name", nullable = false)
     private String firstName;
-    
+
+    @Column (name = "token", nullable = true)
+    private String token;
+
     @Column (name = "last_name", nullable = false)
     private String lastName;
     
@@ -228,7 +231,13 @@ public class GeoUser extends AbstractDomain<GeoUser>{
         return layerToUserReferences;
     }
 
+    public String getToken() {
+        return token;
+    }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public void setLayerToUserReferences(Set<GeoLayerToUserReference> layerToUserReferences) {
         this.layerToUserReferences = layerToUserReferences;

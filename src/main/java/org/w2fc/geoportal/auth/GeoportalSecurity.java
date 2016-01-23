@@ -13,6 +13,7 @@ import org.w2fc.geoportal.gis.model.DeleteObjectsModel;
 import org.w2fc.geoportal.gis.model.GeoObjectJSONModel;
 import org.w2fc.geoportal.gis.model.PortalObjectModel;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 
 @Component
 public class GeoportalSecurity {
@@ -25,22 +26,19 @@ public class GeoportalSecurity {
     }
     
     public boolean isLayerEditor(Long layerId, Long parentLayerId) {
+    	if (Constants.isAdministrator()) {
+			return true;
+		}
 
-		return true;
+    	if(null == layerId)
+    	    layerId = parentLayerId;
 
-//    	if (Constants.isAdministrator()) {
-//			return true;
-//		}
-//
-//    	if(null == layerId)
-//    	    layerId = parentLayerId;
-//
-//    	if(null == layerId)
-//    	    return false;
-//
-//        GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
-//        List<GeoUser> users = serviceRegistry.getLayerDao().getAllowedUsersByLayerId(layerId);
-//        return users.contains(user);
+    	if(null == layerId)
+    	    return false;
+
+        GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
+        List<GeoUser> users = serviceRegistry.getLayerDao().getAllowedUsersByLayerId(layerId);
+        return users.contains(user);
     }
     
     
@@ -49,16 +47,14 @@ public class GeoportalSecurity {
     }
     
     public boolean isLayerReader(Long layerId) {
-		return true;
-
-//    	if (Constants.isAdministrator()) {
-//			return true;
-//		}
-//    	if(null == layerId)
-//    	    return false;
-//    	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
-//    	List<GeoUser> users = serviceRegistry.getLayerDao().getRelyUsersByLayerId(layerId);
-//    	return users.contains(user);
+    	if (Constants.isAdministrator()) {
+			return true;
+		}
+    	if(null == layerId)
+    	    return false;
+    	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
+    	List<GeoUser> users = serviceRegistry.getLayerDao().getRelyUsersByLayerId(layerId);
+    	return users.contains(user);
     }
     
     
@@ -112,6 +108,9 @@ public class GeoportalSecurity {
     	List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
     	
     	GeoObject obj = serviceRegistry.getGeoObjectDao().get(id);
+		if (obj == null)
+			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
+
     	for(GeoLayer l : obj.getGeoLayers()){
     		if(layers.contains(l)){
     			return true;
