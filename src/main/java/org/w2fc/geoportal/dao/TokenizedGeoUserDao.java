@@ -22,8 +22,8 @@ public class TokenizedGeoUserDao extends GeoUserDaoWrapper {
         if (token == null)
             return super.getCurrentGeoUser();
 
-        GeoUser geoUser = (GeoUser) sessionFactory.getCurrentSession().createQuery("from GeoUser where enabled=true and token=:token")
-                                                .setString("token", token).uniqueResult();
+        GeoUser geoUser = super.getByToken(token);
+
         if (geoUser == null)
             throw new AccessDeniedException("Token is invalid");
 

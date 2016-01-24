@@ -30,6 +30,11 @@ public class GeoUserDaoWrapper implements GeoUserDao {
     }
 
     @Override
+    public GeoUser getByToken(String token) {
+        return geoUserDao.getByToken(token);
+    }
+
+    @Override
     public GeoUser add(GeoUser object, boolean... forceFlush) {
         return geoUserDao.add(object, forceFlush);
     }

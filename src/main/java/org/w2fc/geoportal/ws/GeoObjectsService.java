@@ -40,9 +40,6 @@ public class GeoObjectsService {
 
     public Long createPoint(RequestPoint rp)
     {
-        if ((rp.getLat() == null|| rp.getLon() == null)&& rp.getAddress() == null)
-            throw new MissingParameterException("Coordinates or address must be present");
-
         return createGeoObject(rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 

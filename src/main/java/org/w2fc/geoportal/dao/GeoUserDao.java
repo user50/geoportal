@@ -14,5 +14,7 @@ public interface GeoUserDao extends AbstractDao<GeoUser, Long> {
 	public Map<String, Geometry> getPermissionArea(Long id);
 
 	public GeoUser get(String login);
-    
+
+	public GeoUser getByToken(String token);
+
 }
