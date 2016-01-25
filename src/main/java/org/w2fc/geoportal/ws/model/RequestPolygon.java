@@ -34,6 +34,8 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElement(name = "lon")
     private Double[] lons;
 
+    private PolygonHole[] polygonHoles;
+
     @XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
     @XmlJavaTypeAdapter(DateAdapter.class)
     @JsonDeserialize(using = DateDeserializer.class)
@@ -94,4 +96,11 @@ public class RequestPolygon implements Serializable, GeometryParameter{
         this.name = name;
     }
 
+    public PolygonHole[] getPolygonHoles() {
+        return polygonHoles;
+    }
+
+    public void setPolygonHoles(PolygonHole[] polygonHoles) {
+        this.polygonHoles = polygonHoles;
+    }
 }
