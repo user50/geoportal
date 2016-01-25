@@ -1,5 +1,6 @@
 package org.w2fc.geoportal.ws.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
+import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.gis.GeoObjectUI;
@@ -79,7 +81,14 @@ public class GeoObjectFullAdapter extends GeoObjectUI {
 	    }
 
 	   public List<GeoLayerUIAdapter> getLayers(){
-		   return null;
+		   if (geoObject.getGeoLayers() == null){
+			   return null;
+		   }
+		   List<GeoLayerUIAdapter> layers = new ArrayList<GeoLayerUIAdapter>();
+		   for (GeoLayer geoLayer : geoObject.getGeoLayers()) {
+			   layers.add(new GeoLayerUIAdapter(geoLayer));
+		   }
+		   return layers;
 	   }
 
 
