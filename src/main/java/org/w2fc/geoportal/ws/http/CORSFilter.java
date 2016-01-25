@@ -10,14 +10,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class CORSFilter extends OncePerRequestFilter {
+
+    public static final String CREDENTIALS_NAME = "Access-Control-Allow-Credentials";
+    public static final String ORIGIN_NAME = "Access-Control-Allow-Origin";
+    public static final String METHODS_NAME = "Access-Control-Allow-Methods";
+    public static final String HEADERS_NAME = "Access-Control-Allow-Headers";
+    public static final String MAX_AGE_NAME = "Access-Control-Max-Age";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
-            response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-            response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Access-Token");
-            response.addHeader("Access-Control-Max-Age", "1");
-        }
+        response.setHeader(CREDENTIALS_NAME, "true");
+        response.setHeader(ORIGIN_NAME, "*");
+        response.setHeader(METHODS_NAME, "GET, OPTIONS, POST, PUT, DELETE");
+        response.setHeader(HEADERS_NAME, "Origin, X-Requested-With, Content-Type, Accept, Access-Token");
+        response.setHeader(MAX_AGE_NAME, "3600");
+
         filterChain.doFilter(request, response);
     }
 }
