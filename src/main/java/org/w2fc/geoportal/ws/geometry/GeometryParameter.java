@@ -14,4 +14,6 @@ public interface GeometryParameter {
     Date getTimetick();
 
     Long getLayerId();
+
+    String getWkt();
 }

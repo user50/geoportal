@@ -40,35 +40,53 @@ public class GeoObjectsService {
 
     public Long createPoint(RequestPoint rp)
     {
-        return createGeoObject(rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
+        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
+            return createGeoObject(rp, new WKTGeometryBuilder());
+        else
+            return createGeoObject(rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 
     public Long createLine(RequestLine rp)
     {
-        return createGeoObject(rp, new LineGeometryBuilder());
+        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
+            return createGeoObject(rp, new WKTGeometryBuilder());
+        else
+            return createGeoObject(rp, new LineGeometryBuilder());
     }
 
     public Long createPolygon(RequestPolygon rp)
     {
-        return createGeoObject(rp, new PolygonGeometryBuilder());
+        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
+            return createGeoObject(rp, new WKTGeometryBuilder());
+        else
+            return createGeoObject(rp, new PolygonGeometryBuilder());
     }
 
     public void updatePoint(Long id, RequestPoint rp)
     {
         checkExists(id);
-        updateGeoObject(id, rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
+        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
+            updateGeoObject(id, rp, new WKTGeometryBuilder());
+        else
+            updateGeoObject(id, rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
     }
 
     public void updateLine(Long id, RequestLine request)
     {
         checkExists(id);
-        updateGeoObject(id, request, new LineGeometryBuilder());
+        if (request.getWkt() != null && !request.getWkt().isEmpty())
+            updateGeoObject(id, request, new WKTGeometryBuilder());
+        else
+            updateGeoObject(id, request, new LineGeometryBuilder());
     }
 
     public void updatePolygon(Long id, RequestPolygon request)
     {
         checkExists(id);
-        updateGeoObject(id, request, new PolygonGeometryBuilder());
+        if (request.getWkt() != null && !request.getWkt().isEmpty())
+            updateGeoObject(id, request, new WKTGeometryBuilder());
+        else
+            updateGeoObject(id, request, new PolygonGeometryBuilder());
     }
 
     public void delete(Long layerId, Long id) {

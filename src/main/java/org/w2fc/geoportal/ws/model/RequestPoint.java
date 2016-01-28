@@ -44,6 +44,17 @@ public class RequestPoint implements Serializable, GeometryParameter{
     @XmlElement(name="tag")
 	Set<GeoObjectTag> tags;
 
+	@XmlElement(name = "wkt", required=false)
+	private String wkt;
+
+	@Override
+	public String getWkt() {
+		return wkt;
+	}
+
+	public void setWkt(String wkt) {
+		this.wkt = wkt;
+	}
 
 	public PointCoordinates getPointCoordinates() {
 		return pointCoordinates;
