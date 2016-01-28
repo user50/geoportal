@@ -26,13 +26,9 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name = "name", required=true)
     private String name;
 
-    @XmlElementWrapper(name = "lats", required = true)
-    @XmlElement(name = "lat")
-    private Double[] lats;
-
-    @XmlElementWrapper(name = "lons", required=true)
-    @XmlElement(name = "lon")
-    private Double[] lons;
+    @XmlElementWrapper(name = "points", required = true)
+    @XmlElement(name = "point")
+    private PointCoordinates[] pointCoordinateses;
 
     @XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
     @XmlJavaTypeAdapter(DateAdapter.class)
@@ -47,20 +43,12 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name="tag")
     HashSet<GeoObjectTag> tags;
 
-    public Double[] getLats() {
-        return lats;
+    public PointCoordinates[] getPointCoordinateses() {
+        return pointCoordinateses;
     }
 
-    public void setLats(Double[] lats) {
-        this.lats = lats;
-    }
-
-    public Double[] getLons() {
-        return lons;
-    }
-
-    public void setLons(Double[] lons) {
-        this.lons = lons;
+    public void setPointCoordinateses(PointCoordinates[] pointCoordinateses) {
+        this.pointCoordinateses = pointCoordinateses;
     }
 
     public Date getTimetick() {

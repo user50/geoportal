@@ -8,19 +8,16 @@ public class LineGeometryBuilder implements GeometryBuilder<RequestLine> {
 
     @Override
     public LineString create(RequestLine parameters) {
-        if (parameters.getLats().length != parameters.getLons().length)
-            throw new InvalidGeometryException("Counts of latitudes and longitudes must be equal");
-
-        if (parameters.getLats().length < 2 || parameters.getLons().length < 2)
-            throw new InvalidGeometryException("At least coordinates for two points must be specified");
+        if (parameters.getPointCoordinateses().length < 2)
+            throw new InvalidGeometryException("At least two points must be specified");
 
         GeometryFactory factory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);//SRID
 
-        int countOfPoints = parameters.getLats().length;
+        int countOfPoints = parameters.getPointCoordinateses().length;
         Coordinate[] coordinates = new Coordinate[countOfPoints];
 
         for (int i = 0; i < countOfPoints; i++) {
-            coordinates[i] = new Coordinate(parameters.getLons()[i], parameters.getLats()[i]);
+            coordinates[i] = new Coordinate(parameters.getPointCoordinateses()[i].getLon(), parameters.getPointCoordinateses()[i].getLat());
         }
 
         return factory.createLineString(coordinates);

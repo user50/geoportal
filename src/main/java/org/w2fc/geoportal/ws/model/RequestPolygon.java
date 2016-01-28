@@ -26,14 +26,10 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElement(name = "name", required=true)
     private String name;
 
-    @XmlElementWrapper(name = "lats", required = true)
-    @XmlElement(name = "lat")
-    private Double[] lats;
+    @XmlElementWrapper(name = "points", required = true)
+    private PointCoordinates[] pointCoordinateses;
 
-    @XmlElementWrapper(name = "lons", required=true)
-    @XmlElement(name = "lon")
-    private Double[] lons;
-
+    @XmlElementWrapper(name = "polygonHoles", required = true)
     private PolygonHole[] polygonHoles;
 
     @XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
@@ -49,20 +45,20 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElement(name="tag")
     HashSet<GeoObjectTag> tags;
 
-    public Double[] getLats() {
-        return lats;
+    public PointCoordinates[] getPointCoordinateses() {
+        return pointCoordinateses;
     }
 
-    public void setLats(Double[] lats) {
-        this.lats = lats;
+    public void setPointCoordinateses(PointCoordinates[] pointCoordinateses) {
+        this.pointCoordinateses = pointCoordinateses;
     }
 
-    public Double[] getLons() {
-        return lons;
+    public PolygonHole[] getPolygonHoles() {
+        return polygonHoles;
     }
 
-    public void setLons(Double[] lons) {
-        this.lons = lons;
+    public void setPolygonHoles(PolygonHole[] polygonHoles) {
+        this.polygonHoles = polygonHoles;
     }
 
     public Date getTimetick() {
@@ -94,13 +90,5 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     }
     public void setName(String name) {
         this.name = name;
-    }
-
-    public PolygonHole[] getPolygonHoles() {
-        return polygonHoles;
-    }
-
-    public void setPolygonHoles(PolygonHole[] polygonHoles) {
-        this.polygonHoles = polygonHoles;
     }
 }

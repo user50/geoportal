@@ -2,7 +2,6 @@ package org.w2fc.geoportal.ws.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -26,10 +25,10 @@ public class RequestPoint implements Serializable, GeometryParameter{
 
 	@XmlElement(name = "name", required=true)
 	private String name;
-	@XmlElement(name = "lat", required=false)
-	private Double lat;
-	@XmlElement(name = "lon", required=false)
-	private Double lon;
+
+	@XmlElement(name = "point", required = true)
+	private PointCoordinates pointCoordinates;
+
 	@XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
 	@XmlJavaTypeAdapter(DateAdapter.class)
 	@JsonDeserialize(using = DateDeserializer.class)
@@ -44,20 +43,16 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	@XmlElementWrapper(name="tags")
     @XmlElement(name="tag")
 	Set<GeoObjectTag> tags;
-    
-	
-	public Double getLat() {
-		return lat;
+
+
+	public PointCoordinates getPointCoordinates() {
+		return pointCoordinates;
 	}
-	public void setLat(Double lat) {
-		this.lat = lat;
+
+	public void setPointCoordinates(PointCoordinates pointCoordinates) {
+		this.pointCoordinates = pointCoordinates;
 	}
-	public Double getLon() {
-		return lon;
-	}
-	public void setLon(Double lon) {
-		this.lon = lon;
-	}
+
 	public Date getTimetick() {
 		return timetick;
 	}

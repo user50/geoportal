@@ -2,6 +2,7 @@ package org.w2fc.geoportal.ws.geometry;
 
 import com.vividsolutions.jts.geom.*;
 import org.w2fc.geoportal.ws.exception.InvalidGeometryException;
+import org.w2fc.geoportal.ws.model.PointCoordinates;
 import org.w2fc.geoportal.ws.model.PolygonHole;
 import org.w2fc.geoportal.ws.model.RequestPolygon;
 
@@ -10,7 +11,7 @@ public class PolygonGeometryBuilder implements GeometryBuilder<RequestPolygon> {
     @Override
     public Geometry create(RequestPolygon parameters) {
         GeometryFactory factory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);//SRID
-        LinearRing polygon = buildLinearRing(parameters.getLats(), parameters.getLons(), factory);
+        LinearRing polygon = buildLinearRing(parameters.getPointCoordinateses(), factory);
         LinearRing[] holes = buildHoles(parameters.getPolygonHoles(), factory);
 
         return factory.createPolygon(polygon, holes);
@@ -23,17 +24,15 @@ public class PolygonGeometryBuilder implements GeometryBuilder<RequestPolygon> {
         LinearRing[] holes = new LinearRing[polygonHoles.length];
         for (int i = 0; i < polygonHoles.length; i++) {
             PolygonHole hole = polygonHoles[i];
-            holes[i] = buildLinearRing(hole.getLats(), hole.getLons(), factory);
+            holes[i] = buildLinearRing(hole.getPointsCoordinates(), factory);
         }
         return holes;
     }
 
-    private LinearRing buildLinearRing(Double[] lats, Double[] lons, GeometryFactory factory) {
-        validateCoordinates(lats, lons);
-
-        Coordinate[] coordinates = new Coordinate[lons.length];
-        for (int i=0;i<lons.length; i++ )
-            coordinates[i] = new Coordinate(lons[i], lats[i]);
+    private LinearRing buildLinearRing(PointCoordinates[] points, GeometryFactory factory) {
+        Coordinate[] coordinates = new Coordinate[points.length];
+        for (int i=0;i<points.length; i++ )
+            coordinates[i] = new Coordinate(points[i].getLon(), points[i].getLat());
 
         return factory.createLinearRing(coordinates);
     }
