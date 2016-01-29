@@ -14,17 +14,10 @@ import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
-import org.w2fc.geoportal.ws.exception.MissingParameterException;
-import org.w2fc.geoportal.ws.geocoder.GeoCoder;
 import org.w2fc.geoportal.ws.geometry.*;
-import org.w2fc.geoportal.ws.model.DateAdapter;
-import org.w2fc.geoportal.ws.model.RequestLine;
-import org.w2fc.geoportal.ws.model.RequestPoint;
-import org.w2fc.geoportal.ws.model.RequestPolygon;
+import org.w2fc.geoportal.ws.model.*;
 
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class GeoObjectsService {
@@ -38,55 +31,64 @@ public class GeoObjectsService {
         this.serviceRegistry = serviceRegistry;
     }
 
+    public void createObjects(List<RequestGeoObject> geoObjectsReq){
+        List<GeoObject> geoObjects = new ArrayList<GeoObject>();
+
+        for (RequestGeoObject requestGeoObject : geoObjectsReq) {
+            GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
+            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+
+            GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
+            geoObjects.add(geoObject);
+        }
+
+        // todo bulk save geoObjects
+
+        throw new UnsupportedOperationException("Not implemented yet");
+
+    }
+
+    public Long createObject(GeometryParameter geometryParameter){
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+        GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
+
+        return save(geoObject);
+    }
+
     public Long createPoint(RequestPoint rp)
     {
-        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
-            return createGeoObject(rp, new WKTGeometryBuilder());
-        else
-            return createGeoObject(rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
+        return createObject(rp);
     }
 
     public Long createLine(RequestLine rp)
     {
-        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
-            return createGeoObject(rp, new WKTGeometryBuilder());
-        else
-            return createGeoObject(rp, new LineGeometryBuilder());
+        return createObject(rp);
     }
 
     public Long createPolygon(RequestPolygon rp)
     {
-        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
-            return createGeoObject(rp, new WKTGeometryBuilder());
-        else
-            return createGeoObject(rp, new PolygonGeometryBuilder());
+        return createObject(rp);
     }
 
-    public void updatePoint(Long id, RequestPoint rp)
+    public void updatePoint(Long id, RequestPoint request)
     {
         checkExists(id);
-        if (rp.getWkt() != null && !rp.getWkt().isEmpty())
-            updateGeoObject(id, rp, new WKTGeometryBuilder());
-        else
-            updateGeoObject(id, rp, new PointGeometryBuilder(serviceRegistry.getGeoCoder()));
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
+        updateGeoObject(id, request, geometryBuilder);
     }
 
     public void updateLine(Long id, RequestLine request)
     {
         checkExists(id);
-        if (request.getWkt() != null && !request.getWkt().isEmpty())
-            updateGeoObject(id, request, new WKTGeometryBuilder());
-        else
-            updateGeoObject(id, request, new LineGeometryBuilder());
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
+        updateGeoObject(id, request, geometryBuilder);
     }
 
     public void updatePolygon(Long id, RequestPolygon request)
     {
         checkExists(id);
-        if (request.getWkt() != null && !request.getWkt().isEmpty())
-            updateGeoObject(id, request, new WKTGeometryBuilder());
-        else
-            updateGeoObject(id, request, new PolygonGeometryBuilder());
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
+        updateGeoObject(id, request, geometryBuilder);
     }
 
     public void delete(Long layerId, Long id) {
@@ -94,7 +96,7 @@ public class GeoObjectsService {
         serviceRegistry.getGeoObjectDao().remove(id);
     }
 
-    private <T extends GeometryParameter > Long createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
+    private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
         GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());
 
         Geometry geometry = geometryBuilder.create(params);
@@ -109,13 +111,6 @@ public class GeoObjectsService {
             }
             gisObject.setTags(params.getTags());
         }
-        if(params.getTimetick() != null){
-            try {
-                ObjectFactory.createGeoObjectTag(gisObject, "timetick", new DateAdapter().marshal(params.getTimetick()));
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage(), e);
-            }
-        }
 
         Set<GeoLayer> geoLayers = new HashSet<GeoLayer>();
         geoLayers.add(layer);
@@ -124,7 +119,12 @@ public class GeoObjectsService {
         layer.getGeoObjects().add(gisObject);
         gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
         gisObject.setCreated(Calendar.getInstance().getTime());
-        GeoObject res = serviceRegistry.getGeoObjectDao().add(gisObject);
+
+        return gisObject;
+    }
+
+    private Long save(GeoObject geoObject) {
+        GeoObject res = serviceRegistry.getGeoObjectDao().add(geoObject);
         return res.getId();
     }
 

@@ -18,9 +18,6 @@ import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestPoint")
 public class RequestPoint implements Serializable, GeometryParameter{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3250784736508978802L;
 
 	@XmlElement(name = "name", required=true)
@@ -29,23 +26,33 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	@XmlElement(name = "point", required = true)
 	private PointCoordinates pointCoordinates;
 
-	@XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
-	@XmlJavaTypeAdapter(DateAdapter.class)
-	@JsonDeserialize(using = DateDeserializer.class)
-	private Date timetick;
-	@XmlElement(name = "calibrate", required=false, defaultValue="false")
-	private Boolean calibrate;
 	@XmlElement(name = "layerId", required=true)
 	private Long layerId;
-	@XmlElement(name = "address", required=false)
+
+	@XmlElement(name = "address")
 	private String address;
 
 	@XmlElementWrapper(name="tags")
     @XmlElement(name="tag")
-	Set<GeoObjectTag> tags;
+	private Set<GeoObjectTag> tags;
 
-	@XmlElement(name = "wkt", required=false)
+	@XmlElement(name = "wkt")
 	private String wkt;
+
+	public RequestPoint() {
+	}
+
+	public RequestPoint(String name, Long layerId, PointCoordinates pointCoordinates) {
+		this.name = name;
+		this.layerId = layerId;
+		this.pointCoordinates = pointCoordinates;
+	}
+
+	public RequestPoint(String name, Long layerId, String address) {
+		this.name = name;
+		this.layerId = layerId;
+		this.address = address;
+	}
 
 	@Override
 	public String getWkt() {
@@ -64,18 +71,6 @@ public class RequestPoint implements Serializable, GeometryParameter{
 		this.pointCoordinates = pointCoordinates;
 	}
 
-	public Date getTimetick() {
-		return timetick;
-	}
-	public void setTimetick(Date timetick) {
-		this.timetick = timetick;
-	}
-	public Boolean getCalibrate() {
-		return calibrate;
-	}
-	public void setCalibrate(Boolean calibrate) {
-		this.calibrate = calibrate;
-	}
 	public Long getLayerId() {
 		return layerId;
 	}
@@ -88,6 +83,12 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	public void setTags(Set<GeoObjectTag> tags) {
 		this.tags = tags;
 	}
+
+	@Override
+	public GeoObjectGeometryType getType() {
+		return GeoObjectGeometryType.POINT;
+	}
+
 	public String getName() {
 		return name;
 	}

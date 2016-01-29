@@ -2,6 +2,8 @@ package org.w2fc.geoportal.ws;
 
 import org.w2fc.geoportal.ws.model.*;
 
+import java.util.List;
+
 
 public interface PortalWsService {
 
@@ -23,6 +25,8 @@ public interface PortalWsService {
 	public Long getLastRevision(Long layerId);
     
 	public GeoObjectFullAdapter getObject(Long id);
+
+	public void createObjects(List<RequestGeoObject> geoObjectsReq);
 
 	public Long createPoint(RequestPoint rp);
 

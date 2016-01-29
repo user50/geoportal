@@ -3,6 +3,7 @@ package org.w2fc.geoportal.ws.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,9 +19,7 @@ import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestPoint")
 public class RequestPolygon implements Serializable, GeometryParameter{
-    /**
-     *
-     */
+
     private static final long serialVersionUID = -3250784736508978802L;
 
     @XmlElement(name = "name", required=true)
@@ -32,21 +31,24 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElementWrapper(name = "polygonHoles", required = true)
     private PolygonHole[] polygonHoles;
 
-    @XmlElement(name = "timetick", required=false, defaultValue="01.01.1970 12:00:00")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    @JsonDeserialize(using = DateDeserializer.class)
-    private Date timetick;
-    @XmlElement(name = "calibrate", required=false, defaultValue="false")
-    private Boolean calibrate;
     @XmlElement(name = "layerId", required=true)
     private Long layerId;
 
     @XmlElementWrapper(name="tags")
     @XmlElement(name="tag")
-    HashSet<GeoObjectTag> tags;
+    private Set<GeoObjectTag> tags;
 
     @XmlElement(name = "wkt", required=false)
     private String wkt;
+
+    public RequestPolygon() {
+    }
+
+    public RequestPolygon(String name, Long layerId, PointCoordinates[] pointCoordinateses) {
+        this.name = name;
+        this.layerId = layerId;
+        this.pointCoordinateses = pointCoordinateses;
+    }
 
     @Override
     public String getWkt() {
@@ -73,30 +75,24 @@ public class RequestPolygon implements Serializable, GeometryParameter{
         this.polygonHoles = polygonHoles;
     }
 
-    public Date getTimetick() {
-        return timetick;
-    }
-    public void setTimetick(Date timetick) {
-        this.timetick = timetick;
-    }
-    public Boolean getCalibrate() {
-        return calibrate;
-    }
-    public void setCalibrate(Boolean calibrate) {
-        this.calibrate = calibrate;
-    }
     public Long getLayerId() {
         return layerId;
     }
     public void setLayerId(Long layerId) {
         this.layerId = layerId;
     }
-    public HashSet<GeoObjectTag> getTags() {
+    public Set<GeoObjectTag> getTags() {
         return tags;
     }
-    public void setTags(HashSet<GeoObjectTag> tags) {
+    public void setTags(Set<GeoObjectTag> tags) {
         this.tags = tags;
     }
+
+    @Override
+    public GeoObjectGeometryType getType() {
+        return null;
+    }
+
     public String getName() {
         return name;
     }
