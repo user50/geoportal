@@ -18,6 +18,14 @@ public class PointCoordinates implements Serializable{
     @XmlElement(name = "lon", required=true)
     private Double lon;
 
+    public PointCoordinates() {
+    }
+
+    public PointCoordinates(Double lat, Double lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
+
     public Double getLat() {
         return lat;
     }

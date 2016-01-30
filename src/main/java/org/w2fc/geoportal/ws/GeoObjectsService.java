@@ -44,51 +44,8 @@ public class GeoObjectsService {
 
         // todo bulk save geoObjects
 
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException("todo bulk save geoObjects");
 
-    }
-
-    public Long createObject(GeometryParameter geometryParameter){
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
-        GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
-
-        return save(geoObject);
-    }
-
-    public Long createPoint(RequestPoint rp)
-    {
-        return createObject(rp);
-    }
-
-    public Long createLine(RequestLine rp)
-    {
-        return createObject(rp);
-    }
-
-    public Long createPolygon(RequestPolygon rp)
-    {
-        return createObject(rp);
-    }
-
-    public void updatePoint(Long id, RequestPoint request)
-    {
-        checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
-        updateGeoObject(id, request, geometryBuilder);
-    }
-
-    public void updateLine(Long id, RequestLine request)
-    {
-        checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
-        updateGeoObject(id, request, geometryBuilder);
-    }
-
-    public void updatePolygon(Long id, RequestPolygon request)
-    {
-        checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
-        updateGeoObject(id, request, geometryBuilder);
     }
 
     public void delete(Long layerId, Long id) {

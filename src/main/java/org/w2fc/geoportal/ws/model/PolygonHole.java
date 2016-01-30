@@ -15,6 +15,13 @@ public class PolygonHole {
     @XmlElementWrapper(name = "points", required = true)
     private PointCoordinates[] pointsCoordinates;
 
+    public PolygonHole() {
+    }
+
+    public PolygonHole(PointCoordinates[] pointsCoordinates) {
+        this.pointsCoordinates = pointsCoordinates;
+    }
+
     public PointCoordinates[] getPointsCoordinates() {
         return pointsCoordinates;
     }

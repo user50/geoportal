@@ -90,7 +90,7 @@ public class RequestPolygon implements Serializable, GeometryParameter{
 
     @Override
     public GeoObjectGeometryType getType() {
-        return null;
+        return GeoObjectGeometryType.POLYGON;
     }
 
     public String getName() {

@@ -3,14 +3,15 @@ package org.w2fc.geoportal.ws.model;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.HashSet;
 
 /**
  * @author yevhenlozov
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestGeoObject")
 public class RequestGeoObject implements Serializable, GeometryParameter {
 
     @XmlElement(name = "name", required=true)
@@ -29,10 +30,10 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name="tag")
     private HashSet<GeoObjectTag> tags;
 
-    @XmlElementWrapper(name = "points", required = true)
+    @XmlElement(name = "points", required = true)
     private String pointsCoordinates; // json array of arrays: [[lat,lon], [lat,lon]]
 
-    @XmlElementWrapper(name = "polygonHoles") // json array of arrays of arrays: [[lat,lon], [lat,lon]]
+    @XmlElement(name = "polygonHoles") // json array of arrays of arrays: [[lat,lon], [lat,lon]]
     private String polygonHoles;
 
     @XmlElement(name = "address")

@@ -78,7 +78,7 @@ public class RequestLine implements Serializable, GeometryParameter{
 
     @Override
     public GeoObjectGeometryType getType() {
-        return null;
+        return GeoObjectGeometryType.LINESTRING;
     }
 
     public String getName() {

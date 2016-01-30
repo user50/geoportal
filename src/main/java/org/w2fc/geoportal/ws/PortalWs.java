@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w2fc.geoportal.ws.model.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 @Service
 @WebService(serviceName="PortalWs")
@@ -95,41 +98,11 @@ public class PortalWs extends SpringBeanAutowiringSupport{
         autowire();
         return portalWsService.getObject(id);
     }
-    
-    @WebMethod
-    public Long CreatePoint(RequestPoint rp){
-    	return portalWsService.createPoint(rp);
-    }
 
     @WebMethod
-    public Long createLine(RequestLine rp){
-        return portalWsService.createLine(rp);
-    }
-
-    @WebMethod
-    public Long createPolygon(RequestPolygon rp){
-        return portalWsService.createPolygon(rp);
-    }
-
-    @WebMethod
-    public void updatePoint(@XmlElement(required=true, name="id") Long id, RequestPoint request){
-        portalWsService.updatePoint(id, request );
-    }
-
-    @WebMethod
-    public void updateLine(@XmlElement(required=true, name="id") Long id, RequestLine request){
-        portalWsService.updateLine(id, request);
-    }
-
-    @WebMethod
-    public void updatePolygon(@XmlElement(required=true, name="id") Long id, RequestPolygon request){
-        portalWsService.updatePolygon(id, request);
-    }
-
-    @WebMethod
-    public void deletePoint(@XmlElement(required=true, name="layerId") Long layerId,
-                            @XmlElement(required=true, name="id") Long id){
-        portalWsService.delete(layerId, id);
+    public void createObjects(List<RequestGeoObject> rp){
+        autowire();
+        portalWsService.createObjects(rp);
     }
     
     private void  autowire(){
