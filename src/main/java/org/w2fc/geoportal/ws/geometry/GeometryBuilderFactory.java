@@ -30,6 +30,15 @@ public class GeometryBuilderFactory {
             case POLYGON:
                 geometryBuilder = new PolygonGeometryBuilder();
                 break;
+            case MULTIPOINT:
+                geometryBuilder = new MultiPointGeometryBuilder();
+                break;
+            case MULTILINESTRING:
+                geometryBuilder = new MultiLineStringGeometryBuilder();
+                break;
+            case MULTIPOLYGON:
+                geometryBuilder = new MultiPolygonBuilder();
+                break;
             default:
                 throw new IllegalGeometryTypeException("Geometry type is not allowed: " + geometryParameter.getType());
         }

@@ -3,7 +3,7 @@ package org.w2fc.geoportal.ws.geometry;
 import com.vividsolutions.jts.geom.*;
 import org.w2fc.geoportal.ws.exception.InvalidGeometryException;
 import org.w2fc.geoportal.ws.model.PointCoordinates;
-import org.w2fc.geoportal.ws.model.PolygonHole;
+import org.w2fc.geoportal.ws.model.LineCoordinates;
 import org.w2fc.geoportal.ws.model.RequestPolygon;
 
 public class PolygonGeometryBuilder implements GeometryBuilder<RequestPolygon> {
@@ -11,19 +11,20 @@ public class PolygonGeometryBuilder implements GeometryBuilder<RequestPolygon> {
     @Override
     public Geometry create(RequestPolygon parameters) {
         GeometryFactory factory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);//SRID
+
         LinearRing polygon = buildLinearRing(parameters.getPointCoordinateses(), factory);
         LinearRing[] holes = buildHoles(parameters.getPolygonHoles(), factory);
 
         return factory.createPolygon(polygon, holes);
     }
 
-    private LinearRing[] buildHoles(PolygonHole[] polygonHoles, GeometryFactory factory) {
+    private LinearRing[] buildHoles(LineCoordinates[] polygonHoles, GeometryFactory factory) {
         if (polygonHoles == null || polygonHoles.length == 0 )
             return null;
 
         LinearRing[] holes = new LinearRing[polygonHoles.length];
         for (int i = 0; i < polygonHoles.length; i++) {
-            PolygonHole hole = polygonHoles[i];
+            LineCoordinates hole = polygonHoles[i];
             holes[i] = buildLinearRing(hole.getPointsCoordinates(), factory);
         }
         return holes;

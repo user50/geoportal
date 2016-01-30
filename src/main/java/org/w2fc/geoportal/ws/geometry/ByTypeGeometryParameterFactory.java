@@ -28,6 +28,15 @@ public class ByTypeGeometryParameterFactory implements GeometryParameterFactory 
             case POLYGON:
                 geometryParameter = new RequestPolygonFactory(requestGeoObject).create();
                 break;
+            case MULTIPOINT:
+                geometryParameter = new MultiPointFactory(requestGeoObject).create();
+                break;
+            case MULTILINESTRING:
+                geometryParameter = new MultiLineStringFactory(requestGeoObject).create();
+                break;
+            case MULTIPOLYGON:
+                geometryParameter = new MultiPolygonFactory(requestGeoObject).create();
+                break;
             default:
                 throw new IllegalGeometryTypeException("Geometry type is not allowed: " + requestGeoObject.getType());
         }

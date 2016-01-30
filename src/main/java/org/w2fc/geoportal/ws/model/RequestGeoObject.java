@@ -33,9 +33,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name = "points", required = true)
     private String pointsCoordinates; // json array of arrays: [[lat,lon], [lat,lon]]
 
-    @XmlElement(name = "polygonHoles") // json array of arrays of arrays: [[lat,lon], [lat,lon]]
-    private String polygonHoles;
-
     @XmlElement(name = "address")
     private String address;
 
@@ -90,14 +87,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
 
     public void setType(GeoObjectGeometryType type) {
         this.type = type;
-    }
-
-    public String getPolygonHoles() {
-        return polygonHoles;
-    }
-
-    public void setPolygonHoles(String polygonHoles) {
-        this.polygonHoles = polygonHoles;
     }
 
     public String getAddress() {

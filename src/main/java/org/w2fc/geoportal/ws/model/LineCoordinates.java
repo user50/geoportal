@@ -10,15 +10,15 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/PolygonHole")
-public class PolygonHole {
+public class LineCoordinates {
 
     @XmlElementWrapper(name = "points", required = true)
     private PointCoordinates[] pointsCoordinates;
 
-    public PolygonHole() {
+    public LineCoordinates() {
     }
 
-    public PolygonHole(PointCoordinates[] pointsCoordinates) {
+    public LineCoordinates(PointCoordinates[] pointsCoordinates) {
         this.pointsCoordinates = pointsCoordinates;
     }
 

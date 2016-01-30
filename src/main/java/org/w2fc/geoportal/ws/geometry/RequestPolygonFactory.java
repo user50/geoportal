@@ -2,7 +2,7 @@ package org.w2fc.geoportal.ws.geometry;
 
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.ws.model.PointCoordinates;
-import org.w2fc.geoportal.ws.model.PolygonHole;
+import org.w2fc.geoportal.ws.model.LineCoordinates;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 import org.w2fc.geoportal.ws.model.RequestPolygon;
 
@@ -28,13 +28,14 @@ public class RequestPolygonFactory implements GeometryParameterFactory {
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
 
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
-        List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
-        List<PolygonHole> polygonHoles = new PolygonHoleFromJsonFactory().create(jsonCoordsArray);
+        List<LineCoordinates> lines = new LinesCoordinatesFromJsonFactory().create(jsonCoordsArray);
 
-        RequestPolygon requestPolygon =new RequestPolygon(name, layerId, pointCoordinates.toArray(new PointCoordinates[pointCoordinates.size()]));
+        LineCoordinates externalPolygon = lines.get(0);
+
+        RequestPolygon requestPolygon = new RequestPolygon(name, layerId, externalPolygon.getPointsCoordinates());
         requestPolygon.setWkt(wkt);
         requestPolygon.setTags(tags);
-        requestPolygon.setPolygonHoles(polygonHoles.toArray(new PolygonHole[polygonHoles.size()]));
+        requestPolygon.setPolygonHoles(lines.subList(1, lines.size()).toArray(new LineCoordinates[lines.size() - 1]));
 
         return requestPolygon;
     }

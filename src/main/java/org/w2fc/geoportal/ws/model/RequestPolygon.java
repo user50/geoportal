@@ -1,8 +1,6 @@
 package org.w2fc.geoportal.ws.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,9 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 
@@ -29,7 +25,7 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     private PointCoordinates[] pointCoordinateses;
 
     @XmlElementWrapper(name = "polygonHoles", required = true)
-    private PolygonHole[] polygonHoles;
+    private LineCoordinates[] polygonHoles;
 
     @XmlElement(name = "layerId", required=true)
     private Long layerId;
@@ -67,11 +63,11 @@ public class RequestPolygon implements Serializable, GeometryParameter{
         this.pointCoordinateses = pointCoordinateses;
     }
 
-    public PolygonHole[] getPolygonHoles() {
+    public LineCoordinates[] getPolygonHoles() {
         return polygonHoles;
     }
 
-    public void setPolygonHoles(PolygonHole[] polygonHoles) {
+    public void setPolygonHoles(LineCoordinates[] polygonHoles) {
         this.polygonHoles = polygonHoles;
     }
 
