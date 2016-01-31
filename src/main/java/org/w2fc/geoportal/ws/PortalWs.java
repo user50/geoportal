@@ -1,14 +1,18 @@
 package org.w2fc.geoportal.ws;
 
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w2fc.geoportal.ws.model.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +23,8 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     
     @Autowired
     private PortalWsService portalWsService;
-    
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @WebMethod
     public String ping(){
@@ -109,6 +114,19 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     public void updateObjects(List<RequestGeoObject> rp){
         autowire();
         portalWsService.updateObjects(rp);
+    }
+
+    @WebMethod
+    public void deleteObjects(@WebParam(name = "ids")@XmlElement(required = true, nillable = false) String ids){
+        autowire();
+        List<Long> idList;
+        try {
+            idList = objectMapper.readValue(ids, new TypeReference<List<Long>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Unable to parse json array");
+        }
+        portalWsService.deleteObjects(idList);
     }
 
     private void  autowire(){

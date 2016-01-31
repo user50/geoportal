@@ -58,6 +58,12 @@ public class GeoObjectsService {
         }
     }
 
+    public void deleteObjects(List<Long> ids){
+        for (Long id : ids) {
+            delete(id);
+        }
+    }
+
     public Long createObject(GeometryParameter geometryParameter){
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
         GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
@@ -101,7 +107,7 @@ public class GeoObjectsService {
         updateGeoObject(id, request, geometryBuilder);
     }
 
-    public void delete(Long layerId, Long id) {
+    public void delete(Long id) {
         checkExists(id);
         serviceRegistry.getGeoObjectDao().remove(id);
     }

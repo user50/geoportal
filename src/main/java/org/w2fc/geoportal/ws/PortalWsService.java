@@ -30,6 +30,8 @@ public interface PortalWsService {
 
 	public void updateObjects(List<RequestGeoObject> geoObjectsReq);
 
+	public void deleteObjects(List<Long> ids);
+
 	public Long createPoint(RequestPoint rp);
 
 	Long createLine(RequestLine rp);
@@ -42,5 +44,5 @@ public interface PortalWsService {
 
 	void updatePolygon(Long id, RequestPolygon requestPolygon);
 
-	public void delete(Long layerId, Long id);
+	public void delete(Long id);
 }

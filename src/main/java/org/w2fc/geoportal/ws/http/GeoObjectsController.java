@@ -85,7 +85,7 @@ public class GeoObjectsController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(@PathVariable Long id, @RequestParam Long layerId){
-        portalWsService.delete(layerId, id);
+        portalWsService.delete(id);
     }
 
 }

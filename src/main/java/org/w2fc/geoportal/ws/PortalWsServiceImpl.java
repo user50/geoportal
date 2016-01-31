@@ -175,6 +175,10 @@ public class PortalWsServiceImpl implements PortalWsService {
 		geoObjectsService.updateObjects(geoObjectsReq);
 	}
 
+	public void deleteObjects(List<Long> ids){
+		geoObjectsService.deleteObjects(ids);
+	}
+
 	@Override
 	@PreAuthorize("@geoportalSecurity.isLayerEditor(#rp.layerId)")
 	@Transactional
@@ -219,8 +223,8 @@ public class PortalWsServiceImpl implements PortalWsService {
 
 	@Override
 	@Transactional
-	public void delete(Long layerId, Long id) {
-		geoObjectsService.delete(layerId, id);
+	public void delete(Long id) {
+		geoObjectsService.delete(id);
 	}
 
 }
