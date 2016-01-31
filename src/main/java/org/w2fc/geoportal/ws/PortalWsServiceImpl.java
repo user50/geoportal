@@ -170,6 +170,12 @@ public class PortalWsServiceImpl implements PortalWsService {
 	}
 
 	@Override
+	@Transactional
+	public void updateObjects(List<RequestGeoObject> geoObjectsReq) {
+		geoObjectsService.updateObjects(geoObjectsReq);
+	}
+
+	@Override
 	@PreAuthorize("@geoportalSecurity.isLayerEditor(#rp.layerId)")
 	@Transactional
 	public Long createPoint(RequestPoint rp) {

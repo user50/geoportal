@@ -1,7 +1,8 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.builder;
 
 import org.w2fc.geoportal.ws.exception.IllegalGeometryTypeException;
 import org.w2fc.geoportal.ws.geocoder.GeoCoder;
+import org.w2fc.geoportal.ws.model.GeometryParameter;
 
 /**
  * @author yevhenlozov

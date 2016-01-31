@@ -1,9 +1,10 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.builder;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import org.w2fc.geoportal.ws.exception.InvalidWKTException;
+import org.w2fc.geoportal.ws.model.GeometryParameter;
 
 /**
  * @author yevhenlozov

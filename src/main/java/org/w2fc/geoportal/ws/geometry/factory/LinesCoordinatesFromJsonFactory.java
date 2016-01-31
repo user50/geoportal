@@ -1,4 +1,4 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.w2fc.geoportal.ws.model.PointCoordinates;

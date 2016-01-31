@@ -77,16 +77,16 @@
         </property>
     </bean>
         
-    <!--bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driver}" />
         <property name="url" value="${jdbc.url}" />
         <property name="username" value="${jdbc.user}" />
         <property name="password" value="${jdbc.password}" />
-    </bean-->
+    </bean>
     
-    <jee:jndi-lookup id="dataSource"
+<!--    <jee:jndi-lookup id="dataSource"
 		jndi-name="jdbc/geoportal"
-		expected-type="javax.sql.DataSource" />
+		expected-type="javax.sql.DataSource" />-->
     
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean	">
 	<!--bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"-->
@@ -139,16 +139,16 @@
         
     <!-- Cartography -->
     
-    <!-- bean id="dataSourceCartography" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean id="dataSourceCartography" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc1.driver}" />
         <property name="url" value="${jdbc1.url}" />
         <property name="username" value="${jdbc1.user}" />
         <property name="password" value="${jdbc1.password}" />
-    </bean-->
+    </bean>
     
-    <jee:jndi-lookup id="dataSourceCartography"
+<!--    <jee:jndi-lookup id="dataSourceCartography"
 		jndi-name="jdbc/cartography"
-		expected-type="javax.sql.DataSource" />
+		expected-type="javax.sql.DataSource" />-->
     
     <bean id="sessionFactoryCartography" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean ">
         <property name="dataSource" ref="dataSourceCartography" />

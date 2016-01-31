@@ -1,4 +1,4 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.builder;
 
 import com.vividsolutions.jts.geom.*;
 import org.w2fc.geoportal.ws.exception.InvalidGeometryException;

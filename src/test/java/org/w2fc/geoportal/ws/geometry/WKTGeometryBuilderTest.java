@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.ws.geometry;
 
 import com.vividsolutions.jts.geom.Geometry;
+import org.w2fc.geoportal.ws.geometry.builder.WKTGeometryBuilder;
 import org.w2fc.geoportal.ws.model.RequestPoint;
 
 public class WKTGeometryBuilderTest {

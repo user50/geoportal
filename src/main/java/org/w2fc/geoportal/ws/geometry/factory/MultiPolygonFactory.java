@@ -1,6 +1,7 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.factory;
 
 import org.w2fc.geoportal.domain.GeoObjectTag;
+import org.w2fc.geoportal.ws.model.GeometryParameter;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.util.List;

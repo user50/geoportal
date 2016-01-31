@@ -1,7 +1,6 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.builder;
 
 import com.vividsolutions.jts.geom.*;
-import org.w2fc.geoportal.ws.exception.InvalidGeometryException;
 import org.w2fc.geoportal.ws.model.*;
 import org.w2fc.geoportal.ws.model.MultiPolygon;
 

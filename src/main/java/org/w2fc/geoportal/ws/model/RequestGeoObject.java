@@ -1,7 +1,6 @@
 package org.w2fc.geoportal.ws.model;
 
 import org.w2fc.geoportal.domain.GeoObjectTag;
-import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
@@ -13,6 +12,9 @@ import java.util.HashSet;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestGeoObject")
 public class RequestGeoObject implements Serializable, GeometryParameter {
+
+    @XmlElement(name = "id")
+    private Long id;
 
     @XmlElement(name = "name", required=true)
     private String name;
@@ -35,6 +37,14 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
 
     @XmlElement(name = "address")
     private String address;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Override
     public String getName() {

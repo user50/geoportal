@@ -1,7 +1,6 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.factory;
 
 import org.w2fc.geoportal.domain.GeoObjectTag;
-import org.w2fc.geoportal.ws.model.PointCoordinates;
 import org.w2fc.geoportal.ws.model.LineCoordinates;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 import org.w2fc.geoportal.ws.model.RequestPolygon;

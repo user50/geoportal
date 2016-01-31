@@ -1,7 +1,5 @@
 package org.w2fc.geoportal.ws.model;
 
-import org.w2fc.geoportal.ws.geometry.GeometryBuilder;
-
 /**
  * @author yevhenlozov
  */

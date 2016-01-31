@@ -1,8 +1,6 @@
 package org.w2fc.geoportal.ws.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,7 +10,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
 import org.w2fc.geoportal.domain.GeoObjectTag;
-import org.w2fc.geoportal.ws.geometry.GeometryParameter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestPoint")

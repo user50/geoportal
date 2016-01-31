@@ -104,7 +104,13 @@ public class PortalWs extends SpringBeanAutowiringSupport{
         autowire();
         portalWsService.createObjects(rp);
     }
-    
+
+    @WebMethod
+    public void updateObjects(List<RequestGeoObject> rp){
+        autowire();
+        portalWsService.updateObjects(rp);
+    }
+
     private void  autowire(){
         if(null == portalWsService){
             processInjectionBasedOnCurrentContext(this);

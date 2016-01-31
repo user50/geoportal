@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.ws.geometry;
 
 import org.junit.Test;
+import org.w2fc.geoportal.ws.geometry.factory.LinesCoordinatesFromJsonFactory;
 import org.w2fc.geoportal.ws.model.LineCoordinates;
 
 import java.util.List;

@@ -14,7 +14,9 @@ import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
-import org.w2fc.geoportal.ws.geometry.*;
+import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
+import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilderFactory;
+import org.w2fc.geoportal.ws.geometry.factory.ByTypeGeometryParameterFactory;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.util.*;
@@ -44,6 +46,15 @@ public class GeoObjectsService {
 
         for (GeoObject geoObject : geoObjects) {
             save(geoObject);
+        }
+    }
+
+    public void updateObjects(List<RequestGeoObject> geoObjectsReq) {
+        for (RequestGeoObject requestGeoObject : geoObjectsReq) {
+            GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
+            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+
+            updateGeoObject(requestGeoObject.getId(), geometryParameter, geometryBuilder);
         }
     }
 

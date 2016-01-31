@@ -1,24 +1,26 @@
-package org.w2fc.geoportal.ws.geometry;
+package org.w2fc.geoportal.ws.geometry.factory;
 
 import org.w2fc.geoportal.domain.GeoObjectTag;
-import org.w2fc.geoportal.ws.model.MultiPoint;
 import org.w2fc.geoportal.ws.model.PointCoordinates;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
-import org.w2fc.geoportal.ws.model.RequestLine;
+import org.w2fc.geoportal.ws.model.RequestPoint;
 
 import java.util.List;
 import java.util.Set;
 
-public class MultiPointFactory implements GeometryParameterFactory {
+/**
+ * @author yevhenlozov
+ */
+public class RequestPointFactory implements GeometryParameterFactory {
 
     private RequestGeoObject reqGeoObject;
 
-    public MultiPointFactory(RequestGeoObject reqGeoObject) {
-        this.reqGeoObject = reqGeoObject;
+    public RequestPointFactory(RequestGeoObject requestGeoObject) {
+        this.reqGeoObject = requestGeoObject;
     }
 
     @Override
-    public GeometryParameter create() {
+    public RequestPoint create() {
         String name = reqGeoObject.getName();
         Long layerId = reqGeoObject.getLayerId();
         String wkt = reqGeoObject.getWkt();
@@ -26,12 +28,13 @@ public class MultiPointFactory implements GeometryParameterFactory {
 
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
         List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
+        String address = reqGeoObject.getAddress();
 
-        MultiPoint multiPoint = new MultiPoint(name, layerId, pointCoordinates.toArray(new PointCoordinates[pointCoordinates.size()]));
-        multiPoint.setWkt(wkt);
-        multiPoint.setTags(tags);
+        RequestPoint requestPoint = new RequestPoint(name, layerId, pointCoordinates.get(0));
+        requestPoint.setWkt(wkt);
+        requestPoint.setAddress(address);
+        requestPoint.setTags(tags);
 
-        return multiPoint;
-
+        return requestPoint;
     }
 }

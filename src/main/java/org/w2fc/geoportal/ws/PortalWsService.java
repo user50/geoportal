@@ -28,6 +28,8 @@ public interface PortalWsService {
 
 	public void createObjects(List<RequestGeoObject> geoObjectsReq);
 
+	public void updateObjects(List<RequestGeoObject> geoObjectsReq);
+
 	public Long createPoint(RequestPoint rp);
 
 	Long createLine(RequestLine rp);
