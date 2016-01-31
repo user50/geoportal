@@ -198,6 +198,11 @@ public class GeoObject extends AbstractDomain<GeoObject>{
         this.tags = tags;
     }
 
+    public void addTag(GeoObjectTag tag)
+    {
+        this.tags.add(tag);
+    }
+
     public GeoObjectProperties getGeoObjectProperties() {
         return geoObjectProperties;
     }

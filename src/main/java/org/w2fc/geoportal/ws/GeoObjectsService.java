@@ -14,8 +14,6 @@ import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
-import org.w2fc.geoportal.ws.exception.MissingParameterException;
-import org.w2fc.geoportal.ws.geocoder.GeoCoder;
 import org.w2fc.geoportal.ws.geometry.*;
 import org.w2fc.geoportal.ws.model.DateAdapter;
 import org.w2fc.geoportal.ws.model.RequestLine;
@@ -116,6 +114,8 @@ public class GeoObjectsService {
 
         if (gisObject == null)
             throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");
+
+        new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
 
         gisObject.setName(params.getName());
 
