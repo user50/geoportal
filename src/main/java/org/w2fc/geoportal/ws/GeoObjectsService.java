@@ -33,19 +33,12 @@ public class GeoObjectsService {
         this.serviceRegistry = serviceRegistry;
     }
 
+    public GeoObjectsService() {
+    }
+
     public void createObjects(List<RequestGeoObject> geoObjectsReq){
-        List<GeoObject> geoObjects = new ArrayList<GeoObject>();
-
         for (RequestGeoObject requestGeoObject : geoObjectsReq) {
-            GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
-            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
-
-            GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
-            geoObjects.add(geoObject);
-        }
-
-        for (GeoObject geoObject : geoObjects) {
-            save(geoObject);
+            createAndSaveObject(requestGeoObject);
         }
     }
 
@@ -64,7 +57,16 @@ public class GeoObjectsService {
         }
     }
 
-    public Long createObject(GeometryParameter geometryParameter){
+    public Long createAndSaveObject(RequestGeoObject requestGeoObject){
+        GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+
+        GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
+
+        return save(geoObject);
+    }
+
+    public Long createAndSaveObject(GeometryParameter geometryParameter){
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
         GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
 
@@ -73,17 +75,17 @@ public class GeoObjectsService {
 
     public Long createPoint(RequestPoint rp)
     {
-        return createObject(rp);
+        return createAndSaveObject(rp);
     }
 
     public Long createLine(RequestLine rp)
     {
-        return createObject(rp);
+        return createAndSaveObject(rp);
     }
 
     public Long createPolygon(RequestPolygon rp)
     {
-        return createObject(rp);
+        return createAndSaveObject(rp);
     }
 
     public void updatePoint(Long id, RequestPoint request)
