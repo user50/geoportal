@@ -43,6 +43,9 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name = "wkt")
     private String wkt;
 
+    @XmlElement(name = "wkt")
+    private String refKey;
+
     @Override
     public String getWkt() {
         return wkt;
@@ -85,4 +88,12 @@ public class RequestLine implements Serializable, GeometryParameter{
         this.name = name;
     }
 
+    @Override
+    public String getRefKey() {
+        return refKey;
+    }
+
+    public void setRefKey(String refKey) {
+        this.refKey = refKey;
+    }
 }

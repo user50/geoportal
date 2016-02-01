@@ -16,4 +16,6 @@ public interface GeometryParameter {
     Long getLayerId();
 
     String getWkt();
+
+    String getRefKey();
 }

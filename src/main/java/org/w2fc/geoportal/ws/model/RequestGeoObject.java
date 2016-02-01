@@ -38,6 +38,9 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name = "address")
     private String address;
 
+    @XmlElement(name = "refKey")
+    private String refKey;
+
     public Long getId() {
         return id;
     }
@@ -105,5 +108,14 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String getRefKey() {
+        return refKey;
+    }
+
+    public void setRefKey(String refKey) {
+        this.refKey = refKey;
     }
 }

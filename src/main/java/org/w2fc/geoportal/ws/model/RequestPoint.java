@@ -35,6 +35,9 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	@XmlElement(name = "wkt")
 	private String wkt;
 
+	@XmlElement(name = "refKey")
+	private String refKey;
+
 	public RequestPoint() {
 	}
 
@@ -98,5 +101,14 @@ public class RequestPoint implements Serializable, GeometryParameter{
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	@Override
+	public String getRefKey() {
+		return refKey;
+	}
+
+	public void setRefKey(String refKey) {
+		this.refKey = refKey;
 	}
 }

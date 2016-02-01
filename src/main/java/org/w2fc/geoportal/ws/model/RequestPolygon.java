@@ -36,6 +36,9 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElement(name = "wkt", required=false)
     private String wkt;
 
+    @XmlElement(name="refKey")
+    private String refKey;
+
     public RequestPolygon() {
     }
 
@@ -93,5 +96,14 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getRefKey() {
+        return refKey;
+    }
+
+    public void setRefKey(String refKey) {
+        this.refKey = refKey;
     }
 }

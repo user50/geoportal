@@ -38,7 +38,7 @@ public class GeoObjectsService {
 
         for (RequestGeoObject requestGeoObject : geoObjectsReq) {
             GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
-            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
 
             GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
             geoObjects.add(geoObject);
@@ -52,7 +52,7 @@ public class GeoObjectsService {
     public void updateObjects(List<RequestGeoObject> geoObjectsReq) {
         for (RequestGeoObject requestGeoObject : geoObjectsReq) {
             GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
-            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
 
             updateGeoObject(requestGeoObject.getId(), geometryParameter, geometryBuilder);
         }
@@ -65,7 +65,7 @@ public class GeoObjectsService {
     }
 
     public Long createObject(GeometryParameter geometryParameter){
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
         GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
 
         return save(geoObject);
@@ -89,21 +89,21 @@ public class GeoObjectsService {
     public void updatePoint(Long id, RequestPoint request)
     {
         checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(request);
         updateGeoObject(id, request, geometryBuilder);
     }
 
     public void updateLine(Long id, RequestLine request)
     {
         checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(request);
         updateGeoObject(id, request, geometryBuilder);
     }
 
     public void updatePolygon(Long id, RequestPolygon request)
     {
         checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(request);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(request);
         updateGeoObject(id, request, geometryBuilder);
     }
 

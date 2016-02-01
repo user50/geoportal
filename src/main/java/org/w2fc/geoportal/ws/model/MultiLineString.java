@@ -16,6 +16,7 @@ public class MultiLineString implements GeometryParameter {
     private Long layerId;
     private Set<GeoObjectTag> tags;
     private String wkt;
+    private String refKey;
 
     public MultiLineString(String name, Long layerId, List<GeoLineString> lineStrings) {
         this.name = name;
@@ -52,6 +53,15 @@ public class MultiLineString implements GeometryParameter {
     @Override
     public String getWkt() {
         return wkt;
+    }
+
+    @Override
+    public String getRefKey() {
+        return refKey;
+    }
+
+    public void setRefKey(String refKey) {
+        this.refKey = refKey;
     }
 
     public void setWkt(String wkt) {
