@@ -9,6 +9,7 @@ import org.w2fc.geoportal.ws.model.*;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
+import java.util.List;
 
 /**
  * @author Yevhen
@@ -88,4 +89,9 @@ public class GeoObjectsController {
         portalWsService.delete(id);
     }
 
+    @RequestMapping(value = "/srs", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public List<String> getSpatialRefSystems(){
+        return portalWsService.getSpatialRefSystems();
+    }
 }
