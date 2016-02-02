@@ -38,8 +38,8 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElement(name = "wkt", required=false)
     private String wkt;
 
-    @XmlElement(name="refKey")
-    private String refKey;
+    @XmlElement(name="spatialKey")
+    private String spatialKey;
 
     public RequestPolygon() {
     }
@@ -110,11 +110,11 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     }
 
     @Override
-    public String getRefKey() {
-        return refKey;
+    public String getSpatialKey() {
+        return spatialKey;
     }
 
-    public void setRefKey(String refKey) {
-        this.refKey = refKey;
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }

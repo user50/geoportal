@@ -42,7 +42,7 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     private String address;
 
     @XmlElement(name = "spatialKey")
-    private String refKey;
+    private String spatialKey;
 
     public Long getId() {
         return id;
@@ -123,11 +123,11 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     }
 
     @Override
-    public String getRefKey() {
-        return refKey;
+    public String getSpatialKey() {
+        return spatialKey;
     }
 
-    public void setRefKey(String refKey) {
-        this.refKey = refKey;
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }

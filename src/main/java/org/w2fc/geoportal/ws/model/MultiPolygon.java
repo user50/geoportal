@@ -14,7 +14,7 @@ public class MultiPolygon implements GeometryParameter {
     private Long layerId;
     private Set<GeoObjectTag> tags;
     private String wkt;
-    private String refKey;
+    private String spatialKey;
 
     public MultiPolygon(String name, Long layerId, List<GeoPolygon> polygons) {
         this.name = name;
@@ -85,11 +85,11 @@ public class MultiPolygon implements GeometryParameter {
     }
 
     @Override
-    public String getRefKey() {
-        return refKey;
+    public String getSpatialKey() {
+        return spatialKey;
     }
 
-    public void setRefKey(String refKey) {
-        this.refKey = refKey;
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }

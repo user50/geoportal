@@ -16,7 +16,7 @@ public class MultiPoint implements GeometryParameter {
     private Long layerId;
     private Set<GeoObjectTag> tags;
     private String wkt;
-    private String refKey;
+    private String spatialKey;
 
     public MultiPoint(String name, Long layerId, PointCoordinates[] pointsCoordinates) {
         this.name = name;
@@ -83,11 +83,11 @@ public class MultiPoint implements GeometryParameter {
     }
 
     @Override
-    public String getRefKey() {
-        return refKey;
+    public String getSpatialKey() {
+        return spatialKey;
     }
 
-    public void setRefKey(String refKey) {
-        this.refKey = refKey;
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }

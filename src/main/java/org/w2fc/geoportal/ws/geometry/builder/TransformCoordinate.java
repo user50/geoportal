@@ -35,11 +35,11 @@ public class TransformCoordinate<T extends GeometryParameter> implements Geometr
 
         Geometry geometry = geometryBuilder.create(parameters);
 
-        if(parameters.getRefKey() == null || parameters.getRefKey().equals("WGS84"))
+        if(parameters.getSpatialKey() == null || parameters.getSpatialKey().equals("WGS84"))
             return geometry;
 
         try {
-            CoordinateReferenceSystem sourceSystem = CRS.parseWKT(referenceSystemDao.get(parameters.getRefKey()).getWkt());
+            CoordinateReferenceSystem sourceSystem = CRS.parseWKT(referenceSystemDao.get(parameters.getSpatialKey()).getWkt());
             MathTransform transform = CRS.findMathTransform(sourceSystem, targetSystem, true);
 
             return JTS.transform(geometry, transform);
