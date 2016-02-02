@@ -8,6 +8,7 @@ import java.util.Set;
 public class MultiPolygon implements GeometryParameter {
 
     private String name;
+    private String guid;
     private GeoObjectGeometryType type;
     private List<GeoPolygon> polygons;
     private Long layerId;
@@ -28,6 +29,15 @@ public class MultiPolygon implements GeometryParameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     @Override

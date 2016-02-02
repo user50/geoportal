@@ -11,6 +11,7 @@ import java.util.Set;
 public class MultiLineString implements GeometryParameter {
 
     private String name;
+    private String guid;
     private GeoObjectGeometryType type;
     private List<GeoLineString> lineStrings;
     private Long layerId;
@@ -31,6 +32,15 @@ public class MultiLineString implements GeometryParameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     @Override

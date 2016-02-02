@@ -18,4 +18,6 @@ public interface GeometryParameter {
     String getWkt();
 
     String getRefKey();
+
+    String getGuid();
 }

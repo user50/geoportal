@@ -34,6 +34,8 @@ public class RequestLineFactory implements GeometryParameterFactory {
         requestLine.setWkt(wkt);
         requestLine.setTags(tags);
         requestLine.setRefKey(reKey);
+        String guid = reqGeoObject.getGuid();
+        requestLine.setGuid(guid);
 
         return requestLine;
     }

@@ -16,6 +16,9 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name = "id")
     private Long id;
 
+    @XmlElement(name = "guid")
+    private String guid;
+
     @XmlElement(name = "name", required=true)
     private String name;
 
@@ -56,6 +59,15 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public String getPointsCoordinates() {

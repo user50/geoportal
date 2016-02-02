@@ -31,6 +31,8 @@ public class MultiPolygonFactory implements GeometryParameterFactory {
         multiPolygon.setTags(tags);
         multiPolygon.setWkt(wkt);
         multiPolygon.setRefKey(reKey);
+        String guid = reqGeoObject.getGuid();
+        multiPolygon.setGuid(guid);
 
         return multiPolygon;
     }

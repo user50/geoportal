@@ -36,6 +36,8 @@ public class RequestPointFactory implements GeometryParameterFactory {
         requestPoint.setAddress(address);
         requestPoint.setTags(tags);
         requestPoint.setRefKey(reKey);
+        String guid = reqGeoObject.getGuid();
+        requestPoint.setGuid(guid);
 
         return requestPoint;
     }

@@ -20,6 +20,8 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     @XmlElement(name = "name", required=true)
     private String name;
 
+    private String guid;
+
     @XmlElementWrapper(name = "points", required = true)
     private PointCoordinates[] pointCoordinateses;
 
@@ -84,6 +86,15 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     }
     public void setTags(Set<GeoObjectTag> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     @Override

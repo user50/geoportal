@@ -33,6 +33,9 @@ public class MultiPointFactory implements GeometryParameterFactory {
         multiPoint.setTags(tags);
         multiPoint.setRefKey(reKey);
 
+        String guid = reqGeoObject.getGuid();
+        multiPoint.setGuid(guid);
+
         return multiPoint;
 
     }

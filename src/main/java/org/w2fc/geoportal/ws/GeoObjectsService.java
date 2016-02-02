@@ -142,6 +142,8 @@ public class GeoObjectsService {
         Set<GeoLayer> geoLayers = new HashSet<GeoLayer>();
         geoLayers.add(layer);
 
+        gisObject.setGuid(params.getGuid());
+
         gisObject.setGeoLayers(geoLayers);
         layer.getGeoObjects().add(gisObject);
         gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());

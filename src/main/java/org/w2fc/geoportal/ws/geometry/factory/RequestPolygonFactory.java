@@ -37,6 +37,8 @@ public class RequestPolygonFactory implements GeometryParameterFactory {
         requestPolygon.setTags(tags);
         requestPolygon.setPolygonHoles(lines.subList(1, lines.size()).toArray(new LineCoordinates[lines.size() - 1]));
         requestPolygon.setRefKey(reKey);
+        String guid = reqGeoObject.getGuid();
+        requestPolygon.setGuid(guid);
 
         return requestPolygon;
     }
