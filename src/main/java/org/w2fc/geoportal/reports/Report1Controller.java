@@ -137,4 +137,42 @@ public class Report1Controller {
         return "SimplePDFView";
     }
 
+    @RequestMapping(value = "/integrational-service.pdf")
+    public String pdfReport(@RequestParam(required = false) final List<Long> ids, Model model) {
+
+        model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
+
+            @Override
+            public void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
+                                         HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+                String appRoot = request.getSession().getServletContext().getRealPath("/");
+
+                BaseFont baseFont = BaseFont.createFont(appRoot + "/WEB-INF/jasper/fonts/arial.ttf",
+                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                BaseFont baseBoldFont = BaseFont.createFont(appRoot + "/WEB-INF/jasper/fonts/arialbd.ttf",
+                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                Font font12 = new Font(baseFont, 12);
+
+                Paragraph title1 = new Paragraph(
+                        "Отчет о результатах использования \n интеграционного сервиса",
+                        new Font(baseBoldFont, 20));
+                title1.setSpacingAfter(30);
+                title1.setAlignment("center");
+
+                Chapter chapter1 = new Chapter(title1, 1);
+                chapter1.setNumberDepth(0);
+
+                document.add(chapter1);
+            }
+
+            private PdfPCell getTableCell(String string, Font font){
+                PdfPCell c1 = new PdfPCell(new Phrase(string, font));
+                c1.setPaddingBottom(4f);
+                return c1;
+            }
+        });
+
+        return "SimplePDFView";
+    }
 }

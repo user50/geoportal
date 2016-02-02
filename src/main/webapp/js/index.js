@@ -254,7 +254,10 @@ $(document).ready(function() {
 	$('#show_report').button().click(function(){
 	    window.open('report/layers.pdf',  '_blank');
     });
-	
+	$('#show_report_is').button().click(function(){
+		window.open('report/integrational-service.pdf',  '_blank');
+	});
+
 	$('#add_layer').button().click(function(){
 		layers.openForm();
 	});
