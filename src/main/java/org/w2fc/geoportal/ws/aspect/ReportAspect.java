@@ -12,13 +12,13 @@ import org.w2fc.geoportal.ws.model.RequestGeoObject;
  * @author Yevhen
  */
 @Aspect
-public class LoggingAspect {
+public class ReportAspect {
 
-    final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+    final Logger logger = LoggerFactory.getLogger(ReportAspect.class);
 
     private OperationStatusRepository repository;
 
-    public LoggingAspect(OperationStatusRepository repository) {
+    public ReportAspect(OperationStatusRepository repository) {
         this.repository = repository;
     }
 

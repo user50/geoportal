@@ -2,6 +2,7 @@ package org.w2fc.geoportal.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Yevhen
@@ -23,6 +24,9 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     @Column (name = "guid", nullable = false)
     private Long guid;
 
+    @Column (name = "user_id", nullable = false)
+    private Long userId;
+
     @Column (name = "iKey", nullable = true)
     private  String iKey;
 
@@ -37,6 +41,13 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column (name = "date", nullable = true)
+    private Date date;
+
+    @Column (name = "layer_id", nullable = false)
+    private Long layerId;
+
     public OperationStatus() {
     }
 
@@ -44,6 +55,7 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
         this.guid = guid;
         this.action = action;
         this.status = status;
+        this.date = new Date();
     }
 
     public Long getId() {
@@ -60,6 +72,14 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
 
     public void setGuid(Long guid) {
         this.guid = guid;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getiKey() {
@@ -92,6 +112,22 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Long getLayerId() {
+        return layerId;
+    }
+
+    public void setLayerId(Long layerId) {
+        this.layerId = layerId;
     }
 
     public static enum Action {
