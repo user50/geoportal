@@ -21,14 +21,14 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Long id;
 
-    @Column (name = "guid", nullable = false)
+    @Column (name = "guid", nullable = true)
     private Long guid;
 
     @Column (name = "user_id", nullable = false)
     private Long userId;
 
     @Column (name = "iKey", nullable = true)
-    private  String iKey;
+    private  Long iKey;
 
     @Column (name = "message", nullable = true)
     private String message;
@@ -42,7 +42,7 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     private Status status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column (name = "date", nullable = true)
+    @Column (name = "date", nullable = false)
     private Date date;
 
     @Column (name = "layer_id", nullable = false)
@@ -51,12 +51,15 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     public OperationStatus() {
     }
 
-    public OperationStatus(Long guid, Action action, Status status) {
-        this.guid = guid;
+    public OperationStatus(Long userId, Action action, Status status, Date date, Long layerId) {
+        this.userId = userId;
         this.action = action;
         this.status = status;
-        this.date = new Date();
+        this.date = date;
+        this.layerId = layerId;
     }
+
+
 
     public Long getId() {
         return id;
@@ -82,11 +85,11 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
         this.userId = userId;
     }
 
-    public String getiKey() {
+    public Long getiKey() {
         return iKey;
     }
 
-    public void setiKey(String iKey) {
+    public void setiKey(Long iKey) {
         this.iKey = iKey;
     }
 
