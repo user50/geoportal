@@ -162,6 +162,8 @@ public class GeoObjectsService {
         if (gisObject == null)
             throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");
 
+        new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
+
         gisObject.setName(params.getName());
 
         gisObject.setTheGeom(geometryBuilder.create(params));
