@@ -26,10 +26,10 @@
     <bean id="geoCoderFactory" class="org.w2fc.geoportal.ws.geocoder.YandexGeoCoderFactory"/>
     <bean id="geoCoder" class="org.w2fc.geoportal.ws.geocoder.YandexGeoCoder" factory-bean="geoCoderFactory" factory-method="create"/>
 
-    <aop:aspectj-autoproxy/>
+<!--    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-    <!-- Aspect -->
-    <!--<bean id="logAspect" class="org.w2fc.geoportal.ws.aspect.LoggingAspect" />-->
+    &lt;!&ndash; Aspect &ndash;&gt;
+    <bean id="logAspect" class="org.w2fc.geoportal.ws.aspect.LoggingAspect" factory-method="aspectOf"/>-->
 
     <!-- CXF -->
 	<!-- import resource="classpath:META-INF/cxf/cxf.xml"/-->

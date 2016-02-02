@@ -11,10 +11,13 @@ import java.util.HashSet;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestGeoObject")
-public class RequestGeoObject implements Serializable, GeometryParameter {
+public class RequestGeoObject implements Serializable {
 
     @XmlElement(name = "id")
     private Long id;
+
+    @XmlElement(name = "guid")
+    private Long guid;
 
     @XmlElement(name = "name", required=true)
     private String name;
@@ -46,7 +49,14 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
         this.id = id;
     }
 
-    @Override
+    public Long getGuid() {
+        return guid;
+    }
+
+    public void setGuid(Long guid) {
+        this.guid = guid;
+    }
+
     public String getName() {
         return name;
     }
@@ -63,7 +73,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
         this.pointsCoordinates = pointsCoordinates;
     }
 
-    @Override
     public Long getLayerId() {
         return layerId;
     }
@@ -72,7 +81,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
         this.layerId = layerId;
     }
 
-    @Override
     public HashSet<GeoObjectTag> getTags() {
         return tags;
     }
@@ -81,7 +89,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
         this.tags = tags;
     }
 
-    @Override
     public String getWkt() {
         return wkt;
     }
@@ -90,7 +97,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
         this.wkt = wkt;
     }
 
-    @Override
     public GeoObjectGeometryType getType() {
         return type;
     }
