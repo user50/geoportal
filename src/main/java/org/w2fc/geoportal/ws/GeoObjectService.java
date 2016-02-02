@@ -45,7 +45,7 @@ public class GeoObjectService {
 
     public Long createAndSaveObject(RequestGeoObject requestGeoObject){
         GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
 
         GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
 
@@ -53,7 +53,7 @@ public class GeoObjectService {
     }
 
     public Long createAndSaveObject(GeometryParameter geometryParameter){
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
         GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
 
         return save(geoObject);
@@ -63,13 +63,13 @@ public class GeoObjectService {
         checkExists(requestGeoObject.getId());
 
         GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
         updateGeoObject(requestGeoObject.getId(), geometryParameter, geometryBuilder);
     }
 
     public void updateObject(Long id, GeometryParameter geometryParameter){
         checkExists(id);
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder()).create(geometryParameter);
+        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
         updateGeoObject(id, geometryParameter, geometryBuilder);
     }
 

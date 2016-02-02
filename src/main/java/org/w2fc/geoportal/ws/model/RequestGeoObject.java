@@ -19,6 +19,9 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name = "name", required=true)
     private String name;
 
+    @XmlElement(name = "guid")
+    private String guid;
+
     @XmlElement(name = "type")
     private GeoObjectGeometryType type;
 

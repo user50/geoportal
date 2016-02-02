@@ -20,7 +20,7 @@ public class ReportAspect {
 
     final Logger logger = LoggerFactory.getLogger(ReportAspect.class);
 
-    private static final Long LAYER_ID = 1L;
+    private static final Long LAYER_ID = 1L; // todo getting layer
 
     private OperationStatusRepository repository;
     private GeoUserDao geoUserDao;
@@ -36,8 +36,8 @@ public class ReportAspect {
             returning = "id")
     public void afterCreateSuccess(JoinPoint joinPoint, Long id) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
-        OperationStatus actionStatus = new OperationStatus(getCurrentUserId(), OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
-        actionStatus.setGuid(requestGeoObject.getGuid());
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
+                                            OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
         actionStatus.setiKey(id);
 
         repository.save(actionStatus);
@@ -48,9 +48,9 @@ public class ReportAspect {
             throwing= "error")
     public void afterCreateFail(JoinPoint joinPoint, Throwable error) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
-        OperationStatus actionStatus = new OperationStatus(getCurrentUserId(), OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
+                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
         actionStatus.setMessage(error.getMessage());
-        actionStatus.setGuid(requestGeoObject.getGuid());
 
         repository.save(actionStatus);
     }
@@ -62,19 +62,19 @@ public class ReportAspect {
         try{
             joinPoint.proceed();
         } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(getCurrentUserId(), OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
+            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
+                    OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
             actionStatus.setMessage(e.getMessage());
-            actionStatus.setGuid(requestGeoObject.getGuid());
             actionStatus.setiKey(requestGeoObject.getId());
 
             repository.save(actionStatus);
             return;
         }
 
-        OperationStatus actionStatus = new OperationStatus(getCurrentUserId(), OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
+                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
         actionStatus.setUserId(getCurrentUserId());
         actionStatus.setGuid(requestGeoObject.getGuid());
-        actionStatus.setiKey(requestGeoObject.getId());
 
         repository.save(actionStatus);
     }
@@ -86,18 +86,16 @@ public class ReportAspect {
         try{
             joinPoint.proceed();
         } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
+            OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
             actionStatus.setMessage(e.getMessage());
             actionStatus.setUserId(getCurrentUserId());
-            actionStatus.setiKey(id);
 
             repository.save(actionStatus);
             return;
         }
 
-        OperationStatus actionStatus = new OperationStatus(getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
+        OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
         actionStatus.setUserId(getCurrentUserId());
-        actionStatus.setiKey(id);
 
         repository.save(actionStatus);
     }

@@ -14,7 +14,7 @@ import java.util.Date;
 )
 
 @Table(name = "OPERATION_STATUS")
-public class OperationStatus extends AbstractDomain<OperationStatus> implements Serializable{
+public class OperationStatus implements Serializable{
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -22,7 +22,7 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     private Long id;
 
     @Column (name = "guid", nullable = true)
-    private Long guid;
+    private String guid;
 
     @Column (name = "user_id", nullable = false)
     private Long userId;
@@ -51,7 +51,8 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
     public OperationStatus() {
     }
 
-    public OperationStatus(Long userId, Action action, Status status, Date date, Long layerId) {
+    public OperationStatus(String guid, Long userId, Action action, Status status, Date date, Long layerId) {
+        this.guid = guid;
         this.userId = userId;
         this.action = action;
         this.status = status;
@@ -59,7 +60,14 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
         this.layerId = layerId;
     }
 
-
+    public OperationStatus(Long iKey, Long userId, Action action, Status status, Date date, Long layerId) {
+        this.iKey = iKey;
+        this.userId = userId;
+        this.action = action;
+        this.status = status;
+        this.date = date;
+        this.layerId = layerId;
+    }
 
     public Long getId() {
         return id;
@@ -69,11 +77,11 @@ public class OperationStatus extends AbstractDomain<OperationStatus> implements 
         this.id = id;
     }
 
-    public Long getGuid() {
+    public String getGuid() {
         return guid;
     }
 
-    public void setGuid(Long guid) {
+    public void setGuid(String guid) {
         this.guid = guid;
     }
 
