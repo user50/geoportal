@@ -70,4 +70,8 @@ public class GeoObjectsService {
     {
         geoObjectService.updateObject(id, request);
     }
+
+    public List<String> getSpatialRefSystems(){
+       return geoObjectService.getSpatialRefSystems();
+    }
 }

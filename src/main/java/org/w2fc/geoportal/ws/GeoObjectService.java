@@ -11,6 +11,7 @@ import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
+import org.w2fc.geoportal.domain.ReferenceSystemProj;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
@@ -20,9 +21,7 @@ import org.w2fc.geoportal.ws.geometry.factory.ByTypeGeometryParameterFactory;
 import org.w2fc.geoportal.ws.model.GeometryParameter;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Yevhen
@@ -141,6 +140,16 @@ public class GeoObjectService {
         GeoObject geoObject = serviceRegistry.getGeoObjectDao().get(id);
         if (geoObject == null)
             throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
+    }
+
+    public List<String> getSpatialRefSystems(){
+        List<ReferenceSystemProj> list = serviceRegistry.getReferenceSystemProjDao().list();
+        List<String> refKeys = new ArrayList<String>();
+        for (ReferenceSystemProj systemProj : list) {
+            refKeys.add(systemProj.getKey());
+        }
+
+        return refKeys;
     }
     
 }
