@@ -25,6 +25,7 @@ public class RequestPointFactory implements GeometryParameterFactory {
         Long layerId = reqGeoObject.getLayerId();
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
+        String reKey = reqGeoObject.getRefKey();
 
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
         List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
@@ -34,6 +35,7 @@ public class RequestPointFactory implements GeometryParameterFactory {
         requestPoint.setWkt(wkt);
         requestPoint.setAddress(address);
         requestPoint.setTags(tags);
+        requestPoint.setRefKey(reKey);
 
         return requestPoint;
     }

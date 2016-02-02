@@ -21,6 +21,7 @@ public class MultiPolygonFactory implements GeometryParameterFactory {
         Long layerId = reqGeoObject.getLayerId();
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
+        String reKey = reqGeoObject.getRefKey();
 
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
 
@@ -29,6 +30,7 @@ public class MultiPolygonFactory implements GeometryParameterFactory {
         MultiPolygon multiPolygon = new MultiPolygon(name, layerId, polygons);
         multiPolygon.setTags(tags);
         multiPolygon.setWkt(wkt);
+        multiPolygon.setRefKey(reKey);
 
         return multiPolygon;
     }

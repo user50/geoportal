@@ -35,7 +35,7 @@ public class TransformCoordinate<T extends GeometryParameter> implements Geometr
 
         Geometry geometry = geometryBuilder.create(parameters);
 
-        if(parameters.getRefKey().equals("WGS84"))
+        if(parameters.getRefKey() == null || parameters.getRefKey().equals("WGS84"))
             return geometry;
 
         try {

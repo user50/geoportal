@@ -12,6 +12,6 @@ public class MultiLineStringFactory implements GeometryParameterFactory {
 
     @Override
     public GeometryParameter create() {
-        return null;
+        return null;//todo
     }
 }

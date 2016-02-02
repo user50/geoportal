@@ -11,6 +11,7 @@ import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
+import org.w2fc.geoportal.domain.ReferenceSystemProj;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
@@ -112,6 +113,15 @@ public class GeoObjectsService {
         serviceRegistry.getGeoObjectDao().remove(id);
     }
 
+    public List<String> getSpatialRefSystems(){
+        List<ReferenceSystemProj> list = serviceRegistry.getReferenceSystemProjDao().list();
+        List<String> refKeys = new ArrayList<String>();
+        for (ReferenceSystemProj systemProj : list) {
+            refKeys.add(systemProj.getKey());
+        }
+
+        return refKeys;
+    }
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
         GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());

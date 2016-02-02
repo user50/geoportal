@@ -43,7 +43,7 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name = "wkt")
     private String wkt;
 
-    @XmlElement(name = "wkt")
+    @XmlElement(name = "refKey")
     private String refKey;
 
     @Override

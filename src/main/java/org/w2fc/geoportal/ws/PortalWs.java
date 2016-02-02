@@ -129,6 +129,12 @@ public class PortalWs extends SpringBeanAutowiringSupport{
         portalWsService.deleteObjects(idList);
     }
 
+    @WebMethod
+    public List<String> getSpatialRefSystems(){
+        autowire();
+        return portalWsService.getSpatialRefSystems();
+    }
+
     private void  autowire(){
         if(null == portalWsService){
             processInjectionBasedOnCurrentContext(this);
