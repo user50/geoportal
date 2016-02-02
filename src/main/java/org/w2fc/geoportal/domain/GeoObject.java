@@ -51,7 +51,10 @@ public class GeoObject extends AbstractDomain<GeoObject>{
     @Column (name = "name", nullable = false)
     private String name;
 
-    
+    @Field
+    @Column (name = "guid", nullable = true)
+    private String guid;
+
     /*  GeoUser */
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED) 
     @OneToOne
@@ -112,6 +115,14 @@ public class GeoObject extends AbstractDomain<GeoObject>{
 
    	public Long getId() {
         return id;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public void setId(Long id) {
@@ -196,6 +207,11 @@ public class GeoObject extends AbstractDomain<GeoObject>{
 
     public void setTags(Set<GeoObjectTag> tags) {
         this.tags = tags;
+    }
+
+    public void addTag(GeoObjectTag tag)
+    {
+        this.tags.add(tag);
     }
 
     public GeoObjectProperties getGeoObjectProperties() {

@@ -45,4 +45,6 @@ public interface PortalWsService {
 	void updatePolygon(Long id, RequestPolygon requestPolygon);
 
 	public void delete(Long id);
+
+	public List<String> getSpatialRefSystems();
 }

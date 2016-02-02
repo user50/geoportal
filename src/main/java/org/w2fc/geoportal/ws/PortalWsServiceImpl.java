@@ -223,4 +223,9 @@ public class PortalWsServiceImpl implements PortalWsService {
 		geoObjectsService.deleteObjects(Arrays.asList(id));
 	}
 
+	@Override
+	public List<String> getSpatialRefSystems() {
+		return geoObjectsService.getSpatialRefSystems();
+	}
+
 }

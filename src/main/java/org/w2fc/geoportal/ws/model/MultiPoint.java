@@ -10,11 +10,13 @@ import java.util.Set;
 public class MultiPoint implements GeometryParameter {
 
     private String name;
+    private String guid;
     private GeoObjectGeometryType type;
     private PointCoordinates[] pointsCoordinates;
     private Long layerId;
     private Set<GeoObjectTag> tags;
     private String wkt;
+    private String spatialKey;
 
     public MultiPoint(String name, Long layerId, PointCoordinates[] pointsCoordinates) {
         this.name = name;
@@ -29,6 +31,15 @@ public class MultiPoint implements GeometryParameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     @Override
@@ -69,5 +80,14 @@ public class MultiPoint implements GeometryParameter {
     @Override
     public GeoObjectGeometryType getType() {
         return GeoObjectGeometryType.MULTIPOINT;
+    }
+
+    @Override
+    public String getSpatialKey() {
+        return spatialKey;
+    }
+
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }

@@ -91,6 +91,10 @@ public class GeoObjectFullAdapter extends GeoObjectUI {
 		   return layers;
 	   }
 
+	public String getGuid(){
+		return geoObject.getGuid();
+	}
+
 
 	@Override
 	public List<Map<String, String>> getTags() {

@@ -8,11 +8,13 @@ import java.util.Set;
 public class MultiPolygon implements GeometryParameter {
 
     private String name;
+    private String guid;
     private GeoObjectGeometryType type;
     private List<GeoPolygon> polygons;
     private Long layerId;
     private Set<GeoObjectTag> tags;
     private String wkt;
+    private String spatialKey;
 
     public MultiPolygon(String name, Long layerId, List<GeoPolygon> polygons) {
         this.name = name;
@@ -27,6 +29,15 @@ public class MultiPolygon implements GeometryParameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     @Override
@@ -71,5 +82,14 @@ public class MultiPolygon implements GeometryParameter {
 
     public void setWkt(String wkt) {
         this.wkt = wkt;
+    }
+
+    @Override
+    public String getSpatialKey() {
+        return spatialKey;
+    }
+
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }

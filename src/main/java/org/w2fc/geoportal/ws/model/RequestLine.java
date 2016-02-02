@@ -29,6 +29,8 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name = "name", required=true)
     private String name;
 
+    private String guid;
+
     @XmlElementWrapper(name = "points", required = true)
     @XmlElement(name = "point")
     private PointCoordinates[] pointsCoordinates;
@@ -42,6 +44,9 @@ public class RequestLine implements Serializable, GeometryParameter{
 
     @XmlElement(name = "wkt")
     private String wkt;
+
+    @XmlElement(name = "spatialKey")
+    private String spatialKey;
 
     @Override
     public String getWkt() {
@@ -58,6 +63,15 @@ public class RequestLine implements Serializable, GeometryParameter{
 
     public void setPointsCoordinates(PointCoordinates[] pointsCoordinates) {
         this.pointsCoordinates = pointsCoordinates;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public Long getLayerId() {
@@ -85,4 +99,12 @@ public class RequestLine implements Serializable, GeometryParameter{
         this.name = name;
     }
 
+    @Override
+    public String getSpatialKey() {
+        return spatialKey;
+    }
+
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
+    }
 }

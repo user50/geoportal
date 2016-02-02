@@ -11,13 +11,10 @@ import java.util.HashSet;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestGeoObject")
-public class RequestGeoObject implements Serializable {
+public class RequestGeoObject implements Serializable, GeometryParameter {
 
     @XmlElement(name = "id")
     private Long id;
-
-    @XmlElement(name = "guid")
-    private Long guid;
 
     @XmlElement(name = "name", required=true)
     private String name;
@@ -41,6 +38,9 @@ public class RequestGeoObject implements Serializable {
     @XmlElement(name = "address")
     private String address;
 
+    @XmlElement(name = "spatialKey")
+    private String spatialKey;
+
     public Long getId() {
         return id;
     }
@@ -49,20 +49,22 @@ public class RequestGeoObject implements Serializable {
         this.id = id;
     }
 
-    public Long getGuid() {
-        return guid;
-    }
-
-    public void setGuid(Long guid) {
-        this.guid = guid;
-    }
-
+    @Override
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public String getPointsCoordinates() {
@@ -73,6 +75,7 @@ public class RequestGeoObject implements Serializable {
         this.pointsCoordinates = pointsCoordinates;
     }
 
+    @Override
     public Long getLayerId() {
         return layerId;
     }
@@ -81,6 +84,7 @@ public class RequestGeoObject implements Serializable {
         this.layerId = layerId;
     }
 
+    @Override
     public HashSet<GeoObjectTag> getTags() {
         return tags;
     }
@@ -89,6 +93,7 @@ public class RequestGeoObject implements Serializable {
         this.tags = tags;
     }
 
+    @Override
     public String getWkt() {
         return wkt;
     }
@@ -97,6 +102,7 @@ public class RequestGeoObject implements Serializable {
         this.wkt = wkt;
     }
 
+    @Override
     public GeoObjectGeometryType getType() {
         return type;
     }
@@ -111,5 +117,14 @@ public class RequestGeoObject implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String getSpatialKey() {
+        return spatialKey;
+    }
+
+    public void setSpatialKey(String spatialKey) {
+        this.spatialKey = spatialKey;
     }
 }
