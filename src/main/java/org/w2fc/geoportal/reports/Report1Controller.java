@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
+import org.w2fc.geoportal.domain.OperationStatus;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 
 import com.lowagie.text.Chapter;
@@ -160,16 +161,9 @@ public class Report1Controller {
                 title1.setSpacingAfter(30);
                 title1.setAlignment("center");
 
-                Chapter chapter1 = new Chapter(title1, 1);
-                chapter1.setNumberDepth(0);
+                List<OperationStatus> operationStatuses = serviceRegistry.getOperationStatusRepository().list();
 
-                document.add(chapter1);
-            }
-
-            private PdfPCell getTableCell(String string, Font font){
-                PdfPCell c1 = new PdfPCell(new Phrase(string, font));
-                c1.setPaddingBottom(4f);
-                return c1;
+                new SOAPReportGenerator().fillDocument(document, operationStatuses);
             }
         });
 

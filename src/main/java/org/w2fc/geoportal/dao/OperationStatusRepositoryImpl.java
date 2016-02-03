@@ -6,6 +6,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.w2fc.geoportal.domain.OperationStatus;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author Yevhen
  */
@@ -33,5 +37,24 @@ public class OperationStatusRepositoryImpl implements OperationStatusRepository{
             session.close();
         }
         return id;
+    }
+
+    @Override
+    public List<OperationStatus> list() {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        List<OperationStatus> operationStatusList = new ArrayList<OperationStatus>();
+        try{
+            tx = session.beginTransaction();
+            operationStatusList = (List<OperationStatus>) session.createQuery("FROM operation_status").list();
+            tx.commit();
+        }catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+        return operationStatusList;
     }
 }

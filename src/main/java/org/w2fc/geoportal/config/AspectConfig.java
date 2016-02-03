@@ -22,11 +22,8 @@ import org.w2fc.geoportal.dao.OperationStatusRepositoryImpl;
 public class AspectConfig {
 
     @Bean
-    public ReportAspect loggingAspect(@Qualifier("sessionFactory") SessionFactory sessionFactoryy,
-                                        @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao){
-        OperationStatusRepository repository = new OperationStatusRepositoryImpl(sessionFactoryy);
-        ReportAspect reportAspect = new ReportAspect(repository, geoUserDao);
-        return reportAspect;
+    public OperationStatusRepository operationStatusRepository(@Qualifier("sessionFactory") SessionFactory sessionFactoryy){
+        return new OperationStatusRepositoryImpl(sessionFactoryy);
     }
 
     @Bean
@@ -36,11 +33,10 @@ public class AspectConfig {
     }
 
     @Bean
-    public CreateObjectReportService createObjectReportService(@Qualifier("sessionFactory") SessionFactory sessionFactoryy,
+    public CreateObjectReportService createObjectReportService(OperationStatusRepository operationStatusRepository,
                                                                @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
     {
-        OperationStatusRepository repository = new OperationStatusRepositoryImpl(sessionFactoryy);
-        return new CreateObjectReportService(repository, geoUserDao);
+        return new CreateObjectReportService(operationStatusRepository, geoUserDao);
     }
 
 

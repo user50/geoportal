@@ -29,7 +29,7 @@ public class SOAPReportGenerator {
 
     public Document fillDocument(Document document, List<OperationStatus> list) throws DocumentException, IOException {
 
-        Paragraph title = new Paragraph(Font.BOLD, "Отчет");
+        Paragraph title = new Paragraph(Font.BOLD, "Report");
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
@@ -40,18 +40,25 @@ public class SOAPReportGenerator {
     }
 
     private void addForRequest(Document document, OperationStatus operationStatus) throws DocumentException, IOException {
-        Paragraph paragraph = new Paragraph("Запрсо " + operationStatus.getAction().name() + " - " + format.format(operationStatus.getDate()));
-        paragraph.setSpacingBefore(50);
-        paragraph.setSpacingAfter(30);
+        Message message = objectMapper.readValue(operationStatus.getMessage(), Message.class);
+
+        Paragraph paragraph = new Paragraph("Request " + operationStatus.getAction().name() + " - " + format.format(operationStatus.getDate()) + " - layer : Test");
+        paragraph.setSpacingBefore(10);
+        paragraph.setSpacingAfter(5);
         paragraph.setAlignment(Element.ALIGN_LEFT);
         document.add(paragraph);
 
-        Message message = objectMapper.readValue(operationStatus.getMessage(), Message.class);
+        Paragraph paragraph1 = new Paragraph("Success " + message.getSuccessions().size() );
+        paragraph1.setSpacingBefore(5);
+        paragraph1.setSpacingAfter(10);
+        paragraph.setAlignment(Element.ALIGN_LEFT);
+        document.add(paragraph1);
 
         PdfPTable table = new PdfPTable(2);
         PdfPCell headGuid = new PdfPCell(new Paragraph("GUID"));
         headGuid.setHorizontalAlignment(Element.ALIGN_CENTER);
-        PdfPCell headMessage = new PdfPCell(new Paragraph("Причина ошибки"));
+        PdfPCell headMessage = new PdfPCell(new Paragraph("Message"));
+        headMessage.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(headGuid);
         table.addCell(headMessage);
 
