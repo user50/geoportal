@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w2fc.geoportal.dao.GeoObjectDao;
 import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.OperationStatusRepository;
 import org.w2fc.geoportal.domain.OperationStatus;
@@ -23,10 +24,12 @@ public class ReportAspect {
 
     private OperationStatusRepository repository;
     private GeoUserDao geoUserDao;
+    private GeoObjectDao geoObjectDao;
 
-    public ReportAspect(OperationStatusRepository repository, GeoUserDao geoUserDao) {
+    public ReportAspect(OperationStatusRepository repository, GeoUserDao geoUserDao, GeoObjectDao geoObjectDao) {
         this.repository = repository;
         this.geoUserDao = geoUserDao;
+        this.geoObjectDao = geoObjectDao;
     }
 
     // create actions
@@ -36,7 +39,7 @@ public class ReportAspect {
     public void afterCreateSuccess(JoinPoint joinPoint, Long id) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
-                                            OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
+                                            OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
         actionStatus.setiKey(id);
 
         repository.save(actionStatus);
@@ -48,7 +51,7 @@ public class ReportAspect {
     public void afterCreateFail(JoinPoint joinPoint, Throwable error) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
+                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId());
         actionStatus.setMessage(error.getMessage());
 
         repository.save(actionStatus);
@@ -62,7 +65,7 @@ public class ReportAspect {
             joinPoint.proceed();
         } catch (Exception e){
             OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
-                    OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
+                    OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId());
             actionStatus.setMessage(e.getMessage());
             actionStatus.setiKey(requestGeoObject.getId());
 
@@ -71,7 +74,7 @@ public class ReportAspect {
         }
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
+                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
         actionStatus.setUserId(getCurrentUserId());
         actionStatus.setGuid(requestGeoObject.getGuid());
 
@@ -81,11 +84,12 @@ public class ReportAspect {
     @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
     public void aroundDelete(ProceedingJoinPoint joinPoint) throws Throwable {
         Long id = (Long) joinPoint.getArgs()[0];
+        Long layerId = getLayerId(id);
 
         try{
             joinPoint.proceed();
         } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), LAYER_ID);
+            OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId);
             actionStatus.setMessage(e.getMessage());
             actionStatus.setUserId(getCurrentUserId());
 
@@ -93,7 +97,7 @@ public class ReportAspect {
             return;
         }
 
-        OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), LAYER_ID);
+        OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerId);
         actionStatus.setUserId(getCurrentUserId());
 
         repository.save(actionStatus);
@@ -101,5 +105,10 @@ public class ReportAspect {
 
     public Long getCurrentUserId() {
         return geoUserDao.getCurrentGeoUser().getId();
+    }
+
+    private Long getLayerId(Long objectId)
+    {
+        return geoObjectDao.get(objectId).getGeoLayers().iterator().next().getId();
     }
 }
