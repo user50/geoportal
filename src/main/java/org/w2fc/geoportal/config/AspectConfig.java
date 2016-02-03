@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.OperationStatusRepository;
 import org.w2fc.geoportal.ws.aspect.CreateObjectReportService;
@@ -35,7 +36,6 @@ public class AspectConfig {
     }
 
     @Bean
-    @Scope("request")
     public CreateObjectReportService createObjectReportService(@Qualifier("sessionFactory") SessionFactory sessionFactoryy,
                                                                @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
     {

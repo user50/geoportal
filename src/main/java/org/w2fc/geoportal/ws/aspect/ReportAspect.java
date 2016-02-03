@@ -15,7 +15,6 @@ import java.util.Date;
 /**
  * @author Yevhen
  */
-@Aspect
 public class ReportAspect {
 
     final Logger logger = LoggerFactory.getLogger(ReportAspect.class);
