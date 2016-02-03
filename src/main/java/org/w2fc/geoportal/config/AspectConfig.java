@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Scope;
 import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.OperationStatusRepository;
+import org.w2fc.geoportal.ws.aspect.CreateObjectReportService;
+import org.w2fc.geoportal.ws.aspect.CreateObjectsAspect;
 import org.w2fc.geoportal.ws.aspect.ReportAspect;
 import org.w2fc.geoportal.dao.OperationStatusRepositoryImpl;
 
@@ -24,4 +27,21 @@ public class AspectConfig {
         ReportAspect reportAspect = new ReportAspect(repository, geoUserDao);
         return reportAspect;
     }
+
+    @Bean
+    public CreateObjectsAspect createObjectsAspect(CreateObjectReportService reportService)
+    {
+        return new CreateObjectsAspect(reportService);
+    }
+
+    @Bean
+    @Scope("request")
+    public CreateObjectReportService createObjectReportService(@Qualifier("sessionFactory") SessionFactory sessionFactoryy,
+                                                               @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
+    {
+        OperationStatusRepository repository = new OperationStatusRepositoryImpl(sessionFactoryy);
+        return new CreateObjectReportService(repository, geoUserDao);
+    }
+
+
 }
