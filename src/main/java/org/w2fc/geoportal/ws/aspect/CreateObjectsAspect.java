@@ -30,7 +30,7 @@ public class CreateObjectsAspect {
     public void afterCreateObjectFail(JoinPoint joinPoint, Throwable error) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
-        reportService.collectCreationFailedObject(requestGeoObject.getGuid(), error.getMessage());
+        reportService.collectFailedCreatedObject(requestGeoObject.getGuid(), error.getMessage());
     }
 
     @AfterReturning(

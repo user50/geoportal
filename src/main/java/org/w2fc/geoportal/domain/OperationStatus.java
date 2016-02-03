@@ -69,6 +69,17 @@ public class OperationStatus implements Serializable{
         this.layerId = layerId;
     }
 
+    public OperationStatus(String guid, Long userId, Action action, Status status, Date date, Long layerId, String message) {
+        this.guid = guid;
+        this.userId = userId;
+        this.action = action;
+        this.status = status;
+        this.date = date;
+        this.layerId = layerId;
+        this.message = message;
+    }
+
+
     public Long getId() {
         return id;
     }
