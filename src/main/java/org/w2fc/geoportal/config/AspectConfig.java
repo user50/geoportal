@@ -35,7 +35,6 @@ public class AspectConfig {
     }
 
     @Bean
-    @Scope("request")
     public CreateObjectReportService createObjectReportService(@Qualifier("sessionFactory") SessionFactory sessionFactoryy,
                                                                @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
     {

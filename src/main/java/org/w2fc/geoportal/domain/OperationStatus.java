@@ -30,7 +30,7 @@ public class OperationStatus implements Serializable{
     @Column (name = "iKey", nullable = true)
     private  Long iKey;
 
-    @Column (name = "message", nullable = true)
+    @Column (name = "message", nullable = true, columnDefinition="TEXT")
     private String message;
 
     @Column (name = "action", nullable = false)
