@@ -79,6 +79,9 @@ public class GeoObjectService {
 
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
+
+        new CreateGeoObjectValidator().validate(params);
+
         GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());
 
         Geometry geometry = geometryBuilder.create(params);
