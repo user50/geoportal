@@ -23,7 +23,7 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     private String guid;
 
     @XmlElementWrapper(name = "points", required = true)
-    private PointCoordinates[] pointCoordinateses;
+    private PointCoordinates[] pointsCoordinates;
 
     @XmlElementWrapper(name = "polygonHoles", required = true)
     private LineCoordinates[] polygonHoles;
@@ -44,10 +44,10 @@ public class RequestPolygon implements Serializable, GeometryParameter{
     public RequestPolygon() {
     }
 
-    public RequestPolygon(String name, Long layerId, PointCoordinates[] pointCoordinateses) {
+    public RequestPolygon(String name, Long layerId, PointCoordinates[] pointsCoordinates) {
         this.name = name;
         this.layerId = layerId;
-        this.pointCoordinateses = pointCoordinateses;
+        this.pointsCoordinates = pointsCoordinates;
     }
 
     @Override
@@ -59,12 +59,12 @@ public class RequestPolygon implements Serializable, GeometryParameter{
         this.wkt = wkt;
     }
 
-    public PointCoordinates[] getPointCoordinateses() {
-        return pointCoordinateses;
+    public PointCoordinates[] getPointsCoordinates() {
+        return pointsCoordinates;
     }
 
-    public void setPointCoordinateses(PointCoordinates[] pointCoordinateses) {
-        this.pointCoordinateses = pointCoordinateses;
+    public void setPointsCoordinates(PointCoordinates[] pointsCoordinates) {
+        this.pointsCoordinates = pointsCoordinates;
     }
 
     public LineCoordinates[] getPolygonHoles() {

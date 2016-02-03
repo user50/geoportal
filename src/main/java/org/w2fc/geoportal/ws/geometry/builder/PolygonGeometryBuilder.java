@@ -12,7 +12,7 @@ public class PolygonGeometryBuilder implements GeometryBuilder<RequestPolygon> {
     public Geometry create(RequestPolygon parameters) {
         GeometryFactory factory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);//SRID
 
-        LinearRing polygon = buildLinearRing(parameters.getPointCoordinateses(), factory);
+        LinearRing polygon = buildLinearRing(parameters.getPointsCoordinates(), factory);
         LinearRing[] holes = buildHoles(parameters.getPolygonHoles(), factory);
 
         return factory.createPolygon(polygon, holes);
