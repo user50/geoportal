@@ -4,6 +4,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 
 @Aspect
@@ -40,7 +41,9 @@ public class CreateObjectsAspect {
         reportService.saveReport();
     }
 
-
-
+    @Before("execution(* org.w2fc.geoportal.ws.GeoObjectsService.createObjects(..)))")
+    public void beforeCreateObjectsSuccess() {
+        reportService.init();
+    }
 
 }
