@@ -27,9 +27,10 @@ public class ReportAspect {
     private GeoUserDao geoUserDao;
     private GeoObjectDao geoObjectDao;
 
-    public ReportAspect(OperationStatusRepository repository, GeoUserDao geoUserDao) {
+    public ReportAspect(OperationStatusRepository repository, GeoUserDao geoUserDao, GeoObjectDao geoObjectDao) {
         this.repository = repository;
         this.geoUserDao = geoUserDao;
+        this.geoObjectDao = geoObjectDao;
     }
 
     // create actions
