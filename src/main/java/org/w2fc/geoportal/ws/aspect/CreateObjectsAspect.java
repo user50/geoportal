@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 
-@Aspect
 public class CreateObjectsAspect {
 
     CreateObjectReportService reportService;

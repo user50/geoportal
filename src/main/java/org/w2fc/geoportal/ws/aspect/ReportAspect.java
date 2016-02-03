@@ -16,6 +16,7 @@ import java.util.Date;
 /**
  * @author Yevhen
  */
+@Aspect
 public class ReportAspect {
 
     final Logger logger = LoggerFactory.getLogger(ReportAspect.class);
@@ -33,26 +34,27 @@ public class ReportAspect {
     }
 
     // create actions
-    @AfterReturning(
-            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))",
-            returning = "id")
-    public void afterCreateSuccess(JoinPoint joinPoint, Long id) {
-        RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
-        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
-                                            OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
-        actionStatus.setiKey(id);
 
-        repository.save(actionStatus);
-    }
-
-    @AfterThrowing(
-            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.RequestGeoObject))",
-            throwing= "error")
-    public void afterCreateFail(JoinPoint joinPoint, Throwable error) {
+    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))")
+    public void aroundCreate(ProceedingJoinPoint joinPoint) throws Throwable {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
-        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId());
-        actionStatus.setMessage(error.getMessage());
+
+        try{
+            joinPoint.proceed();
+        } catch (Exception e){
+            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
+                    OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId());
+            actionStatus.setMessage(e.getMessage());
+            actionStatus.setiKey(requestGeoObject.getId());
+
+            repository.save(actionStatus);
+            return;
+        }
+
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
+                OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
+        actionStatus.setUserId(getCurrentUserId());
+        actionStatus.setGuid(requestGeoObject.getGuid());
 
         repository.save(actionStatus);
     }

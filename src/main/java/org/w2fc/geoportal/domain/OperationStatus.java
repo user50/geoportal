@@ -29,10 +29,10 @@ public class OperationStatus implements Serializable{
     @Column (name = "user_id", nullable = false)
     private Long userId;
 
-    @Column (name = "iKey", nullable = true)
+    @Column (name = "iKey")
     private  Long iKey;
 
-    @Column (name = "message", nullable = true, columnDefinition="TEXT")
+    @Column (name = "message", nullable = true)
     private String message;
 
     @Column (name = "action", nullable = false)
@@ -47,7 +47,7 @@ public class OperationStatus implements Serializable{
     @Column (name = "date", nullable = false)
     private Date date;
 
-    @Column (name = "layer_id", nullable = false)
+    @Column (name = "layer_id")
     private Long layerId;
 
     public OperationStatus() {

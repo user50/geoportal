@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.w2fc.geoportal.dao.GeoObjectDao;
 import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.OperationStatusRepository;
 import org.w2fc.geoportal.ws.aspect.CreateObjectReportService;
@@ -25,19 +25,27 @@ public class AspectConfig {
     public OperationStatusRepository operationStatusRepository(@Qualifier("sessionFactory") SessionFactory sessionFactoryy){
         return new OperationStatusRepositoryImpl(sessionFactoryy);
     }
-
     @Bean
-    public CreateObjectsAspect createObjectsAspect(CreateObjectReportService reportService)
-    {
-        return new CreateObjectsAspect(reportService);
+    public ReportAspect loggingAspect(OperationStatusRepository repository,
+                                      @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao,
+                                      GeoObjectDao geoObjectDao){
+        ReportAspect reportAspect = new ReportAspect(repository, geoUserDao,geoObjectDao);
+        return reportAspect;
     }
 
-    @Bean
-    public CreateObjectReportService createObjectReportService(OperationStatusRepository operationStatusRepository,
-                                                               @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
-    {
-        return new CreateObjectReportService(operationStatusRepository, geoUserDao);
-    }
+//    @Bean
+//    public CreateObjectsAspect createObjectsAspect(CreateObjectReportService reportService)
+//    {
+//        return new CreateObjectsAspect(reportService);
+//    }
+//
+//    @Bean
+//    public CreateObjectReportService createObjectReportService(@Qualifier("sessionFactory") SessionFactory sessionFactoryy,
+//                                                               @Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
+//    {
+//        OperationStatusRepository repository = new OperationStatusRepositoryImpl(sessionFactoryy);
+//        return new CreateObjectReportService(repository, geoUserDao);
+//    }
 
 
 }

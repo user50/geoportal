@@ -46,7 +46,7 @@ public class OperationStatusRepositoryImpl implements OperationStatusRepository{
         List<OperationStatus> operationStatusList = new ArrayList<OperationStatus>();
         try{
             tx = session.beginTransaction();
-            operationStatusList = (List<OperationStatus>) session.createQuery("FROM operation_status").list();
+            operationStatusList = (List<OperationStatus>) session.createQuery("FROM OPERATION_STATUS").list();
             tx.commit();
         }catch (HibernateException e) {
             if (tx!=null) tx.rollback();
