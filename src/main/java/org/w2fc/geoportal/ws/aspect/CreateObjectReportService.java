@@ -19,25 +19,31 @@ public class CreateObjectReportService {
     private OperationStatusRepository repository;
     private GeoUserDao geoUserDao;
 
-    List<String> successions = new ArrayList<String>();
-    Map<String,String> fails = new HashMap<String, String>();
+    ThreadLocal<List<String>> successions = new ThreadLocal<List<String>>();
+    ThreadLocal<Map<String,String>> fails = new ThreadLocal<Map<String, String>>();
 
     public CreateObjectReportService(OperationStatusRepository repository, GeoUserDao geoUserDao) {
         this.repository = repository;
         this.geoUserDao = geoUserDao;
     }
 
+    public void init() {
+        successions.set(new ArrayList<String>());
+        fails.set(new HashMap<String, String>());
+    }
+
     public void collectSuccessCreatedObject(String guid) {
-        successions.add(guid);
+
+        successions.get().add(guid);
     }
 
     public void collectFailedCreatedObject(String requestGeoObjectGuid, String errorMessage) {
-        fails.put(requestGeoObjectGuid, errorMessage);
+        fails.get().put(requestGeoObjectGuid, errorMessage);
     }
 
     public void saveReport() {
         Long userId = geoUserDao.getCurrentGeoUser().getId();
-        OperationStatus.Status status = fails.isEmpty() ? OperationStatus.Status.SUCCESS : OperationStatus.Status.FAILURE;
+        OperationStatus.Status status = fails.get().isEmpty() ? OperationStatus.Status.SUCCESS : OperationStatus.Status.FAILURE;
         try {
             repository.save(new OperationStatus(null, userId, OperationStatus.Action.CREATE, status, new Date(), LAYER_ID, generateMessage() ));
         } catch (JsonProcessingException e) {
@@ -46,6 +52,8 @@ public class CreateObjectReportService {
     }
 
     private String generateMessage() throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(new Message(successions, fails));
+        return new ObjectMapper().writeValueAsString(new Message(successions.get(), fails.get()));
     }
+
+
 }
