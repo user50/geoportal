@@ -141,6 +141,11 @@ public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> impleme
 	}
 
 	@Override
+	public GeoUser get(Long id) {
+		return (GeoUser) getCurrentSession().createQuery("from GeoUser where id=:id").setLong("id", id).uniqueResult();
+	}
+
+	@Override
 	public GeoUser getByToken(String token) {
 		return (GeoUser) sessionFactory.getCurrentSession().createQuery("from GeoUser where enabled=true and token=:token")
 				.setString("token", token).uniqueResult();

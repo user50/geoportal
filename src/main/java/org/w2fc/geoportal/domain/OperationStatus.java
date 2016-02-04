@@ -47,7 +47,7 @@ public class OperationStatus implements Serializable{
     @Column (name = "date", nullable = false)
     private Date date;
 
-    @Column (name = "layer_id")
+    @Column (name = "layer_id", nullable = true)
     private Long layerId;
 
     public OperationStatus() {

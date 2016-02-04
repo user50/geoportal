@@ -1,22 +1,15 @@
 package org.w2fc.geoportal.reports;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfCell;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+import org.w2fc.geoportal.domain.GeoUser;
 import org.w2fc.geoportal.domain.OperationStatus;
 import org.w2fc.geoportal.ws.aspect.Message;
 
-import java.awt.*;
+import java.awt.Font;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,22 +21,25 @@ public class SOAPReportGenerator {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public Document fillDocument(Document document, List<OperationStatus> actionStatusList) throws DocumentException, IOException {
+    public Document fillDocument(Document document, List<OperationStatus> actionStatusList, GeoUser geoUser, BaseFont baseFont) throws DocumentException, IOException {
 
-        Paragraph title = new Paragraph(Font.BOLD, "Report");
+
+        Paragraph title = new Paragraph("Отчет для  " + geoUser.getLogin(),new com.lowagie.text.Font(baseFont, 10));
+        title.setSpacingBefore(20);
+        title.setSpacingAfter(10);
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
-        Paragraph paragraph = new Paragraph("Success operations");
-        paragraph.setSpacingBefore(50);
-        paragraph.setSpacingAfter(30);
+        Paragraph paragraph = new Paragraph("Успешные операции", new com.lowagie.text.Font(baseFont, 10));
+        paragraph.setSpacingBefore(10);
+        paragraph.setSpacingAfter(10);
         paragraph.setAlignment(Element.ALIGN_CENTER);
         document.add(paragraph);
 
         PdfPTable table = new PdfPTable(2); // 2 columns.
-        PdfPCell head1 = new PdfPCell(new Paragraph("Action"));
+        PdfPCell head1 = new PdfPCell(new Paragraph("Операция", new com.lowagie.text.Font(baseFont, 10)));
         head1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        PdfPCell head2 = new PdfPCell(new Paragraph("Number of success"));
+        PdfPCell head2 = new PdfPCell(new Paragraph("Кол-во", new com.lowagie.text.Font(baseFont, 10)));
         head2.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(head1);
         table.addCell(head2);
@@ -56,31 +52,39 @@ public class SOAPReportGenerator {
         }
         document.add(table);
 
-        paragraph = new Paragraph("Failure operations");
-        paragraph.setSpacingBefore(50);
-        paragraph.setSpacingAfter(30);
+        paragraph = new Paragraph("Неуспешние операции", new com.lowagie.text.Font(baseFont, 10));
+        paragraph.setSpacingBefore(10);
+        paragraph.setSpacingAfter(10);
         paragraph.setAlignment(Element.ALIGN_CENTER);
         document.add(paragraph);
 
-        PdfPTable table2 = new PdfPTable(4);
-        head1 = new PdfPCell(new Paragraph("geoObjectId"));
+        PdfPTable table2 = new PdfPTable(5);
+        head1 = new PdfPCell(new Paragraph("GUID"));
         head1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        head2 = new PdfPCell(new Paragraph("Action"));
+        PdfPCell layerCell = new PdfPCell(new Paragraph("Слой", new com.lowagie.text.Font(baseFont, 10)));
+        layerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        head2 = new PdfPCell(new Paragraph("Операция", new com.lowagie.text.Font(baseFont, 10)));
         head2.setHorizontalAlignment(Element.ALIGN_CENTER);
-        PdfPCell head3 = new PdfPCell(new Paragraph("Message"));
-        PdfPCell head4 = new PdfPCell(new Paragraph("Date"));
+        PdfPCell head3 = new PdfPCell(new Paragraph("Причина", new com.lowagie.text.Font(baseFont, 10)));
+        PdfPCell head4 = new PdfPCell(new Paragraph("Дата", new com.lowagie.text.Font(baseFont, 10)));
         table2.addCell(head1);
+        table2.addCell(layerCell);
         table2.addCell(head2);
         table2.addCell(head3);
         table2.addCell(head4);
 
         for(OperationStatus actionStatus : actionStatusList){
             if(actionStatus.getStatus()== OperationStatus.Status.FAILURE){
-                PdfPCell id = new PdfPCell(new Paragraph(actionStatus.getGuid().toString()));
+                PdfPCell id = new PdfPCell(new Paragraph(actionStatus.getGuid()));
                 PdfPCell action = new PdfPCell(new Paragraph(actionStatus.getAction().toString()));
                 PdfPCell message = new PdfPCell(new Paragraph(actionStatus.getMessage()));
                 PdfPCell date = new PdfPCell(new Paragraph(formatter.format(actionStatus.getDate())));
                 table2.addCell(id);
+                if (actionStatus.getLayerId() != null) {
+                    PdfPCell layer = new PdfPCell(new Paragraph(actionStatus.getLayerId().toString()));
+                    table2.addCell(layer);
+                } else
+                 table2.addCell(new PdfPCell(new Paragraph("#")));
                 table2.addCell(action);
                 table2.addCell(message);
                 table2.addCell(date);

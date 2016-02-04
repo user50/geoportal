@@ -42,7 +42,7 @@ public class ReportAspect {
         try{
             joinPoint.proceed();
         } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
+            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
                     OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId());
             actionStatus.setMessage(e.getMessage());
             actionStatus.setiKey(requestGeoObject.getId());
@@ -51,10 +51,10 @@ public class ReportAspect {
             return;
         }
 
-        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
                 OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
         actionStatus.setUserId(getCurrentUserId());
-        actionStatus.setGuid(requestGeoObject.getGuid());
+        actionStatus.setiKey(requestGeoObject.getId());
 
         repository.save(actionStatus);
     }
@@ -86,12 +86,11 @@ public class ReportAspect {
     @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
     public void aroundDelete(ProceedingJoinPoint joinPoint) throws Throwable {
         Long id = (Long) joinPoint.getArgs()[0];
-        Long layerId = getLayerId(id);
 
         try{
             joinPoint.proceed();
         } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId);
+            OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), null);
             actionStatus.setMessage(e.getMessage());
             actionStatus.setUserId(getCurrentUserId());
 
@@ -99,6 +98,7 @@ public class ReportAspect {
             return;
         }
 
+        Long layerId = getLayerId(id);
         OperationStatus actionStatus = new OperationStatus(id, getCurrentUserId(), OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerId);
         actionStatus.setUserId(getCurrentUserId());
 
