@@ -29,7 +29,7 @@ public class OperationStatus implements Serializable{
     @Column (name = "user_id", nullable = false)
     private Long userId;
 
-    @Column (name = "iKey")
+    @Column (name = "iKey",nullable = true)
     private  Long iKey;
 
     @Column (name = "message", nullable = true)
