@@ -1,11 +1,18 @@
 package org.w2fc.geoportal.reports;
 
+import java.awt.*;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,15 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
+import org.w2fc.geoportal.domain.GeoUser;
+import org.w2fc.geoportal.domain.OperationStatus;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 
-import com.lowagie.text.Chapter;
-import com.lowagie.text.Document;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Section;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
@@ -136,5 +138,52 @@ public class Report1Controller {
         
         return "SimplePDFView";
     }
+
+    @RequestMapping(value = "/integrational-service.pdf")
+    public String pdfReport(@RequestParam(required = false) final List<Long> ids, Model model) {
+
+        model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
+
+            @Override
+            public void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
+                                         HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+                String appRoot = request.getSession().getServletContext().getRealPath("/");
+
+                BaseFont baseFont = BaseFont.createFont(appRoot + "/WEB-INF/jasper/fonts/arial.ttf",
+                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                BaseFont baseBoldFont = BaseFont.createFont(appRoot + "/WEB-INF/jasper/fonts/arialbd.ttf",
+                        BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                Font font12 = new Font(baseFont, 12);
+
+                Paragraph title1 = new Paragraph(
+                        "Отчет о результатах использования \n интеграционного сервиса",
+                        new Font(baseBoldFont, 20));
+                title1.setSpacingAfter(30);
+                title1.setAlignment("center");
+
+                document.add(title1);
+
+                List<OperationStatus> operationStatuses = serviceRegistry.getOperationStatusRepository().list();
+
+                Set<Long> usersIds = new HashSet<Long>();
+                for (OperationStatus operationStatuse : operationStatuses) {
+                    usersIds.add(operationStatuse.getUserId());
+                }
+
+                Set<GeoUser> users = new HashSet<GeoUser>();
+                for (Long usersId : usersIds) {
+                    users.add(serviceRegistry.getUserDao().get(usersId));
+                }
+
+                for (GeoUser user : users) {
+                    new SOAPReportGenerator().fillDocument(document, operationStatuses, user, baseFont);
+                }
+            }
+        });
+
+        return "SimplePDFView";
+    }
+
 
 }

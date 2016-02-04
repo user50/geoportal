@@ -124,6 +124,9 @@
 	<div class="bottom-pane">
 		<button id="reset_all">Очистить</button>
         <button id="show_report">Отчет</button>
+		<c:if test="${admin}">
+				<button id="show_report_is">Отчет по ИС</button>
+		</c:if>
 	</div>
 	</div>
 	

@@ -5,17 +5,7 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.w2fc.geoportal.dao.AddnsPopupTemplateDao;
-import org.w2fc.geoportal.dao.AddnsRatingDao;
-import org.w2fc.geoportal.dao.GeoACLDao;
-import org.w2fc.geoportal.dao.GeoLayerDao;
-import org.w2fc.geoportal.dao.GeoLayerTypeDao;
-import org.w2fc.geoportal.dao.GeoObjectDao;
-import org.w2fc.geoportal.dao.GeoObjectPropertiesDao;
-import org.w2fc.geoportal.dao.GeoSettingsDao;
-import org.w2fc.geoportal.dao.GeoUserDao;
-import org.w2fc.geoportal.dao.GeoUserRoleDao;
-import org.w2fc.geoportal.dao.ReferenceSystemProjDao;
+import org.w2fc.geoportal.dao.*;
 import org.w2fc.geoportal.user.CustomJdbcUserDetailsManager;
 import org.w2fc.geoportal.wms.WMSService;
 import org.w2fc.geoportal.ws.geocoder.GeoCoder;
@@ -70,6 +60,8 @@ public class ServiceRegistry {
     @Autowired
     private GeoCoder geoCoder;
 
+    @Autowired
+    private OperationStatusRepository operationStatusRepository;
     //==========================================
     
     public GeoLayerDao getLayerDao() {
@@ -139,5 +131,13 @@ public class ServiceRegistry {
 
     public GeoCoder getGeoCoder() {
         return geoCoder;
+    }
+
+    public OperationStatusRepository getOperationStatusRepository() {
+        return operationStatusRepository;
+    }
+
+    public void setOperationStatusRepository(OperationStatusRepository operationStatusRepository) {
+        this.operationStatusRepository = operationStatusRepository;
     }
 }

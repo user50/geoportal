@@ -1,10 +1,6 @@
 package org.w2fc.geoportal.ws;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,7 +220,7 @@ public class PortalWsServiceImpl implements PortalWsService {
 	@Override
 	@Transactional
 	public void delete(Long id) {
-		geoObjectsService.delete(id);
+		geoObjectsService.deleteObjects(Arrays.asList(id));
 	}
 
 	@Override
