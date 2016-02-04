@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.w2fc.geoportal.dao.GeoObjectDao;
 import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.OperationStatusRepository;
+import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.OperationStatus;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 
@@ -111,6 +112,11 @@ public class ReportAspect {
 
     private Long getLayerId(Long objectId)
     {
-        return geoObjectDao.get(objectId).getGeoLayers().iterator().next().getId();
+        GeoObject geoObject = geoObjectDao.get(objectId);
+
+        if (geoObject == null)
+            return null;
+
+        return geoObject.getGeoLayers().iterator().next().getId();
     }
 }
