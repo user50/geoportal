@@ -1,5 +1,6 @@
 package org.w2fc.geoportal.ws;
 
+import com.sun.javaws.exceptions.MissingFieldException;
 import com.vividsolutions.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.w2fc.geoportal.domain.ReferenceSystemProj;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
+import org.w2fc.geoportal.ws.exception.MissingParameterException;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilderFactory;
 import org.w2fc.geoportal.ws.geometry.factory.ByTypeGeometryParameterFactory;
@@ -120,11 +122,26 @@ public class GeoObjectService {
         if (gisObject == null)
             throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");
 
-        gisObject.setName(params.getName());
+        updateObjectLayer(gisObject, params.getLayerId());
 
+        gisObject.setName(params.getName());
+        new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
         gisObject.setTheGeom(geometryBuilder.create(params));
 
         serviceRegistry.getGeoObjectDao().update(gisObject);
+    }
+
+    private void updateObjectLayer(GeoObject gisObject, Long layerId) {
+        for (GeoLayer geoLayer : gisObject.getGeoLayers())
+            if (geoLayer.getId().equals(layerId))
+                return;
+
+        GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
+
+        if (layer == null)
+            throw new MissingParameterException("Geo layer with id "+layerId +" does not exist");
+
+        gisObject.setGeoLayers(new HashSet<GeoLayer>(Arrays.asList(layer)));
     }
 
     private void checkArea(GeoObject gisObject) {
