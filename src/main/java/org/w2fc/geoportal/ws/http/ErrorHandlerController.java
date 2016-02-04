@@ -37,4 +37,12 @@ public class ErrorHandlerController
         response.getWriter().flush();
         response.getWriter().close();
     }
+
+    @ExceptionHandler(value = MissingParameterException.class)
+    public void missingParameterException(HttpServletResponse response, InvalidGeometryException e) throws IOException {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write(e.getMessage());
+        response.getWriter().flush();
+        response.getWriter().close();
+    }
 }

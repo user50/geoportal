@@ -67,20 +67,23 @@ public class GeoObjectsController {
 
     @RequestMapping(value = "/points/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public void updatePoint(@PathVariable Long id, @RequestBody RequestPoint requestPoint){
+    public Long updatePoint(@PathVariable Long id, @RequestBody RequestPoint requestPoint){
         portalWsService.updatePoint(id, requestPoint);
+        return id;
     }
 
     @RequestMapping(value = "/lines/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public void updateLine(@PathVariable Long id, @RequestBody RequestLine requestLine){
+    public Long updateLine(@PathVariable Long id, @RequestBody RequestLine requestLine){
         portalWsService.updateLine(id, requestLine);
+        return id;
     }
 
     @RequestMapping(value = "/polygons/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public void updatePolygon(@PathVariable Long id, @RequestBody RequestPolygon requestPolygon){
+    public Long updatePolygon(@PathVariable Long id, @RequestBody RequestPolygon requestPolygon){
         portalWsService.updatePolygon(id, requestPolygon);
+        return id;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
