@@ -132,6 +132,9 @@ public class GeoObjectService {
     }
 
     private void updateObjectLayer(GeoObject gisObject, Long layerId) {
+        if (layerId == null)
+            return;
+
         for (GeoLayer geoLayer : gisObject.getGeoLayers())
             if (geoLayer.getId().equals(layerId))
                 return;
