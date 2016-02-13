@@ -1,28 +1,36 @@
 package org.w2fc.geoportal.ws;
 
+import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.ws.WebServiceContext;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 
 @Service
 @WebService(serviceName="PortalWs")
-public class PortalWs extends SpringBeanAutowiringSupport{
+public class PortalWs extends SpringBeanAutowiringSupport {
     
     @Autowired
     private PortalWsService portalWsService;
+
+    @Autowired
+    private  BasicAuthenticator basicAuthenticator;
+
+    @Resource
+    private WebServiceContext webServiceContext;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -105,20 +113,26 @@ public class PortalWs extends SpringBeanAutowiringSupport{
     }
 
     @WebMethod
-    public void createObjects(List<RequestGeoObject> rp){
+    public String createObjects(List<RequestGeoObject> rp){
         autowire();
-        portalWsService.createObjects(rp);
+        basicAuthenticator.doAuthentication(webServiceContext);
+
+        return portalWsService.createObjects(rp);
     }
 
     @WebMethod
-    public void updateObjects(List<RequestGeoObject> rp){
+    public String updateObjects(List<RequestGeoObject> rp){
         autowire();
-        portalWsService.updateObjects(rp);
+        basicAuthenticator.doAuthentication(webServiceContext);
+        return portalWsService.updateObjects(rp);
     }
 
     @WebMethod
-    public void deleteObjects(@WebParam(name = "ids")@XmlElement(required = true, nillable = false) String ids){
+    public String deleteObjects(@WebParam(name = "ids")@XmlElement(required = true, nillable = false) String ids){
         autowire();
+
+        basicAuthenticator.doAuthentication(webServiceContext);
+
         List<Long> idList;
         try {
             idList = objectMapper.readValue(ids, new TypeReference<List<Long>>(){});
@@ -126,7 +140,13 @@ public class PortalWs extends SpringBeanAutowiringSupport{
             e.printStackTrace();
             throw new IllegalArgumentException("Unable to parse json array");
         }
-        portalWsService.deleteObjects(idList);
+        return portalWsService.deleteObjects(idList);
+    }
+
+    @WebMethod
+    public String getStatus(@XmlElement(required=true, name="pid") String pid){
+        autowire();
+        return SOAPProcessStatus.INSTANCE.get(pid);
     }
 
     @WebMethod

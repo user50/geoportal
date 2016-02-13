@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.domain.ReferenceSystemProj;
+import org.w2fc.geoportal.user.CustomJdbcUserDetailsManager;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
@@ -150,7 +152,19 @@ public class GeoObjectService {
     private void checkArea(GeoObject gisObject) {
         Geometry permArea = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object user = auth.getPrincipal();
+        Object user = null;
+
+        if (auth == null)
+        {
+            String login = serviceRegistry.getUserDao().getCurrentGeoUser().getLogin();
+            List<UserDetails> userDetails = serviceRegistry.getUserDetailsManager().loadUsersByUsername(login);
+
+            user = userDetails.get(0);
+        }else
+        {
+            user = auth.getPrincipal();
+        }
+
         if(user instanceof CustomUserDetails){
             if(((CustomUserDetails)user).getPermissionArea() == null)return;
             permArea = ((CustomUserDetails)user).getPermissionArea().get("area");

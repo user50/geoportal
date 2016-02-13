@@ -49,7 +49,7 @@ public class ReportAspect {
             actionStatus.setiKey(requestGeoObject.getId());
 
             repository.save(actionStatus);
-            return;
+            throw e;
         }
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getCurrentUserId(),
@@ -73,7 +73,8 @@ public class ReportAspect {
             actionStatus.setiKey(requestGeoObject.getId());
 
             repository.save(actionStatus);
-            return;
+
+            throw e;
         }
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getId(), getCurrentUserId(),
@@ -96,7 +97,7 @@ public class ReportAspect {
             actionStatus.setUserId(getCurrentUserId());
 
             repository.save(actionStatus);
-            return;
+            throw e;
         }
 
         Long layerId = getLayerId(id);

@@ -161,18 +161,18 @@ public class PortalWsServiceImpl implements PortalWsService {
 	@Override
 //	@PreAuthorize("@geoportalSecurity.isLayerEditor(#rp.layerId)")
 	@Transactional
-	public void createObjects(List<RequestGeoObject> rp) {
-		geoObjectsService.createObjects(rp);
+	public String createObjects(List<RequestGeoObject> rp) {
+		return geoObjectsService.createObjects(rp);
 	}
 
 	@Override
 	@Transactional
-	public void updateObjects(List<RequestGeoObject> geoObjectsReq) {
-		geoObjectsService.updateObjects(geoObjectsReq);
+	public String updateObjects(List<RequestGeoObject> geoObjectsReq) {
+		return geoObjectsService.updateObjects(geoObjectsReq);
 	}
 
-	public void deleteObjects(List<Long> ids){
-		geoObjectsService.deleteObjects(ids);
+	public String deleteObjects(List<Long> ids){
+		return geoObjectsService.deleteObjects(ids);
 	}
 
 	@Override

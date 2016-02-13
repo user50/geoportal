@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w2fc.geoportal.ws.async.AsyncService;
+import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.util.*;
@@ -12,6 +14,8 @@ import java.util.*;
 public class GeoObjectsService {
 
     final Logger logger = LoggerFactory.getLogger(GeoObjectsService.class);
+
+    private AsyncService asyncService = new AsyncService();
 
     private GeoObjectService geoObjectService;
 
@@ -23,22 +27,38 @@ public class GeoObjectsService {
     public GeoObjectsService() {
     }
 
-    public void createObjects(List<RequestGeoObject> geoObjectsReq){
-        for (RequestGeoObject requestGeoObject : geoObjectsReq) {
-            geoObjectService.createAndSaveObject(requestGeoObject);
-        }
+    public String createObjects(final List<RequestGeoObject> geoObjectsReq){
+        Runnable runnable = new Runnable() {
+            public void run() {
+                for (RequestGeoObject requestGeoObject : geoObjectsReq) {
+                    geoObjectService.createAndSaveObject(requestGeoObject);
+                }
+            }
+        };
+        return asyncService.asyncExecute(runnable);
     }
 
-    public void updateObjects(List<RequestGeoObject> geoObjectsReq) {
-        for (RequestGeoObject requestGeoObject : geoObjectsReq) {
-            geoObjectService.updateObject(requestGeoObject);
-        }
+    public String updateObjects(final List<RequestGeoObject> geoObjectsReq) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                for (RequestGeoObject requestGeoObject : geoObjectsReq) {
+                    geoObjectService.updateObject(requestGeoObject);
+                }
+            }
+        };
+        return asyncService.asyncExecute(runnable);
     }
 
-    public void deleteObjects(List<Long> ids){
-        for (Long id : ids) {
-            geoObjectService.delete(id);
-        }
+    public String deleteObjects(final List<Long> ids){
+        Runnable runnable = new Runnable() {
+            public void run() {
+                for (Long id : ids) {
+                    geoObjectService.delete(id);
+                }
+            }
+        };
+
+        return asyncService.asyncExecute(runnable);
     }
 
     public Long createPoint(RequestPoint rp)

@@ -7,7 +7,13 @@ public enum ThreadTokens {
 
     INSTANCE;
 
-    Map<Long,String> threadToToken = new HashMap<Long, String>();
+    private Map<Long,String> threadToToken = new HashMap<Long, String>();
+
+    synchronized public void copy(long toThreadId){
+        String token = getToken(Thread.currentThread().getId());
+        if (token != null)
+            put(toThreadId, token);
+    }
 
     synchronized public void put(long id, String token)
     {

@@ -26,11 +26,11 @@ public interface PortalWsService {
     
 	public GeoObjectFullAdapter getObject(Long id);
 
-	public void createObjects(List<RequestGeoObject> geoObjectsReq);
+	public String createObjects(List<RequestGeoObject> geoObjectsReq);
 
-	public void updateObjects(List<RequestGeoObject> geoObjectsReq);
+	public String updateObjects(List<RequestGeoObject> geoObjectsReq);
 
-	public void deleteObjects(List<Long> ids);
+	public String deleteObjects(List<Long> ids);
 
 	public Long createPoint(RequestPoint rp);
 

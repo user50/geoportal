@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.GeoUserDaoImpl;
 import org.w2fc.geoportal.dao.TokenizedGeoUserDao;
+import org.w2fc.geoportal.ws.BasicAuthenticator;
 
 
 @Configuration
@@ -17,6 +18,12 @@ public class GeoUserDaoConfig {
                                  GeoUserDao geoUserDao) {
 
         return new TokenizedGeoUserDao(geoUserDao, sessionFactory);
+    }
+
+    @Bean
+    public BasicAuthenticator basicAuthenticator(@Qualifier("tokenizedGeoUserDao") GeoUserDao geoUserDao)
+    {
+        return new BasicAuthenticator(geoUserDao);
     }
 }
 
