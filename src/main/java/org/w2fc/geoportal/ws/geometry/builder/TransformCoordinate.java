@@ -14,6 +14,8 @@ public class TransformCoordinate<T extends GeometryParameter> implements Geometr
 
     final static Logger logger = LoggerFactory.getLogger(TransformCoordinate.class);
 
+    public static final String DEFAULT_SPATIAL_REF_SYS = "WGS84";
+
     GeometryBuilder<T> geometryBuilder;
     ReferenceSystemProjDao referenceSystemDao;
     CoordinateReferenceSystem targetSystem;
@@ -35,7 +37,7 @@ public class TransformCoordinate<T extends GeometryParameter> implements Geometr
 
         Geometry geometry = geometryBuilder.create(parameters);
 
-        if(parameters.getSpatialKey() == null || parameters.getSpatialKey().equals("WGS84"))
+        if(parameters.getSpatialKey() == null || parameters.getSpatialKey().equals(DEFAULT_SPATIAL_REF_SYS))
             return geometry;
 
         try {

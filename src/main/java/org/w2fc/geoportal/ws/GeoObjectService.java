@@ -21,6 +21,7 @@ import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.exception.MissingParameterException;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilderFactory;
+import org.w2fc.geoportal.ws.geometry.builder.TransformCoordinate;
 import org.w2fc.geoportal.ws.geometry.factory.ByTypeGeometryParameterFactory;
 import org.w2fc.geoportal.ws.model.GeometryParameter;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
@@ -182,6 +183,8 @@ public class GeoObjectService {
     public List<String> getSpatialRefSystems(){
         List<ReferenceSystemProj> list = serviceRegistry.getReferenceSystemProjDao().list();
         List<String> refKeys = new ArrayList<String>();
+        refKeys.add(TransformCoordinate.DEFAULT_SPATIAL_REF_SYS);//add default spatial ref sys to the list
+
         for (ReferenceSystemProj systemProj : list) {
             refKeys.add(systemProj.getKey());
         }
