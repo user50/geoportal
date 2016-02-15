@@ -12,6 +12,9 @@ import java.util.List;
 public class GeoPolygonsFromJsonFactory
 {
     public List<GeoPolygon> create(String json){
+        if (json == null || json.isEmpty())
+            throw new IllegalArgumentException("JSON string with coordinates can not be null or empty");
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         Double[][][][] coords;

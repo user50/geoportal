@@ -14,6 +14,9 @@ import java.util.List;
 public class LinesCoordinatesFromJsonFactory {
 
     public List<LineCoordinates> create(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty())
+            throw new IllegalArgumentException("JSON string with coordinates can not be null or empty");
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         Double[][][] holesCoords;

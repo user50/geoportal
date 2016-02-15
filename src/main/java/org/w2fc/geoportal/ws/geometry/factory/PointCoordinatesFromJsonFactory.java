@@ -13,6 +13,9 @@ import java.util.List;
 public class PointCoordinatesFromJsonFactory {
 
     List<PointCoordinates> create(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty())
+            throw new IllegalArgumentException("JSON string with coordinates can not be null or empty");
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         Double[][] list;
