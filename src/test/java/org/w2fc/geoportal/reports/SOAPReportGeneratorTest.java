@@ -1,3 +1,4 @@
+/*
 package org.w2fc.geoportal.reports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,4 +55,4 @@ public class SOAPReportGeneratorTest {
 
         document.close();
     }
-}
+}*/

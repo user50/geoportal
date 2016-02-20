@@ -26,11 +26,11 @@ public class OperationStatus implements Serializable{
     @Column (name = "guid", nullable = true)
     private String guid;
 
+    @Column (name = "pid", nullable = false)
+    private String pid;
+
     @Column (name = "user_id", nullable = false)
     private Long userId;
-
-    @Column (name = "iKey",nullable = true)
-    private  Long iKey;
 
     @Column (name = "message", nullable = true)
     private String message;
@@ -53,26 +53,9 @@ public class OperationStatus implements Serializable{
     public OperationStatus() {
     }
 
-    public OperationStatus(String guid, Long userId, Action action, Status status, Date date, Long layerId) {
+    public OperationStatus(String guid, String pid, Long userId, Action action, Status status, Date date, Long layerId, String message) {
         this.guid = guid;
-        this.userId = userId;
-        this.action = action;
-        this.status = status;
-        this.date = date;
-        this.layerId = layerId;
-    }
-
-    public OperationStatus(Long iKey, Long userId, Action action, Status status, Date date, Long layerId) {
-        this.iKey = iKey;
-        this.userId = userId;
-        this.action = action;
-        this.status = status;
-        this.date = date;
-        this.layerId = layerId;
-    }
-
-    public OperationStatus(String guid, Long userId, Action action, Status status, Date date, Long layerId, String message) {
-        this.guid = guid;
+        this.pid = pid;
         this.userId = userId;
         this.action = action;
         this.status = status;
@@ -81,6 +64,15 @@ public class OperationStatus implements Serializable{
         this.message = message;
     }
 
+    public OperationStatus(String guid, String pid, Long userId, Action action, Status status, Date date, Long layerId) {
+        this.guid = guid;
+        this.pid = pid;
+        this.userId = userId;
+        this.action = action;
+        this.status = status;
+        this.date = date;
+        this.layerId = layerId;
+    }
 
     public Long getId() {
         return id;
@@ -94,6 +86,14 @@ public class OperationStatus implements Serializable{
         return guid;
     }
 
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
     public void setGuid(String guid) {
         this.guid = guid;
     }
@@ -104,14 +104,6 @@ public class OperationStatus implements Serializable{
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getiKey() {
-        return iKey;
-    }
-
-    public void setiKey(Long iKey) {
-        this.iKey = iKey;
     }
 
     public String getMessage() {

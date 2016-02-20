@@ -1,5 +1,6 @@
 package org.w2fc.geoportal.ws.async;
 
+import org.w2fc.geoportal.config.ThreadPids;
 import org.w2fc.geoportal.config.ThreadTokens;
 
 import java.util.UUID;
@@ -11,6 +12,7 @@ public class AsyncService {
 
         Thread thread = new Thread(new AsyncTask(runnable, pid));
         ThreadTokens.INSTANCE.copy(thread.getId());
+        ThreadPids.INSTANCE.put(thread.getId(), pid);
         thread.start();
 
         return pid;

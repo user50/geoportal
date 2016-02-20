@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.w2fc.geoportal.config.ThreadPids;
 import org.w2fc.geoportal.ws.PortalWsService;
 import org.w2fc.geoportal.ws.model.*;
 
 import javax.jws.WebMethod;
+import javax.servlet.http.HttpSession;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
 

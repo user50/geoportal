@@ -44,11 +44,11 @@ public class CreateObjectReportService {
     public void saveReport() {
         Long userId = geoUserDao.getCurrentGeoUser().getId();
         OperationStatus.Status status = fails.get().isEmpty() ? OperationStatus.Status.SUCCESS : OperationStatus.Status.FAILURE;
-        try {
-            repository.save(new OperationStatus(null, userId, OperationStatus.Action.CREATE, status, new Date(), LAYER_ID, generateMessage() ));
-        } catch (JsonProcessingException e) {
-            logger.warn("Unable to save report. Cause: " + e.getMessage());
-        }
+//        try {
+////            repository.save(new OperationStatus(null, userId, OperationStatus.Action.CREATE, status, new Date(), LAYER_ID, generateMessage() ));
+//        } catch (JsonProcessingException e) {
+//            logger.warn("Unable to save report. Cause: " + e.getMessage());
+//        }
     }
 
     private String generateMessage() throws JsonProcessingException {
