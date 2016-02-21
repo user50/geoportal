@@ -8,6 +8,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w2fc.geoportal.dao.ReferenceSystemProjDao;
+import org.w2fc.geoportal.domain.ReferenceSystemProj;
 import org.w2fc.geoportal.ws.model.GeometryParameter;
 
 public class TransformCoordinate<T extends GeometryParameter> implements GeometryBuilder<T> {
@@ -41,7 +42,11 @@ public class TransformCoordinate<T extends GeometryParameter> implements Geometr
             return geometry;
 
         try {
-            CoordinateReferenceSystem sourceSystem = CRS.parseWKT(referenceSystemDao.get(parameters.getSpatialKey()).getWkt());
+            ReferenceSystemProj systemProj = referenceSystemDao.get(parameters.getSpatialKey());
+            if (systemProj == null)
+                throw new RuntimeException("Spatial system does not exists: " + parameters.getSpatialKey());
+
+            CoordinateReferenceSystem sourceSystem = CRS.parseWKT(systemProj.getWkt());
             MathTransform transform = CRS.findMathTransform(sourceSystem, targetSystem, true);
 
             return JTS.transform(geometry, transform);

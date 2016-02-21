@@ -51,7 +51,8 @@ public class GeoObjectsController {
 
     @RequestMapping(value = "/points", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Long createPoint(@RequestBody RequestPoint requestPoint){
+    public Long createPoint(@RequestBody RequestPoint requestPoint, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         return portalWsService.createPoint(requestPoint);
     }
 
