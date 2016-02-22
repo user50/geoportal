@@ -3,10 +3,8 @@ package org.w2fc.geoportal.reports;
 import java.awt.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +14,7 @@ import com.lowagie.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.w2fc.conf.ObjectFactory;
@@ -139,8 +138,8 @@ public class Report1Controller {
         return "SimplePDFView";
     }
 
-    @RequestMapping(value = "/integrational-service.pdf")
-    public String pdfReport(@RequestParam(required = false) final List<Long> ids, Model model) {
+    @RequestMapping(value = "/{pid}/integrational-service-report.pdf")
+    public String pdfReport(@PathVariable final String pid, Model model) {
 
         model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
 
@@ -154,31 +153,38 @@ public class Report1Controller {
                         BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                 BaseFont baseBoldFont = BaseFont.createFont(appRoot + "/WEB-INF/jasper/fonts/arialbd.ttf",
                         BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                Font font12 = new Font(baseFont, 12);
+
+                List<OperationStatus> operationStatuses = serviceRegistry.getOperationStatusRepository().get(pid);
+
+                if (operationStatuses == null || operationStatuses.isEmpty())
+                {
+                    Paragraph title1 = new Paragraph(
+                            "Нет данных",
+                            new Font(baseBoldFont, 15));
+                    title1.setSpacingAfter(30);
+                    title1.setAlignment("center");
+
+                    document.add(title1);
+
+                    return;
+                }
+
+                List<Date> dates = new ArrayList<Date>();
+                for (OperationStatus operationStatus : operationStatuses) {
+                    dates.add(operationStatus.getDate());
+                }
+                Collections.sort(dates);
 
                 Paragraph title1 = new Paragraph(
-                        "Отчет о результатах использования \n интеграционного сервиса",
-                        new Font(baseBoldFont, 20));
+                        "Отчет о результатах использования \n интеграционного сервиса \n" +
+                                "для запроса/сессии \n " + pid + " \n" + SOAPReportGenerator.formatter.format(dates.get(0)),
+                        new Font(baseBoldFont, 15));
                 title1.setSpacingAfter(30);
                 title1.setAlignment("center");
 
                 document.add(title1);
 
-                List<OperationStatus> operationStatuses = serviceRegistry.getOperationStatusRepository().list();
-
-                Set<Long> usersIds = new HashSet<Long>();
-                for (OperationStatus operationStatuse : operationStatuses) {
-                    usersIds.add(operationStatuse.getUserId());
-                }
-
-                Set<GeoUser> users = new HashSet<GeoUser>();
-                for (Long usersId : usersIds) {
-                    users.add(serviceRegistry.getUserDao().get(usersId));
-                }
-
-                for (GeoUser user : users) {
-                    new SOAPReportGenerator().fillDocument(document, operationStatuses, user, baseFont);
-                }
+                new SOAPReportGenerator().fillDocument(document, operationStatuses, baseFont);
             }
         });
 

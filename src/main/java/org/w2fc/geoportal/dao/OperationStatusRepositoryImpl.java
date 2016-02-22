@@ -1,9 +1,6 @@
 package org.w2fc.geoportal.dao;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.w2fc.geoportal.domain.OperationStatus;
 
 import java.util.ArrayList;
@@ -37,6 +34,27 @@ public class OperationStatusRepositoryImpl implements OperationStatusRepository{
             session.close();
         }
         return id;
+    }
+
+    @Override
+    public List<OperationStatus> get(String pid) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        List<OperationStatus> operationStatusList = new ArrayList<OperationStatus>();
+        try{
+            tx = session.beginTransaction();
+            Query query = session.createQuery("from OperationStatus where pid = :pid ");
+            query.setParameter("pid", pid);
+            operationStatusList = (List<OperationStatus>) query.list();
+            tx.commit();
+        }catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+        return operationStatusList;
     }
 
     @Override

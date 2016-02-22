@@ -17,18 +17,11 @@ import java.util.List;
  */
 public class SOAPReportGenerator {
 
-    private SimpleDateFormat formatter = new SimpleDateFormat("dd:MM:yyyy hh:mm:ss");
+    static SimpleDateFormat formatter = new SimpleDateFormat("dd:MM:yyyy hh:mm:ss");
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public Document fillDocument(Document document, List<OperationStatus> actionStatusList, GeoUser geoUser, BaseFont baseFont) throws DocumentException, IOException {
-
-
-        Paragraph title = new Paragraph("Отчет для  " + geoUser.getLogin(),new com.lowagie.text.Font(baseFont, 10));
-        title.setSpacingBefore(20);
-        title.setSpacingAfter(10);
-        title.setAlignment(Element.ALIGN_CENTER);
-        document.add(title);
+    public Document fillDocument(Document document, List<OperationStatus> actionStatusList, BaseFont baseFont) throws DocumentException, IOException {
 
         Paragraph paragraph = new Paragraph("Успешные операции", new com.lowagie.text.Font(baseFont, 10));
         paragraph.setSpacingBefore(10);
