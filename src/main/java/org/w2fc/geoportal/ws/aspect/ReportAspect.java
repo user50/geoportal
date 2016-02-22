@@ -81,67 +81,75 @@ public class ReportAspect {
         repository.save(actionStatus);
     }
 
-    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))")
-    public void aroundUpdateSoap(ProceedingJoinPoint joinPoint) throws Throwable {
+    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))")
+    public void aroundUpdateSoapSuccess(JoinPoint joinPoint) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
-        try{
-            joinPoint.proceed();
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
+                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
 
-            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                    OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
-
-            repository.save(actionStatus);
-
-        } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                    OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), e.getMessage());
-
-            repository.save(actionStatus);
-        }
+        repository.save(actionStatus);
     }
 
-    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))")
-    public void aroundUpdateRest(ProceedingJoinPoint joinPoint) throws Throwable {
+    @AfterThrowing(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))",
+            throwing= "error")
+    public void aroundUpdateSoapFail(JoinPoint joinPoint, Throwable error) {
+        RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
+
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
+                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
+
+        repository.save(actionStatus);
+    }
+
+    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))")
+    public void aroundUpdateRestSuccess(JoinPoint joinPoint) {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
 
-        try{
-            joinPoint.proceed();
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
+                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
 
-            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                    OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
-
-            repository.save(actionStatus);
-
-        } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                    OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), e.getMessage());
-
-            repository.save(actionStatus);
-        }
+        repository.save(actionStatus);
     }
 
-    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
-    public void aroundDelete(ProceedingJoinPoint joinPoint) throws Throwable {
+
+    @AfterThrowing(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))",
+            throwing= "error")
+    public void aroundUpdateRestFail(JoinPoint joinPoint, Throwable error) {
+        GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
+
+        OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
+                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
+
+        repository.save(actionStatus);
+    }
+
+    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
+    public void afterDeleteSuccess(JoinPoint joinPoint) {
         Long guid = (Long) joinPoint.getArgs()[0];
+        Long layerId = getLayerId(guid);
 
-        try{
-            joinPoint.proceed();
+        OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
+                OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerId);
 
-
-            Long layerId = getLayerId(guid);
-            OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
-                    OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerId);
-
-            repository.save(actionStatus);
-
-        } catch (Exception e){
-            OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
-                    OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), null);
-
-            repository.save(actionStatus);
-        }
+        repository.save(actionStatus);
     }
+
+    @AfterThrowing(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))",
+            throwing= "error")
+    public void afterDeleteFail(JoinPoint joinPoint, Throwable error) {
+        Long guid = (Long) joinPoint.getArgs()[0];
+        Long layerId = getLayerId(guid);
+
+        OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
+                OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, error.getMessage());
+
+        repository.save(actionStatus);
+    }
+
 
     public Long getCurrentUserId() {
         return geoUserDao.getCurrentGeoUser().getId();
