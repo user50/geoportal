@@ -113,22 +113,26 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     }
 
     @WebMethod
-    public String createObjects(List<RequestGeoObject> rp){
+    public SOAPOperationResponse createObjects(List<RequestGeoObject> rp){
         autowire();
         basicAuthenticator.doAuthentication(webServiceContext);
 
-        return portalWsService.createObjects(rp);
+        String pid = portalWsService.createObjects(rp);
+
+        return new SOAPOperationResponse(pid);
     }
 
     @WebMethod
-    public String updateObjects(List<RequestGeoObject> rp){
+    public SOAPOperationResponse updateObjects(List<RequestGeoObject> rp){
         autowire();
         basicAuthenticator.doAuthentication(webServiceContext);
-        return portalWsService.updateObjects(rp);
+        String pid = portalWsService.updateObjects(rp);
+
+        return new SOAPOperationResponse(pid);
     }
 
     @WebMethod
-    public String deleteObjects(@WebParam(name = "ids")@XmlElement(required = true, nillable = false) String ids){
+    public SOAPOperationResponse deleteObjects(@WebParam(name = "ids")@XmlElement(required = true, nillable = false) String ids){
         autowire();
 
         basicAuthenticator.doAuthentication(webServiceContext);
@@ -140,7 +144,9 @@ public class PortalWs extends SpringBeanAutowiringSupport {
             e.printStackTrace();
             throw new IllegalArgumentException("Unable to parse json array");
         }
-        return portalWsService.deleteObjects(idList);
+        String pid = portalWsService.deleteObjects(idList);
+
+        return new SOAPOperationResponse(pid);
     }
 
     @WebMethod

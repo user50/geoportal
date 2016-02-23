@@ -32,7 +32,9 @@ import com.lowagie.text.pdf.PdfWriter;
 @Controller
 @RequestMapping(value = "/report")
 public class Report1Controller {
-    
+
+    public static final String REPORT_URL_PATTERN = "/{pid}-report.pdf";
+
     @Autowired
     ServiceRegistry serviceRegistry;
 
@@ -138,7 +140,7 @@ public class Report1Controller {
         return "SimplePDFView";
     }
 
-    @RequestMapping(value = "/{pid}/integrational-service-report.pdf")
+    @RequestMapping(value = REPORT_URL_PATTERN)
     public String pdfReport(@PathVariable final String pid, Model model) {
 
         model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
