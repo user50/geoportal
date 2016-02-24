@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.w2fc.conf.Constants;
 import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoUser;
@@ -141,7 +143,14 @@ public class Report1Controller {
     }
 
     @RequestMapping(value = REPORT_URL_PATTERN)
-    public String pdfReport(@PathVariable final String pid, Model model) {
+    public String pdfReport(@PathVariable final String pid, Model model, HttpServletResponse response) throws IOException {
+
+        GeoUser geoUser = serviceRegistry.getUserDao().getCurrentGeoUser();
+        if (geoUser == null || !Constants.isAdministrator()) {
+            response.setStatus(401);
+            response.getWriter().write("Access denied");
+            return null;
+        }
 
         model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
 
