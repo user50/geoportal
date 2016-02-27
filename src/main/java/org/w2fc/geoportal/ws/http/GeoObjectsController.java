@@ -58,40 +58,46 @@ public class GeoObjectsController {
 
     @RequestMapping(value = "/lines", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Long createLine(@RequestBody RequestLine requestLine){
+    public Long createLine(@RequestBody RequestLine requestLine, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         return portalWsService.createLine(requestLine);
     }
 
     @RequestMapping(value = "/polygons", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Long createPolygon(@RequestBody RequestPolygon requestPolygon){
+    public Long createPolygon(@RequestBody RequestPolygon requestPolygon, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         return portalWsService.createPolygon(requestPolygon);
     }
 
     @RequestMapping(value = "/points/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Long updatePoint(@PathVariable Long id, @RequestBody RequestPoint requestPoint){
+    public Long updatePoint(@PathVariable Long id, @RequestBody RequestPoint requestPoint, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         portalWsService.updatePoint(id, requestPoint);
         return id;
     }
 
     @RequestMapping(value = "/lines/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Long updateLine(@PathVariable Long id, @RequestBody RequestLine requestLine){
+    public Long updateLine(@PathVariable Long id, @RequestBody RequestLine requestLine, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         portalWsService.updateLine(id, requestLine);
         return id;
     }
 
     @RequestMapping(value = "/polygons/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Long updatePolygon(@PathVariable Long id, @RequestBody RequestPolygon requestPolygon){
+    public Long updatePolygon(@PathVariable Long id, @RequestBody RequestPolygon requestPolygon, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         portalWsService.updatePolygon(id, requestPolygon);
         return id;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public void delete(@PathVariable Long id, @RequestParam Long layerId){
+    public void delete(@PathVariable Long id, @RequestParam Long layerId, HttpSession session){
+        ThreadPids.INSTANCE.put(Thread.currentThread().getId(), session.getId());
         portalWsService.delete(id);
     }
 
