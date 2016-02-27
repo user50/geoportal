@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w2fc.geoportal.auth.GeoportalSecurity;
 import org.w2fc.geoportal.ws.async.AsyncService;
 import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
+import org.w2fc.geoportal.ws.exception.AccessDeniedException;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.util.*;
@@ -19,6 +21,8 @@ public class GeoObjectsService {
 
     private GeoObjectService geoObjectService;
 
+    GeoportalSecurity geoportalSecurity;
+
     @Autowired
     public GeoObjectsService(GeoObjectService geoObjectService) {
         this.geoObjectService = geoObjectService;
@@ -27,7 +31,21 @@ public class GeoObjectsService {
     public GeoObjectsService() {
     }
 
+    private void checkPermissions(final List<RequestGeoObject> geoObjectsReq)
+    {
+        Set<Long> layerIds = new HashSet<Long>();
+        for (RequestGeoObject requestGeoObject : geoObjectsReq)
+            layerIds.add(requestGeoObject.getLayerId());
+
+        for (Long layerId : layerIds) {
+            if (!geoportalSecurity.isLayerEditor(layerId))
+                throw new AccessDeniedException("Current user has not access to layer "+layerId);
+        }
+    }
+
     public String createObjects(final List<RequestGeoObject> geoObjectsReq){
+        checkPermissions(geoObjectsReq);
+
         Runnable runnable = new Runnable() {
             public void run() {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
@@ -39,6 +57,8 @@ public class GeoObjectsService {
     }
 
     public String updateObjects(final List<RequestGeoObject> geoObjectsReq) {
+        checkPermissions(geoObjectsReq);
+
         Runnable runnable = new Runnable() {
             public void run() {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
