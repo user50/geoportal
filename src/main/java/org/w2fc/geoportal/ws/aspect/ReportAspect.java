@@ -105,7 +105,7 @@ public class ReportAspect {
 
     @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))")
     public void aroundUpdateRestSuccess(JoinPoint joinPoint) {
-        GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
+        GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[1];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
                 OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
@@ -118,7 +118,7 @@ public class ReportAspect {
             pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))",
             throwing= "error")
     public void aroundUpdateRestFail(JoinPoint joinPoint, Throwable error) {
-        GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
+        GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[1];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
                 OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
