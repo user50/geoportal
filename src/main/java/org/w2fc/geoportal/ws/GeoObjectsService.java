@@ -24,8 +24,9 @@ public class GeoObjectsService {
     GeoportalSecurity geoportalSecurity;
 
     @Autowired
-    public GeoObjectsService(GeoObjectService geoObjectService) {
+    public GeoObjectsService(GeoObjectService geoObjectService, GeoportalSecurity geoportalSecurity) {
         this.geoObjectService = geoObjectService;
+        this.geoportalSecurity = geoportalSecurity;
     }
 
     public GeoObjectsService() {
