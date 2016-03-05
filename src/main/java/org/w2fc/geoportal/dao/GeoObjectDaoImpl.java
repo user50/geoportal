@@ -343,7 +343,7 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 				.setLong("layerId", layerId)
 				.list();
 		if(objs.size() == 0)return objs;
-		List<GeoObjectTag> tags = getCurrentSession().createQuery("from GeoObjectTag t where t.geoObject in :objs").setParameterList("objs", objs).list();
+		List<GeoObjectTag> tags = getCurrentSession().createQuery("SELECT t from GeoObjectTag t join t.geoObject o join o.geoLayers l where l.id = :layerId").setLong("layerId", layerId).list();
 		for(GeoObject obj : objs){
 			HashSet<GeoObjectTag> fetchedTags = new HashSet<GeoObjectTag>();
 			for(GeoObjectTag tag :tags){

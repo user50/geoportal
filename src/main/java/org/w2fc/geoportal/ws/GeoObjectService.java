@@ -115,7 +115,17 @@ public class GeoObjectService {
 
     private Long save(GeoObject geoObject) {
         GeoObject res = serviceRegistry.getGeoObjectDao().add(geoObject);
-        return res.getId();
+        Long id = res.getId();
+        Iterator<GeoLayer> iterator = geoObject.getGeoLayers().iterator();
+        while (iterator.hasNext()){
+            GeoLayer layer = iterator.next();
+            try {
+                serviceRegistry.getGeoObjectDao().addToLayer(id, layer.getId());
+            } catch (Exception e) {
+                throw new RuntimeException("Unable  to add to layer ");
+            }
+        }
+        return id;
     }
 
     public <T extends GeometryParameter> void updateGeoObject(long id, T params, GeometryBuilder<T> geometryBuilder)
