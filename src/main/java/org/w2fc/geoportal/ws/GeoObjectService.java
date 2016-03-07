@@ -106,7 +106,6 @@ public class GeoObjectService {
         geoLayers.add(layer);
 
         gisObject.setGeoLayers(geoLayers);
-        layer.getGeoObjects().add(gisObject);
         gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
         gisObject.setCreated(Calendar.getInstance().getTime());
 

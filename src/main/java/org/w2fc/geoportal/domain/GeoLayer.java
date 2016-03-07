@@ -90,7 +90,7 @@ public class GeoLayer extends AbstractDomain<GeoLayer>{
         
     /* GeoObject */
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "GEO_LAYER_TO_OBJECT", 
             joinColumns = {
