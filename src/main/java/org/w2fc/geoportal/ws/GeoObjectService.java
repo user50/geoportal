@@ -159,7 +159,7 @@ public class GeoObjectService {
         gisObject.setGeoLayers(new HashSet<GeoLayer>(Arrays.asList(layer)));
     }
 
-    private void checkArea(GeoObject gisObject) {
+    private void checkAreaOld(GeoObject gisObject) {
         Geometry permArea = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object user = null;
@@ -181,6 +181,18 @@ public class GeoObjectService {
             if(permArea == null)return;
             if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
         }
+    }
+
+    private void checkArea(GeoObject gisObject) {
+
+        Long currentUserId = serviceRegistry.getUserDao().getCurrentGeoUser().getId();
+
+        Geometry permArea = serviceRegistry.getUserDao().getPermissionArea(currentUserId).get("area");
+
+        if(permArea == null)
+            throw new RuntimeException("Permission area not specified for current user");
+
+        if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
     }
 
     private void checkExists(Long id){
