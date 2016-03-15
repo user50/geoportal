@@ -47,8 +47,9 @@ public class UserManagementController extends AbstractController<GeoUser, GeoUse
     
     @Autowired
     ServiceRegistry serviceRegistry;
-    
-    @Qualifier("GeoUserDao")
+
+    @Autowired
+    @Qualifier("tokenizedGeoUserDao")
     @Override
     public void setAutowiredDao(GeoUserDao dao) {
         setDao(dao);

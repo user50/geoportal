@@ -37,7 +37,7 @@ public class UserRoleController extends AbstractController<GeoUserRole, GeoUserR
     @Autowired
     ServiceRegistry serviceRegistry;
     
-    @Qualifier("GeoUserRoleDao")
+    @Autowired
     @Override
     public void setAutowiredDao(GeoUserRoleDao dao) {
         setDao(dao);
