@@ -36,8 +36,10 @@ public class ReportAspect {
         this.geoObjectDao = geoObjectDao;
     }
 
-    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))")
-    public void aroundCreateSoapSuccess(JoinPoint joinPoint) {
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))",
+            returning= "result")
+    public void aroundCreateSoapSuccess(JoinPoint joinPoint, Object result) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
@@ -53,13 +55,15 @@ public class ReportAspect {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
+                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
 
-    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.GeometryParameter)))")
-    public void aroundCreateRestSuccess(JoinPoint joinPoint) {
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.createAndSaveObject(org.w2fc.geoportal.ws.model.GeometryParameter)))",
+            returning= "result")
+    public void aroundCreateRestSuccess(JoinPoint joinPoint, Object result) {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
@@ -76,13 +80,15 @@ public class ReportAspect {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
+                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
 
-    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))")
-    public void aroundUpdateSoapSuccess(JoinPoint joinPoint) {
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(org.w2fc.geoportal.ws.model.RequestGeoObject)))",
+            returning= "result")
+    public void aroundUpdateSoapSuccess(JoinPoint joinPoint, Object result) {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
@@ -98,13 +104,15 @@ public class ReportAspect {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
+                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
 
-    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))")
-    public void aroundUpdateRestSuccess(JoinPoint joinPoint) {
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.updateObject(Long, org.w2fc.geoportal.ws.model.GeometryParameter)))",
+            returning= "result")
+    public void aroundUpdateRestSuccess(JoinPoint joinPoint, Object result) {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[1];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
@@ -121,13 +129,15 @@ public class ReportAspect {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[1];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), error.getMessage());
+                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
 
-    @After("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
-    public void afterDeleteSuccess(JoinPoint joinPoint) {
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))",
+            returning= "result")
+    public void afterDeleteSuccess(JoinPoint joinPoint, Object result) {
         Long guid = (Long) joinPoint.getArgs()[0];
         Long layerId = getLayerId(guid);
 
@@ -168,4 +178,9 @@ public class ReportAspect {
     private String getPid(){
         return ThreadPids.INSTANCE.getPid(Thread.currentThread().getId());
     }
+
+    private String getErrorMessage(Throwable error) {
+        return error.getClass() + ": " + error.getMessage();
+    }
+
 }
