@@ -187,7 +187,12 @@ public class GeoObjectService {
 
         Long currentUserId = serviceRegistry.getUserDao().getCurrentGeoUser().getId();
 
-        Geometry permArea = serviceRegistry.getUserDao().getPermissionArea(currentUserId).get("area");
+        Map<String, Geometry> permissionAreaMap = serviceRegistry.getUserDao().getPermissionArea(currentUserId);
+
+        if (permissionAreaMap == null)
+            return;
+
+        Geometry permArea = permissionAreaMap.get("area");
 
         if(permArea == null)
             throw new RuntimeException("Permission area not specified for current user");
