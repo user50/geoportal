@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
@@ -60,12 +61,15 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
     @Autowired
     ServiceRegistry serviceRegistry;
     
-    @Qualifier("geoLayerDao")
     @Override
     public void setAutowiredDao(GeoLayerDao dao) {
         setDao(dao);
     }
-    
+
+    @PostConstruct
+    public void init(){
+        setAutowiredDao(serviceRegistry.getLayerDao());
+    }
     
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @Transactional(readOnly = true)

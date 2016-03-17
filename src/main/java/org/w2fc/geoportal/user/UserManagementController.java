@@ -35,6 +35,8 @@ import org.w2fc.geoportal.domain.GeoUserRole;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
 
+import javax.annotation.PostConstruct;
+
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -48,12 +50,16 @@ public class UserManagementController extends AbstractController<GeoUser, GeoUse
     @Autowired
     ServiceRegistry serviceRegistry;
     
-    @Qualifier("GeoUserDao")
     @Override
     public void setAutowiredDao(GeoUserDao dao) {
         setDao(dao);
     }
-    
+
+    @PostConstruct
+    public void init(){
+        setAutowiredDao(serviceRegistry.getUserDao());
+    }
+
     @RequestMapping(value = "/userProfile", method = RequestMethod.GET)
     public String userProfile(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
