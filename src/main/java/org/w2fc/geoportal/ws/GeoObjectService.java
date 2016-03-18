@@ -1,6 +1,5 @@
 package org.w2fc.geoportal.ws;
 
-import com.sun.javaws.exceptions.MissingFieldException;
 import com.vividsolutions.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
