@@ -139,6 +139,8 @@ public class GeoObjectService {
         new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
         gisObject.setTheGeom(geometryBuilder.create(params));
 
+        checkArea(gisObject);
+
         serviceRegistry.getGeoObjectDao().update(gisObject);
     }
 
