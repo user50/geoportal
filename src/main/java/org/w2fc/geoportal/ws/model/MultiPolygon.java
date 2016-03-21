@@ -9,6 +9,7 @@ public class MultiPolygon implements GeometryParameter {
 
     private String name;
     private String guid;
+    private String extSysId;
     private GeoObjectGeometryType type;
     private List<GeoPolygon> polygons;
     private Long layerId;
@@ -38,6 +39,15 @@ public class MultiPolygon implements GeometryParameter {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    @Override
+    public String getExtSysId() {
+        return extSysId;
+    }
+
+    public void setExtSysId(String extSysId) {
+        this.extSysId = extSysId;
     }
 
     @Override

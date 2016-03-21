@@ -107,6 +107,7 @@ public class GeoObjectService {
         gisObject.setGeoLayers(geoLayers);
         gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
         gisObject.setCreated(Calendar.getInstance().getTime());
+        gisObject.setExtSysId(params.getExtSysId());
 
         return gisObject;
     }

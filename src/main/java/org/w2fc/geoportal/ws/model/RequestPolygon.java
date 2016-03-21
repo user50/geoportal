@@ -22,6 +22,8 @@ public class RequestPolygon implements Serializable, GeometryParameter{
 
     private String guid;
 
+    private String extSysId;
+
     @XmlElementWrapper(name = "points", required = true)
     private PointCoordinates[] pointsCoordinates;
 
@@ -95,6 +97,15 @@ public class RequestPolygon implements Serializable, GeometryParameter{
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    @Override
+    public String getExtSysId() {
+        return extSysId;
+    }
+
+    public void setExtSysId(String extSysId) {
+        this.extSysId = extSysId;
     }
 
     @Override

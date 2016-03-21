@@ -22,6 +22,9 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name = "guid")
     private String guid;
 
+    @XmlElement(name = "extSysId")
+    private String extSysId;
+
     @XmlElement(name = "type")
     private GeoObjectGeometryType type;
 
@@ -68,6 +71,15 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    @Override
+    public String getExtSysId() {
+        return extSysId;
+    }
+
+    public void setExtSysId(String extSysId) {
+        this.extSysId = extSysId;
     }
 
     public String getPointsCoordinates() {

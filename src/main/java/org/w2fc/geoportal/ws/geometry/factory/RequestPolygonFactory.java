@@ -26,6 +26,8 @@ public class RequestPolygonFactory implements GeometryParameterFactory {
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
         String reKey = reqGeoObject.getSpatialKey();
+        String guid = reqGeoObject.getGuid();
+        String extSysId = reqGeoObject.getExtSysId();
 
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
         List<LineCoordinates> lines = new LinesCoordinatesFromJsonFactory().create(jsonCoordsArray);
@@ -37,7 +39,7 @@ public class RequestPolygonFactory implements GeometryParameterFactory {
         requestPolygon.setTags(tags);
         requestPolygon.setPolygonHoles(lines.subList(1, lines.size()).toArray(new LineCoordinates[lines.size() - 1]));
         requestPolygon.setSpatialKey(reKey);
-        String guid = reqGeoObject.getGuid();
+        requestPolygon.setExtSysId(extSysId);
         requestPolygon.setGuid(guid);
 
         return requestPolygon;

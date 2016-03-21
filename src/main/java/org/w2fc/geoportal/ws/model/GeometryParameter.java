@@ -20,4 +20,6 @@ public interface GeometryParameter {
     String getSpatialKey();
 
     String getGuid();
+
+    String getExtSysId();
 }

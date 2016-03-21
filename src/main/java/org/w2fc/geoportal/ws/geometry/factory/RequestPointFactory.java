@@ -27,6 +27,7 @@ public class RequestPointFactory implements GeometryParameterFactory {
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
         String reKey = reqGeoObject.getSpatialKey();
         String guid = reqGeoObject.getGuid();
+        String extSysId = reqGeoObject.getExtSysId();
 
         RequestPoint requestPoint;
         if (reqGeoObject.getPointsCoordinates() == null){
@@ -42,6 +43,7 @@ public class RequestPointFactory implements GeometryParameterFactory {
         requestPoint.setTags(tags);
         requestPoint.setSpatialKey(reKey);
         requestPoint.setGuid(guid);
+        requestPoint.setExtSysId(extSysId);
 
         return requestPoint;
     }

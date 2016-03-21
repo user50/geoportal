@@ -31,6 +31,8 @@ public class RequestLine implements Serializable, GeometryParameter{
 
     private String guid;
 
+    private String extSysId;
+
     @XmlElementWrapper(name = "points", required = true)
     @XmlElement(name = "point")
     private PointCoordinates[] pointsCoordinates;
@@ -72,6 +74,15 @@ public class RequestLine implements Serializable, GeometryParameter{
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    @Override
+    public String getExtSysId() {
+        return extSysId;
+    }
+
+    public void setExtSysId(String extSysId) {
+        this.extSysId = extSysId;
     }
 
     public Long getLayerId() {

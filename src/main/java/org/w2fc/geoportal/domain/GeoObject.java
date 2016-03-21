@@ -55,6 +55,10 @@ public class GeoObject extends AbstractDomain<GeoObject>{
     @Column (name = "guid", nullable = true)
     private String guid;
 
+    @Field
+    @Column (name = "ext_sys_id", nullable = true)
+    private String extSysId;
+
     /*  GeoUser */
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED) 
     @OneToOne
@@ -221,7 +225,15 @@ public class GeoObject extends AbstractDomain<GeoObject>{
     public void setGeoObjectProperties(GeoObjectProperties geoObjectProperties) {
         this.geoObjectProperties = geoObjectProperties;
     }
-    
+
+    public String getExtSysId() {
+        return extSysId;
+    }
+
+    public void setExtSysId(String extSysId) {
+        this.extSysId = extSysId;
+    }
+
     @Override
     public boolean equals(Object obj) {
     	if(getId() == null)return false; //a new imported object in list

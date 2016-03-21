@@ -12,6 +12,9 @@ public class CreateGeoObjectValidator {
         if(params.getGuid() == null || params.getGuid().equals(""))
             throw new MissingParameterException("\"guid\" parameter is required");
 
+        if(params.getExtSysId() == null || params.getExtSysId().equals(""))
+            throw new MissingParameterException("\"extSysId\" parameter is required");
+
         if(params.getName() == null || params.getName().equals(""))
             throw new MissingParameterException("\"name\" parameter is required");
 

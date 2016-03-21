@@ -26,6 +26,8 @@ public class RequestLineFactory implements GeometryParameterFactory {
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
         String reKey = reqGeoObject.getSpatialKey();
+        String guid = reqGeoObject.getGuid();
+        String extSysId = reqGeoObject.getExtSysId();
 
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
         List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
@@ -34,7 +36,7 @@ public class RequestLineFactory implements GeometryParameterFactory {
         requestLine.setWkt(wkt);
         requestLine.setTags(tags);
         requestLine.setSpatialKey(reKey);
-        String guid = reqGeoObject.getGuid();
+        requestLine.setExtSysId(extSysId);
         requestLine.setGuid(guid);
 
         return requestLine;

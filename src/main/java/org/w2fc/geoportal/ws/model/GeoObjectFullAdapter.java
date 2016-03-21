@@ -95,6 +95,9 @@ public class GeoObjectFullAdapter extends GeoObjectUI {
 		return geoObject.getGuid();
 	}
 
+	public String getExtSysId(){
+		return geoObject.getExtSysId();
+	}
 
 	@Override
 	public List<Map<String, String>> getTags() {

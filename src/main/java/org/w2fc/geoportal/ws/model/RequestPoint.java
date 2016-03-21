@@ -21,6 +21,8 @@ public class RequestPoint implements Serializable, GeometryParameter{
 
 	private String guid;
 
+	private String extSysId;
+
 	@XmlElement(name = "point", required = true)
 	private PointCoordinates pointCoordinates;
 
@@ -71,6 +73,14 @@ public class RequestPoint implements Serializable, GeometryParameter{
 
 	public void setGuid(String guid) {
 		this.guid = guid;
+	}
+
+	public String getExtSysId() {
+		return extSysId;
+	}
+
+	public void setExtSysId(String extSysId) {
+		this.extSysId = extSysId;
 	}
 
 	public PointCoordinates getPointCoordinates() {

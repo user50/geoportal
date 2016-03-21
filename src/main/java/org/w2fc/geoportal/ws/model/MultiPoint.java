@@ -11,6 +11,7 @@ public class MultiPoint implements GeometryParameter {
 
     private String name;
     private String guid;
+    private String extSysId;
     private GeoObjectGeometryType type;
     private PointCoordinates[] pointsCoordinates;
     private Long layerId;
@@ -40,6 +41,15 @@ public class MultiPoint implements GeometryParameter {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    @Override
+    public String getExtSysId() {
+        return extSysId;
+    }
+
+    public void setExtSysId(String extSysId) {
+        this.extSysId = extSysId;
     }
 
     @Override
