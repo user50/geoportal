@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.w2fc.conf.ObjectFactory;
+import org.w2fc.geoportal.auth.GeoportalSecurity;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
@@ -17,6 +18,7 @@ import org.w2fc.geoportal.user.CustomJdbcUserDetailsManager;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
+import org.w2fc.geoportal.ws.exception.LayerAccessDeniedException;
 import org.w2fc.geoportal.ws.exception.MissingParameterException;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilderFactory;
@@ -36,10 +38,12 @@ public class GeoObjectService {
     final Logger logger = LoggerFactory.getLogger(GeoObjectService.class);
 
     private ServiceRegistry serviceRegistry;
+    private GeoportalSecurity geoportalSecurity;
 
     @Autowired
-    public GeoObjectService(ServiceRegistry serviceRegistry) {
+    public GeoObjectService(ServiceRegistry serviceRegistry, GeoportalSecurity geoportalSecurity) {
         this.serviceRegistry = serviceRegistry;
+        this.geoportalSecurity = geoportalSecurity;
     }
 
     public GeoObjectService() {
@@ -77,7 +81,9 @@ public class GeoObjectService {
     }
 
     public void delete(Long id) {
-        checkExists(id);
+        if (!geoportalSecurity.isObjectAllowed(id))
+            throw new LayerAccessDeniedException("Can not delete the geoobject. Access denied to the layer.");
+
         serviceRegistry.getGeoObjectDao().remove(id);
     }
 

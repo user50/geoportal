@@ -101,9 +101,7 @@ public class GeoportalSecurity {
     
     @Transactional(readOnly=true)
     public boolean isObjectAllowed(Long id){
-    	if (Constants.isEditor()) {
-			return true;
-		}
+
     	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
     	List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
     	

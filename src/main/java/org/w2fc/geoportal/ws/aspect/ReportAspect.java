@@ -134,7 +134,28 @@ public class ReportAspect {
         repository.save(actionStatus);
     }
 
-    @AfterReturning(
+    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
+    public void aroundDelete(ProceedingJoinPoint joinPoint) throws Throwable {
+        Long guid = (Long) joinPoint.getArgs()[0];
+        Long layerId = getLayerId(guid);
+
+        try{
+            joinPoint.proceed();
+
+            OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
+                    OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerId);
+
+            repository.save(actionStatus);
+
+        } catch (Exception e){
+            OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
+                    OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, getErrorMessage(e));
+
+            repository.save(actionStatus);
+        }
+    }
+
+    /*@AfterReturning(
             pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))",
             returning= "result")
     public void afterDeleteSuccess(JoinPoint joinPoint, Object result) {
@@ -155,10 +176,10 @@ public class ReportAspect {
         Long layerId = getLayerId(guid);
 
         OperationStatus actionStatus = new OperationStatus(guid.toString(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, error.getMessage());
+                OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, getErrorMessage(error));
 
         repository.save(actionStatus);
-    }
+    }*/
 
 
     public Long getCurrentUserId() {
