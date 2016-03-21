@@ -48,6 +48,15 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
                 .list();
                 
     }
+
+	@SuppressWarnings("unchecked")
+	public GeoObject getWithTags(Long id) {
+		return (GeoObject) getCurrentSession()
+				.createQuery("Select o from GeoObject o left join fetch o.tags where o.id = :id")
+				.setLong("id", id)
+				.uniqueResult();
+
+	}
     
     @Cacheable(value="GeoPortalCache", key="#identifier")
     @Override
