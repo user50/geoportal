@@ -67,11 +67,13 @@ public class GeoObjectService {
     }
 
     public void updateObject(RequestGeoObject requestGeoObject) {
-        checkExists(requestGeoObject.getId());
+        Long id = serviceRegistry.getGeoObjectDao().getGeoObjectId(requestGeoObject.getGuid(), requestGeoObject.getExtSysId());
+
+        checkExists(id);
 
         GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
-        updateGeoObject(requestGeoObject.getId(), geometryParameter, geometryBuilder);
+        updateGeoObject(id, geometryParameter, geometryBuilder);
     }
 
     public void updateObject(Long id, GeometryParameter geometryParameter){
@@ -114,6 +116,7 @@ public class GeoObjectService {
         gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
         gisObject.setCreated(Calendar.getInstance().getTime());
         gisObject.setExtSysId(params.getExtSysId());
+        gisObject.setGuid(params.getGuid());
 
         return gisObject;
     }

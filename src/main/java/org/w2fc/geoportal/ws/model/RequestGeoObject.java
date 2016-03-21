@@ -13,9 +13,6 @@ import java.util.HashSet;
 @XmlType(namespace = "http://ws.portal.maps.yarcloud.ru/object/RequestGeoObject")
 public class RequestGeoObject implements Serializable, GeometryParameter {
 
-    @XmlElement(name = "id")
-    private Long id;
-
     @XmlElement(name = "name", required=true)
     private String name;
 
@@ -46,14 +43,6 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
 
     @XmlElement(name = "spatialKey")
     private String spatialKey;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Override
     public String getName() {

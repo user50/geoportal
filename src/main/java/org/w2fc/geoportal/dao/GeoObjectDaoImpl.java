@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.dao;
 
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -467,10 +468,14 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
                 .uniqueResult();
 	}
 
-	
+	@Override
+	public Long getGeoObjectId(String guid, String extSysId) {
+		BigInteger id = (BigInteger) getCurrentSession()
+				.createSQLQuery("SELECT id from geo_object where guid = :guid and ext_sys_id = :extSysId")
+				.setString("guid", guid)
+				.setString("extSysId", extSysId)
+				.uniqueResult();
 
-	
-
-
-
+		return id.longValue();
+	}
 }
