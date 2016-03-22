@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
@@ -122,7 +123,7 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 				addScalar("created", StandardBasicTypes.DATE).
 				addScalar("changed", StandardBasicTypes.DATE).
 				addScalar("fias_code", StandardBasicTypes.STRING).
-				addScalar("the_geom",  GeometryUserType.TYPE).
+				addScalar("the_geom", GeometryUserType.TYPE).
 				addScalar("version", StandardBasicTypes.INTEGER).
 				setLong("id", identifier).
 	            list();
@@ -167,7 +168,15 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 	@Override
 	@CacheEvict(value="objectPermanent", allEntries=true)
 	public GeoObject update(GeoObject object, boolean... forceFlush) {
-		return super.update(object, forceFlush);
+		return merge(object, forceFlush);
+	}
+
+	private GeoObject merge(GeoObject object, boolean... forceFlush)
+	{
+		Session s = getCurrentSession();
+		s.merge(object);
+		flushSession(s, forceFlush);
+		return object;
 	}
 
 	@SuppressWarnings("unchecked")
