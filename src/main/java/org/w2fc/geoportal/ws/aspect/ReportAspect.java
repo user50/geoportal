@@ -11,6 +11,7 @@ import org.w2fc.geoportal.dao.GeoUserDao;
 import org.w2fc.geoportal.dao.OperationStatusRepository;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.OperationStatus;
+import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.model.GeometryParameter;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
 
@@ -134,7 +135,7 @@ public class ReportAspect {
         repository.save(actionStatus);
     }
 
-    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
+/*    @Around("execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))")
     public void aroundDelete(ProceedingJoinPoint joinPoint) throws Throwable {
         Long guid = (Long) joinPoint.getArgs()[0];
         Long layerId = getLayerId(guid);
@@ -152,13 +153,15 @@ public class ReportAspect {
                     OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, getErrorMessage(e));
 
             repository.save(actionStatus);
-        }
-    }
 
-    /*@AfterReturning(
-            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))",
+            throw e;
+        }
+    }*/
+
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(Long)))",
             returning= "result")
-    public void afterDeleteSuccess(JoinPoint joinPoint, Object result) {
+    public void afterDeleteRestSuccess(JoinPoint joinPoint, Object result) {
         Long guid = (Long) joinPoint.getArgs()[0];
         Long layerId = getLayerId(guid);
 
@@ -169,9 +172,9 @@ public class ReportAspect {
     }
 
     @AfterThrowing(
-            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(..)))",
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(Long)))",
             throwing= "error")
-    public void afterDeleteFail(JoinPoint joinPoint, Throwable error) {
+    public void afterDeleteRestFail(JoinPoint joinPoint, Throwable error) {
         Long guid = (Long) joinPoint.getArgs()[0];
         Long layerId = getLayerId(guid);
 
@@ -179,8 +182,43 @@ public class ReportAspect {
                 OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, getErrorMessage(error));
 
         repository.save(actionStatus);
-    }*/
+    }
 
+    @AfterReturning(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(String, String)))",
+            returning= "result")
+    public void afterDeleteSoapSuccess(JoinPoint joinPoint, Object result) {
+        String guid = (String) joinPoint.getArgs()[1];
+
+        OperationStatus actionStatus = new OperationStatus(guid, getPid(), getCurrentUserId(),
+                OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), null);
+
+        repository.save(actionStatus);
+    }
+
+    @AfterThrowing(
+            pointcut = "execution(* org.w2fc.geoportal.ws.GeoObjectService.delete(String, String)))",
+            throwing= "error")
+    public void afterDeleteSoapFail(JoinPoint joinPoint, Throwable error) {
+        String extSysId = (String) joinPoint.getArgs()[0];
+        String guid = (String) joinPoint.getArgs()[1];
+
+        if (error instanceof GeoObjectNotFoundException) {
+            OperationStatus actionStatus = new OperationStatus(guid, getPid(), getCurrentUserId(),
+                    OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), null, getErrorMessage(error));
+            repository.save(actionStatus);
+            return;
+        }
+
+        Long id = geoObjectDao.getGeoObjectId(guid, extSysId);
+
+        Long layerId = getLayerId(id);
+
+        OperationStatus actionStatus = new OperationStatus(guid, getPid(), getCurrentUserId(),
+                OperationStatus.Action.DELETE, OperationStatus.Status.FAILURE, new Date(), layerId, getErrorMessage(error));
+
+        repository.save(actionStatus);
+    }
 
     public Long getCurrentUserId() {
         return geoUserDao.getCurrentGeoUser().getId();

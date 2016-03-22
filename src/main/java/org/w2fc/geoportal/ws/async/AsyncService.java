@@ -38,8 +38,6 @@ public class AsyncService {
                 SOAPProcessStatus.INSTANCE.put(pid, "success");
             } catch (Exception e) {
                 SOAPProcessStatus.INSTANCE.put(pid, "error");
-
-                throw new RuntimeException(e);
             }
         }
     }

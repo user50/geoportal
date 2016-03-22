@@ -16,6 +16,7 @@ import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -132,19 +133,19 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     }
 
     @WebMethod
-    public SOAPOperationResponse deleteObjects(@WebParam(name = "ids")@XmlElement(required = true, nillable = false) String ids){
+    public SOAPOperationResponse deleteObjects(DeleteObjectsRequest deleteObjectsRequest){
         autowire();
 
         basicAuthenticator.doAuthentication(webServiceContext);
 
-        List<Long> idList;
+        String[] idList;
         try {
-            idList = objectMapper.readValue(ids, new TypeReference<List<Long>>(){});
+            idList = objectMapper.readValue(deleteObjectsRequest.getIds(), String[].class);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Unable to parse json array");
         }
-        String pid = portalWsService.deleteObjects(idList);
+        String pid = portalWsService.deleteObjects(deleteObjectsRequest.getExtSysId(), Arrays.asList(idList));
 
         return new SOAPOperationResponse(pid);
     }

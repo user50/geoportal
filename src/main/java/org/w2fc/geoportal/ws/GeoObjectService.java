@@ -12,6 +12,7 @@ import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.domain.ReferenceSystemProj;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.exception.LayerAccessDeniedException;
 import org.w2fc.geoportal.ws.exception.MissingParameterException;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
@@ -65,7 +66,8 @@ public class GeoObjectService {
 
         Long id = serviceRegistry.getGeoObjectDao().getGeoObjectId(requestGeoObject.getGuid(), requestGeoObject.getExtSysId());
 
-        geoportalSecurity.checkExists(id);
+        if (id == null)
+            throw new GeoObjectNotFoundException("Geo object does not exist");
 
         GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
@@ -78,7 +80,15 @@ public class GeoObjectService {
         updateGeoObject(id, geometryParameter, geometryBuilder);
     }
 
+    public void delete(String extSysId, String guid) {
+        Long id = serviceRegistry.getGeoObjectDao().getGeoObjectId(guid, extSysId);
+
+        delete(id);
+    }
+
     public void delete(Long id) {
+        geoportalSecurity.checkExists(id);
+
         if (!geoportalSecurity.checkLayerPermissions(id))
             throw new LayerAccessDeniedException("Can not delete the geoobject. Access denied to the layer.");
 

@@ -70,11 +70,11 @@ public class GeoObjectsService {
         return asyncService.asyncExecute(runnable);
     }
 
-    public String deleteObjects(final List<Long> ids){
+    public String deleteObjects(final String extSysId, final List<String> guids){
         Runnable runnable = new Runnable() {
             public void run() {
-                for (Long id : ids) {
-                    geoObjectService.delete(id);
+                for (String guid : guids) {
+                    geoObjectService.delete(extSysId, guid);
                 }
             }
         };
@@ -112,6 +112,9 @@ public class GeoObjectsService {
         geoObjectService.updateObject(id, request);
     }
 
+    public void deleteObject(Long id){
+        geoObjectService.delete(id);
+    }
     public List<String> getSpatialRefSystems(){
        return geoObjectService.getSpatialRefSystems();
     }
