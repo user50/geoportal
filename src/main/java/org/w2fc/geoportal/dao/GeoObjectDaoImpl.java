@@ -494,6 +494,6 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 				.setString("extSysId", extSysId)
 				.uniqueResult();
 
-		return id.longValue();
+		return id != null ? id.longValue() : null;
 	}
 }

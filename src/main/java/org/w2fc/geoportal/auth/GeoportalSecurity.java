@@ -1,7 +1,9 @@
 package org.w2fc.geoportal.auth;
 
 import java.util.List;
+import java.util.Map;
 
+import com.vividsolutions.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,21 +102,51 @@ public class GeoportalSecurity {
     }
     
     @Transactional(readOnly=true)
-    public boolean isObjectAllowed(Long id){
+    public boolean isObjectAllowed(Long id) {
+		return Constants.isEditor() || checkLayerPermissions(id);
+	}
 
-    	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
-    	List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
-    	
-    	GeoObject obj = serviceRegistry.getGeoObjectDao().get(id);
+	@Transactional(readOnly=true)
+	public boolean checkLayerPermissions(long id){
+		GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
+		List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
+
+		GeoObject obj = serviceRegistry.getGeoObjectDao().get(id);
 		if (obj == null)
 			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
 
-    	for(GeoLayer l : obj.getGeoLayers()){
-    		if(layers.contains(l)){
-    			return true;
-    		}
-    	}
-    	return false;
-    }
+		for(GeoLayer l : obj.getGeoLayers()){
+			if(layers.contains(l)){
+				return true;
+			}
+		}
 
+		return false;
+	}
+
+	public void checkArea(GeoObject gisObject) {
+
+		Long currentUserId = serviceRegistry.getUserDao().getCurrentGeoUser().getId();
+
+		Map<String, Geometry> permissionAreaMap = serviceRegistry.getUserDao().getPermissionArea(currentUserId);
+
+		if (permissionAreaMap == null)
+			return;
+
+		Geometry permArea = permissionAreaMap.get("area");
+
+		if(permArea == null)
+			throw new RuntimeException("Permission area not specified for current user");
+
+		if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
+	}
+
+	public void checkExists(Long id){
+		if (id == null)
+			throw new GeoObjectNotFoundException("Geo object does not exist");
+
+		GeoObject geoObject = serviceRegistry.getGeoObjectDao().get(id);
+		if (geoObject == null)
+			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
+	}
 }

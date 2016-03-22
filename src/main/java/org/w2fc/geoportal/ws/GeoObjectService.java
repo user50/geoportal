@@ -4,9 +4,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.auth.GeoportalSecurity;
@@ -14,10 +11,7 @@ import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.domain.ReferenceSystemProj;
-import org.w2fc.geoportal.user.CustomJdbcUserDetailsManager;
-import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
-import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.exception.LayerAccessDeniedException;
 import org.w2fc.geoportal.ws.exception.MissingParameterException;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
@@ -67,9 +61,11 @@ public class GeoObjectService {
     }
 
     public void updateObject(RequestGeoObject requestGeoObject) {
+        new CreateGeoObjectValidator().validateUpdate(requestGeoObject);
+
         Long id = serviceRegistry.getGeoObjectDao().getGeoObjectId(requestGeoObject.getGuid(), requestGeoObject.getExtSysId());
 
-        checkExists(id);
+        geoportalSecurity.checkExists(id);
 
         GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
@@ -77,14 +73,17 @@ public class GeoObjectService {
     }
 
     public void updateObject(Long id, GeometryParameter geometryParameter){
-        checkExists(id);
+        geoportalSecurity.checkExists(id);
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
         updateGeoObject(id, geometryParameter, geometryBuilder);
     }
 
     public void delete(Long id) {
-        if (!geoportalSecurity.isObjectAllowed(id))
+        if (!geoportalSecurity.checkLayerPermissions(id))
             throw new LayerAccessDeniedException("Can not delete the geoobject. Access denied to the layer.");
+
+        GeoObject geoObject = serviceRegistry.getGeoObjectDao().get(id);
+        geoportalSecurity.checkArea(geoObject);
 
         serviceRegistry.getGeoObjectDao().remove(id);
     }
@@ -92,7 +91,7 @@ public class GeoObjectService {
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
 
-        new CreateGeoObjectValidator().validate(params);
+        new CreateGeoObjectValidator().validateCreate(params);
 
         GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());
 
@@ -100,7 +99,7 @@ public class GeoObjectService {
 
         GeoObject gisObject = ObjectFactory.createGeoObject(params.getName(), geometry);
 
-        checkArea(gisObject);
+        geoportalSecurity.checkArea(gisObject);
 
         if(params.getTags() != null && params.getTags().size() > 0){
             for(GeoObjectTag tag : params.getTags()){
@@ -149,7 +148,7 @@ public class GeoObjectService {
         new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
         gisObject.setTheGeom(geometryBuilder.create(params));
 
-        checkArea(gisObject);
+        geoportalSecurity.checkArea(gisObject);
 
         serviceRegistry.getGeoObjectDao().update(gisObject);
     }
@@ -168,53 +167,6 @@ public class GeoObjectService {
             throw new MissingParameterException("Geo layer with id "+layerId +" does not exist");
 
         gisObject.setGeoLayers(new HashSet<GeoLayer>(Arrays.asList(layer)));
-    }
-
-    private void checkAreaOld(GeoObject gisObject) {
-        Geometry permArea = null;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object user = null;
-
-        if (auth == null)
-        {
-            String login = serviceRegistry.getUserDao().getCurrentGeoUser().getLogin();
-            List<UserDetails> userDetails = serviceRegistry.getUserDetailsManager().loadUsersByUsername(login);
-
-            user = userDetails.get(0);
-        }else
-        {
-            user = auth.getPrincipal();
-        }
-
-        if(user instanceof CustomUserDetails){
-            if(((CustomUserDetails)user).getPermissionArea() == null)return;
-            permArea = ((CustomUserDetails)user).getPermissionArea().get("area");
-            if(permArea == null)return;
-            if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
-        }
-    }
-
-    private void checkArea(GeoObject gisObject) {
-
-        Long currentUserId = serviceRegistry.getUserDao().getCurrentGeoUser().getId();
-
-        Map<String, Geometry> permissionAreaMap = serviceRegistry.getUserDao().getPermissionArea(currentUserId);
-
-        if (permissionAreaMap == null)
-            return;
-
-        Geometry permArea = permissionAreaMap.get("area");
-
-        if(permArea == null)
-            throw new RuntimeException("Permission area not specified for current user");
-
-        if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
-    }
-
-    private void checkExists(Long id){
-        GeoObject geoObject = serviceRegistry.getGeoObjectDao().get(id);
-        if (geoObject == null)
-            throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
     }
 
     public List<String> getSpatialRefSystems(){
