@@ -47,10 +47,15 @@ public class GeoObjectsService {
     public String createObjects(final List<RequestGeoObject> geoObjectsReq){
         checkPermissions(geoObjectsReq);
 
-        Runnable runnable = new Runnable() {
+        Task runnable = new Task() {
             public void run() {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
-                    geoObjectService.createAndSaveObject(requestGeoObject);
+                    try {
+                        geoObjectService.createAndSaveObject(requestGeoObject);
+                        setErrors(false);
+                    } catch (Exception e) {
+                        setErrors(true);
+                    }
                 }
             }
         };
@@ -60,10 +65,15 @@ public class GeoObjectsService {
     public String updateObjects(final List<RequestGeoObject> geoObjectsReq) {
         checkPermissions(geoObjectsReq);
 
-        Runnable runnable = new Runnable() {
+        Task runnable = new Task() {
             public void run() {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
-                    geoObjectService.updateObject(requestGeoObject);
+                    try {
+                        geoObjectService.updateObject(requestGeoObject);
+                        setErrors(false);
+                    } catch (Exception e) {
+                        setErrors(true);
+                    }
                 }
             }
         };
@@ -71,10 +81,15 @@ public class GeoObjectsService {
     }
 
     public String deleteObjects(final List<Long> ids){
-        Runnable runnable = new Runnable() {
+        Task runnable = new Task() {
             public void run() {
                 for (Long id : ids) {
-                    geoObjectService.delete(id);
+                    try {
+                        geoObjectService.delete(id);
+                        setErrors(false);
+                    } catch (Exception e) {
+                        setErrors(true);
+                    }
                 }
             }
         };

@@ -2,12 +2,13 @@ package org.w2fc.geoportal.ws.async;
 
 import org.w2fc.geoportal.config.ThreadPids;
 import org.w2fc.geoportal.config.ThreadTokens;
+import org.w2fc.geoportal.ws.Task;
 
 import java.util.UUID;
 
 public class AsyncService {
 
-    public String asyncExecute(Runnable runnable){
+    public String asyncExecute(Task runnable){
         String pid = UUID.randomUUID().toString();
 
         Thread thread = new Thread(new AsyncTask(runnable, pid));
@@ -16,14 +17,14 @@ public class AsyncService {
         thread.start();
 
         return pid;
-    }
+}
 
     private static class AsyncTask implements Runnable
     {
-        Runnable runnable;
+        Task runnable;
         String pid;
 
-        AsyncTask(Runnable runnable, String pid) {
+        AsyncTask(Task runnable, String pid) {
             this.runnable = runnable;
             this.pid = pid;
         }
@@ -35,7 +36,11 @@ public class AsyncService {
 
                 runnable.run();
 
-                SOAPProcessStatus.INSTANCE.put(pid, "success");
+                if (runnable.isErrors())
+                    SOAPProcessStatus.INSTANCE.put(pid, "error");
+                else
+                    SOAPProcessStatus.INSTANCE.put(pid, "success");
+
             } catch (Exception e) {
                 SOAPProcessStatus.INSTANCE.put(pid, "error");
 
@@ -43,4 +48,6 @@ public class AsyncService {
             }
         }
     }
+
+
 }
