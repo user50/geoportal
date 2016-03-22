@@ -138,7 +138,7 @@ public class GeoObjectService {
 
     public <T extends GeometryParameter> void updateGeoObject(long id, T params, GeometryBuilder<T> geometryBuilder)
     {
-        GeoObject gisObject = serviceRegistry.getGeoObjectDao().get(id);
+        GeoObject gisObject = serviceRegistry.getGeoObjectDao().getWithTags(id);
 
         if (gisObject == null)
             throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");

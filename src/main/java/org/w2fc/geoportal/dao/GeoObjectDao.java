@@ -65,4 +65,6 @@ public interface GeoObjectDao extends AbstractDao<GeoObject, Long> {
 	public Double getArea(Long id);
 
 	public Long getGeoObjectId(String guid, String extSysId);
+
+	public GeoObject getWithTags(Long id);
 }
