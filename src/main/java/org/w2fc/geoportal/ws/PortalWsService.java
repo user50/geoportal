@@ -30,7 +30,7 @@ public interface PortalWsService {
 
 	public String updateObjects(List<RequestGeoObject> geoObjectsReq);
 
-	public String deleteObjects(List<Long> ids);
+	public String deleteObjects(String extSysId, List<String> guids);
 
 	public Long createPoint(RequestPoint rp);
 

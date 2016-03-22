@@ -80,12 +80,12 @@ public class GeoObjectsService {
         return asyncService.asyncExecute(runnable);
     }
 
-    public String deleteObjects(final List<Long> ids){
+    public String deleteObjects(final String extSysId, final List<String> guids){
         Task runnable = new Task() {
             public void run() {
-                for (Long id : ids) {
+                for (String guid : guids) {
                     try {
-                        geoObjectService.delete(id);
+                        geoObjectService.delete(extSysId, guid);
                         setErrors(false);
                     } catch (Exception e) {
                         setErrors(true);
@@ -127,6 +127,9 @@ public class GeoObjectsService {
         geoObjectService.updateObject(id, request);
     }
 
+    public void deleteObject(Long id){
+        geoObjectService.delete(id);
+    }
     public List<String> getSpatialRefSystems(){
        return geoObjectService.getSpatialRefSystems();
     }

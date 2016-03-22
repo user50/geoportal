@@ -6,27 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w2fc.conf.Constants;
 import org.w2fc.conf.ObjectFactory;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
-import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.layer.GeoLayerUI;
 import org.w2fc.geoportal.layer.GeoLayerUIAdapter;
-import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.model.*;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 
 @Service
@@ -171,8 +161,8 @@ public class PortalWsServiceImpl implements PortalWsService {
 		return geoObjectsService.updateObjects(geoObjectsReq);
 	}
 
-	public String deleteObjects(List<Long> ids){
-		return geoObjectsService.deleteObjects(ids);
+	public String deleteObjects(String extSysId, List<String> guids){
+		return geoObjectsService.deleteObjects(extSysId, guids);
 	}
 
 	@Override
@@ -220,7 +210,7 @@ public class PortalWsServiceImpl implements PortalWsService {
 	@Override
 	@Transactional
 	public void delete(Long id) {
-		geoObjectsService.deleteObjects(Arrays.asList(id));
+		geoObjectsService.deleteObject(id);
 	}
 
 	@Override

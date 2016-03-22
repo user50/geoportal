@@ -43,8 +43,6 @@ public class AsyncService {
 
             } catch (Exception e) {
                 SOAPProcessStatus.INSTANCE.put(pid, "error");
-
-                throw new RuntimeException(e);
             }
         }
     }
