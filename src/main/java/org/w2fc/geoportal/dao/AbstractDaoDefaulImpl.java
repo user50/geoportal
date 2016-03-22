@@ -94,7 +94,7 @@ public abstract class AbstractDaoDefaulImpl<T, I extends Serializable> implement
     @Override
     public T add(T object, boolean ... forceFlush) {
         Session s = getCurrentSession();
-        s.saveOrUpdate(object);
+        s.merge(object);
         flushSession(s, forceFlush);
         return object;
     }
