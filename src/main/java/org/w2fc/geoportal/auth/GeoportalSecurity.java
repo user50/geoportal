@@ -149,4 +149,10 @@ public class GeoportalSecurity {
 		if (geoObject == null)
 			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
 	}
+
+	public boolean checkExists(String extSysId, String guid){
+		Long id = serviceRegistry.getGeoObjectDao().getGeoObjectId(guid, extSysId);
+
+		return id != null;
+	}
 }
