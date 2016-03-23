@@ -67,4 +67,6 @@ public interface GeoObjectDao extends AbstractDao<GeoObject, Long> {
 	public Long getGeoObjectId(String guid, String extSysId);
 
 	public GeoObject getWithTags(Long id);
+
+	public GeoObject mergeUpdate(GeoObject object, boolean... forceFlush);
 }

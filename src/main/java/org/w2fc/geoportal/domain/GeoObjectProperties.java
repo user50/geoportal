@@ -51,7 +51,7 @@ public class GeoObjectProperties extends AbstractDomain<GeoObjectProperties> {
     private String fillColor;
     
     @Column (name = "fill_opacity", nullable = true)
-    private String fillOpacity;
+    private Double fillOpacity;
     
     
     @Version 
@@ -119,12 +119,12 @@ public class GeoObjectProperties extends AbstractDomain<GeoObjectProperties> {
     }
 
 
-    public String getFillOpacity() {
+    public Double getFillOpacity() {
         return fillOpacity;
     }
 
 
-    public void setFillOpacity(String fillOpacity) {
+    public void setFillOpacity(Double fillOpacity) {
         this.fillOpacity = fillOpacity;
     }
 
