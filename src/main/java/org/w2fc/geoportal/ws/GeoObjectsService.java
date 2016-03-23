@@ -52,7 +52,6 @@ public class GeoObjectsService {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
                     try {
                         geoObjectService.createAndSaveObject(requestGeoObject);
-                        setErrors(false);
                     } catch (Exception e) {
                         setErrors(true);
                     }
@@ -70,7 +69,6 @@ public class GeoObjectsService {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
                     try {
                         geoObjectService.updateObject(requestGeoObject);
-                        setErrors(false);
                     } catch (Exception e) {
                         setErrors(true);
                     }
@@ -86,7 +84,6 @@ public class GeoObjectsService {
                 for (String guid : guids) {
                     try {
                         geoObjectService.delete(extSysId, guid);
-                        setErrors(false);
                     } catch (Exception e) {
                         setErrors(true);
                     }

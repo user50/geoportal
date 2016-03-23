@@ -2,7 +2,7 @@ package org.w2fc.geoportal.ws;
 
 public abstract class Task implements Runnable {
 
-    private boolean errors;
+    private boolean errors = false;
 
 
     public boolean isErrors() {
