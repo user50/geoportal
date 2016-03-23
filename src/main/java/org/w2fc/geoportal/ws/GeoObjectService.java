@@ -160,7 +160,7 @@ public class GeoObjectService {
 
         geoportalSecurity.checkArea(gisObject);
 
-        serviceRegistry.getGeoObjectDao().update(gisObject);
+        serviceRegistry.getGeoObjectDao().mergeUpdate(gisObject);
     }
 
     private void updateObjectLayer(GeoObject gisObject, Long layerId) {

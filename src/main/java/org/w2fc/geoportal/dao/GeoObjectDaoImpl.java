@@ -168,10 +168,12 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 	@Override
 	@CacheEvict(value="objectPermanent", allEntries=true)
 	public GeoObject update(GeoObject object, boolean... forceFlush) {
-		return merge(object, forceFlush);
+		return super.update(object, forceFlush);
 	}
 
-	private GeoObject merge(GeoObject object, boolean... forceFlush)
+	@Override
+	@CacheEvict(value="objectPermanent", allEntries=true)
+	public GeoObject mergeUpdate(GeoObject object, boolean... forceFlush)
 	{
 		Session s = getCurrentSession();
 		s.merge(object);
