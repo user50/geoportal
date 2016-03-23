@@ -15,6 +15,7 @@ import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.exception.LayerAccessDeniedException;
 import org.w2fc.geoportal.ws.exception.MissingParameterException;
+import org.w2fc.geoportal.ws.exception.NonUniqueIdentifierException;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilderFactory;
 import org.w2fc.geoportal.ws.geometry.builder.TransformCoordinate;
@@ -46,6 +47,11 @@ public class GeoObjectService {
 
 
     public Long createAndSaveObject(RequestGeoObject requestGeoObject){
+        new CreateGeoObjectValidator().validateCreate(requestGeoObject);
+
+        if (geoportalSecurity.checkExists(requestGeoObject.getExtSysId(), requestGeoObject.getGuid()))
+            throw new NonUniqueIdentifierException("Non unique identifier: guid - " + requestGeoObject.getGuid() );
+
         GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
 
@@ -55,6 +61,11 @@ public class GeoObjectService {
     }
 
     public Long createAndSaveObject(GeometryParameter geometryParameter){
+        new CreateGeoObjectValidator().validateCreate(geometryParameter);
+
+        if (geoportalSecurity.checkExists(geometryParameter.getExtSysId(), geometryParameter.getGuid()))
+            throw new NonUniqueIdentifierException("Non unique identifier: guid - " + geometryParameter.getGuid() );
+
         GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
         GeoObject geoObject = createGeoObject(geometryParameter, geometryBuilder);
 
@@ -100,8 +111,6 @@ public class GeoObjectService {
 
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
-
-        new CreateGeoObjectValidator().validateCreate(params);
 
         GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());
 
