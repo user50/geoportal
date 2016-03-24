@@ -38,7 +38,16 @@ public class Report1Controller {
     @Autowired
     ServiceRegistry serviceRegistry;
 
-    
+    @RequestMapping(value = "/{name}")
+    public String generalPdfReport(@PathVariable String name, Model model) {
+        List<ReportRaw> list = new ArrayList<ReportRaw>();
+        list.add(new ReportRaw(new Date(), "B91614080E7155BC0FE742CF748D0DF1-report.pdf", "user50"));
+
+        model.addAttribute("list", list);
+
+        return "report/" + name;
+    }
+
     @RequestMapping(value = "/layers.pdf")
     public String listAsPdf(@RequestParam(required = false) final List<Long> ids, Model model) {
         
@@ -141,7 +150,7 @@ public class Report1Controller {
     }
 
     @RequestMapping(value = REPORT_URL_PATTERN)
-    public String pdfReport(@PathVariable final String pid, Model model) {
+    public String pdfReportByPid(@PathVariable final String pid, Model model) {
 
         model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
 
