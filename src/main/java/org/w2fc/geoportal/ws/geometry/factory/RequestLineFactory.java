@@ -22,7 +22,7 @@ public class RequestLineFactory implements GeometryParameterFactory {
     @Override
     public RequestLine create() {
         String name = reqGeoObject.getName();
-        Long layerId = reqGeoObject.getLayerId();
+        Set<Long> layerIds = reqGeoObject.getLayerIds();
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
         String reKey = reqGeoObject.getSpatialKey();
@@ -32,7 +32,7 @@ public class RequestLineFactory implements GeometryParameterFactory {
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
         List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
 
-        RequestLine requestLine = new RequestLine(name, layerId, pointCoordinates.toArray(new PointCoordinates[pointCoordinates.size()]));
+        RequestLine requestLine = new RequestLine(name, layerIds, pointCoordinates.toArray(new PointCoordinates[pointCoordinates.size()]));
         requestLine.setWkt(wkt);
         requestLine.setTags(tags);
         requestLine.setSpatialKey(reKey);

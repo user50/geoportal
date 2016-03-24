@@ -36,7 +36,7 @@ public class GeoObjectsService {
     {
         Set<Long> layerIds = new HashSet<Long>();
         for (RequestGeoObject requestGeoObject : geoObjectsReq)
-            layerIds.add(requestGeoObject.getLayerId());
+            layerIds.addAll(requestGeoObject.getLayerIds());
 
         for (Long layerId : layerIds) {
             if (!geoportalSecurity.isLayerEditor(layerId))

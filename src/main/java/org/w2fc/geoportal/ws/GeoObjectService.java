@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.ws;
 
 import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.cfg.SetSimpleValueTypeSecondPass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,7 @@ public class GeoObjectService {
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
 
-        GeoLayer layer = serviceRegistry.getLayerDao().get(params.getLayerId());
+        Set<GeoLayer> layers = serviceRegistry.getLayerDao().list(params.getLayerIds());
 
         Geometry geometry = geometryBuilder.create(params);
 
@@ -128,7 +129,7 @@ public class GeoObjectService {
         }
 
         Set<GeoLayer> geoLayers = new HashSet<GeoLayer>();
-        geoLayers.add(layer);
+        geoLayers.addAll(layers);
 
         gisObject.setGeoLayers(geoLayers);
         gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
@@ -161,7 +162,7 @@ public class GeoObjectService {
         if (gisObject == null)
             throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");
 
-        updateObjectLayer(gisObject, params.getLayerId());
+        updateObjectLayer(gisObject, params.getLayerIds());
 
         gisObject.setName(params.getName());
         new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
@@ -172,20 +173,19 @@ public class GeoObjectService {
         serviceRegistry.getGeoObjectDao().mergeUpdate(gisObject);
     }
 
-    private void updateObjectLayer(GeoObject gisObject, Long layerId) {
-        if (layerId == null)
+    private void updateObjectLayer(GeoObject gisObject, Set<Long> layerIds) {
+        if (layerIds == null)
             return;
 
-        for (GeoLayer geoLayer : gisObject.getGeoLayers())
-            if (geoLayer.getId().equals(layerId))
-                return;
+        Set<GeoLayer> layers = new HashSet<GeoLayer>();
+        for (Long layerId : layerIds) {
+            GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
+            if (layer == null)
+                throw new MissingParameterException("Geo layer with id "+layerIds +" does not exist");
+            layers.add(layer);
+        }
 
-        GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
-
-        if (layer == null)
-            throw new MissingParameterException("Geo layer with id "+layerId +" does not exist");
-
-        gisObject.setGeoLayers(new HashSet<GeoLayer>(Arrays.asList(layer)));
+        gisObject.setGeoLayers(layers);
     }
 
     public List<String> getSpatialRefSystems(){

@@ -11,8 +11,8 @@ public class CreateGeoObjectValidator {
     public void validateCreate(GeometryParameter params){
         validateUpdate(params);
 
-        if(params.getLayerId() == null)
-            throw new MissingParameterException("\"layerId\" parameter is required");
+        if(params.getLayerIds() == null)
+            throw new MissingParameterException("\"layers\" parameter is required");
     }
 
     public void validateUpdate(GeometryParameter params){

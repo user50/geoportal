@@ -44,7 +44,7 @@ public class ReportAspect {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
+                OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerIds().iterator().next());
 
         repository.save(actionStatus);
     }
@@ -56,7 +56,7 @@ public class ReportAspect {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
+                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerIds().iterator().next(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
@@ -68,7 +68,7 @@ public class ReportAspect {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
+                OperationStatus.Action.CREATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerIds().iterator().next());
 
         repository.save(actionStatus);
     }
@@ -81,7 +81,7 @@ public class ReportAspect {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
+                OperationStatus.Action.CREATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerIds().iterator().next(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
@@ -93,7 +93,7 @@ public class ReportAspect {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
+                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerIds().iterator().next());
 
         repository.save(actionStatus);
     }
@@ -105,7 +105,7 @@ public class ReportAspect {
         RequestGeoObject requestGeoObject = (RequestGeoObject) joinPoint.getArgs()[0];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
+                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerIds().iterator().next(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }
@@ -117,7 +117,7 @@ public class ReportAspect {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[1];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerId());
+                OperationStatus.Action.UPDATE, OperationStatus.Status.SUCCESS, new Date(), requestGeoObject.getLayerIds().iterator().next());
 
         repository.save(actionStatus);
     }
@@ -130,7 +130,7 @@ public class ReportAspect {
         GeometryParameter requestGeoObject = (GeometryParameter) joinPoint.getArgs()[1];
 
         OperationStatus actionStatus = new OperationStatus(requestGeoObject.getGuid(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerId(), getErrorMessage(error));
+                OperationStatus.Action.UPDATE, OperationStatus.Status.FAILURE, new Date(), requestGeoObject.getLayerIds().iterator().next(), getErrorMessage(error));
 
         repository.save(actionStatus);
     }

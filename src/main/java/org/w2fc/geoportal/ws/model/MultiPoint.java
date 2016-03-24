@@ -14,14 +14,14 @@ public class MultiPoint implements GeometryParameter {
     private String extSysId;
     private GeoObjectGeometryType type;
     private PointCoordinates[] pointsCoordinates;
-    private Long layerId;
+    private Set<Long> layerIds;
     private Set<GeoObjectTag> tags;
     private String wkt;
     private String spatialKey;
 
-    public MultiPoint(String name, Long layerId, PointCoordinates[] pointsCoordinates) {
+    public MultiPoint(String name, Set<Long> layerIds, PointCoordinates[] pointsCoordinates) {
         this.name = name;
-        this.layerId = layerId;
+        this.layerIds = layerIds;
         this.pointsCoordinates = pointsCoordinates;
     }
 
@@ -53,12 +53,12 @@ public class MultiPoint implements GeometryParameter {
     }
 
     @Override
-    public Long getLayerId() {
-        return layerId;
+    public Set<Long> getLayerIds() {
+        return layerIds;
     }
 
-    public void setLayerId(Long layerId) {
-        this.layerId = layerId;
+    public void setLayerIds(Set<Long> layerIds) {
+        this.layerIds = layerIds;
     }
 
     public PointCoordinates[] getPointsCoordinates() {

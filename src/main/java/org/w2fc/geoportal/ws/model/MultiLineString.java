@@ -15,14 +15,14 @@ public class MultiLineString implements GeometryParameter {
     private String extSysId;
     private GeoObjectGeometryType type;
     private List<GeoLineString> lineStrings;
-    private Long layerId;
+    private Set<Long> layerIds;
     private Set<GeoObjectTag> tags;
     private String wkt;
     private String spatialKey;
 
-    public MultiLineString(String name, Long layerId, List<GeoLineString> lineStrings) {
+    public MultiLineString(String name, Set<Long> layerIds, List<GeoLineString> lineStrings) {
         this.name = name;
-        this.layerId = layerId;
+        this.layerIds = layerIds;
         this.lineStrings = lineStrings;
     }
 
@@ -54,12 +54,12 @@ public class MultiLineString implements GeometryParameter {
     }
 
     @Override
-    public Long getLayerId() {
-        return layerId;
+    public Set<Long> getLayerIds() {
+        return layerIds;
     }
 
-    public void setLayerId(Long layerId) {
-        this.layerId = layerId;
+    public void setLayerIds(Set<Long> layerIds) {
+        this.layerIds = layerIds;
     }
 
     public List<GeoLineString> getLineStrings() {

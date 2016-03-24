@@ -26,8 +26,7 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	@XmlElement(name = "point", required = true)
 	private PointCoordinates pointCoordinates;
 
-	@XmlElement(name = "layerId", required=true)
-	private Long layerId;
+	private Set<Long> layerIds;
 
 	@XmlElement(name = "address")
 	private String address;
@@ -45,15 +44,15 @@ public class RequestPoint implements Serializable, GeometryParameter{
 	public RequestPoint() {
 	}
 
-	public RequestPoint(String name, Long layerId, PointCoordinates pointCoordinates) {
+	public RequestPoint(String name, Set<Long> layerIds, PointCoordinates pointCoordinates) {
 		this.name = name;
-		this.layerId = layerId;
+		this.layerIds = layerIds;
 		this.pointCoordinates = pointCoordinates;
 	}
 
-	public RequestPoint(String name, Long layerId, String address) {
+	public RequestPoint(String name, Set<Long> layerIds, String address) {
 		this.name = name;
-		this.layerId = layerId;
+		this.layerIds = layerIds;
 		this.address = address;
 	}
 
@@ -91,12 +90,15 @@ public class RequestPoint implements Serializable, GeometryParameter{
 		this.pointCoordinates = pointCoordinates;
 	}
 
-	public Long getLayerId() {
-		return layerId;
+	@Override
+	public Set<Long> getLayerIds() {
+		return layerIds;
 	}
-	public void setLayerId(Long layerId) {
-		this.layerId = layerId;
+
+	public void setLayerIds(Set<Long> layerIds) {
+		this.layerIds = layerIds;
 	}
+
 	public Set<GeoObjectTag> getTags() {
 		return tags;
 	}
