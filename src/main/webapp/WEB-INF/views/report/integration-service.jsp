@@ -19,8 +19,6 @@
     </script>
 
     <style type="text/css">
-        /* <![CDATA[ */
-
         body {
             font-size: 13px;
             background: #deded3;
@@ -84,58 +82,17 @@
             cursor: pointer;
         }
 
-        .input1 {
-            width: 210px;
-            height: 30px;
-            border: 1px solid #e2e2e2;
-            border-radius: 5px;
-            padding: 6px;
-        }
-
         .num{
             text-align: center;
             font-size: 14px;
         }
 
-        .desc{
-            font-size: 14px;
-        }
-
-        .tools-role {
-            width: 100%;
-            padding-top: 30px;
-        }
-
-        .tools-btn{
-            width: 100%;
-            margin-top: 30;
-        }
-
-        /* ]]> */
     </style>
 
     <script type="text/javascript">
-        function deleteUser(){
-            document.forms["remove"].submit();
-        }
-
         function close1(){
             open(location, '_self').close();
         }
-
-        $(function() {
-            $('#user').submit(function() {
-                var p1 = $("#user").find("#passwd").val();
-                var p2 = $("#user").find("#confirmPasswd").val();
-
-                if(p1 == p2){
-                    return true;
-                }
-
-                alert("Пароли не совпадают. Проверьте введенные данные");
-                return false;
-            });
-        });
     </script>
 
 </head>
@@ -156,9 +113,9 @@
         </thead>
         <c:forEach items="${list}" var="item">
             <tr>
-                <td><fmt:formatDate type="both" value="${item.date}" /></td>
+                <td class="num"><fmt:formatDate type="both" value="${item.date}" /></td>
                 <td><a href="../report/<c:out value="${item.pid}-report.pdf" />" target="_blank" style="color: inherit; text-decoration: inherit;"><c:out value="${item.pid}-report.pdf" /></a></td>
-                <td><c:out value="${item.login}" /></td>
+                <td class="num"><c:out value="${item.login}" /></td>
             </tr>
         </c:forEach>
     </table>
