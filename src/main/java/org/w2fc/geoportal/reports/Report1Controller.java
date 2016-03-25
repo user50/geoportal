@@ -34,14 +34,14 @@ import com.lowagie.text.pdf.PdfWriter;
 public class Report1Controller {
 
     public static final String REPORT_URL_PATTERN = "/{pid}-report.pdf";
+    public static final String DEFAULT_REPORT_RAW_LIMIT = "10";
 
     @Autowired
     ServiceRegistry serviceRegistry;
 
     @RequestMapping(value = "/{name}")
     public String generalPdfReport(@PathVariable String name, Model model) {
-        List<ReportRaw> list = new ArrayList<ReportRaw>();
-        list.add(new ReportRaw(new Date(), "B91614080E7155BC0FE742CF748D0DF1-report.pdf", "user50"));
+        List<ReportRaw> list = serviceRegistry.getOperationStatusRepository().reports();
 
         model.addAttribute("list", list);
 

@@ -7,24 +7,24 @@ import java.util.Date;
  */
 public class ReportRaw {
     private Date date;
-    private String reportFile;
-    private String userName;
+    private String pid;
+    private String login;
 
-    public ReportRaw(Date date, String reportFile, String userName) {
+    public ReportRaw(Date date, String pid, String login) {
         this.date = date;
-        this.reportFile = reportFile;
-        this.userName = userName;
+        this.pid = pid;
+        this.login = login;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public String getReportFile() {
-        return reportFile;
+    public String getPid() {
+        return pid;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLogin() {
+        return login;
     }
 }

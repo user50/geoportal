@@ -25,6 +25,7 @@
             font-size: 13px;
             background: #deded3;
             color: #6c6c6c;
+            overflow: scroll;
         }
 
         table {
@@ -156,8 +157,8 @@
         <c:forEach items="${list}" var="item">
             <tr>
                 <td><fmt:formatDate type="both" value="${item.date}" /></td>
-                <td><a href="../report/<c:out value="${item.reportFile}" />" target="_blank" style="color: inherit; text-decoration: inherit;"><c:out value="${item.reportFile}" /></a></td>
-                <td><c:out value="${item.userName}" /></td>
+                <td><a href="../report/<c:out value="${item.pid}-report.pdf" />" target="_blank" style="color: inherit; text-decoration: inherit;"><c:out value="${item.pid}-report.pdf" /></a></td>
+                <td><c:out value="${item.login}" /></td>
             </tr>
         </c:forEach>
     </table>
