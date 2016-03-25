@@ -177,15 +177,20 @@ public class GeoObjectService {
         if (layerIds == null)
             return;
 
-        Set<GeoLayer> layers = new HashSet<GeoLayer>();
+        for (GeoLayer currentLayer : gisObject.getGeoLayers()) {
+            serviceRegistry.getGeoObjectDao().deleteObjectListFromLayer(currentLayer.getId(), Arrays.asList(gisObject.getId()));
+        }
+
         for (Long layerId : layerIds) {
             GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
             if (layer == null)
                 throw new MissingParameterException("Geo layer with id "+layerIds +" does not exist");
-            layers.add(layer);
+            try {
+                serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layer.getId());
+            } catch (Exception e) {
+                throw new RuntimeException("Unable  to add to layer ");
+            }
         }
-
-        gisObject.setGeoLayers(layers);
     }
 
     public List<String> getSpatialRefSystems(){

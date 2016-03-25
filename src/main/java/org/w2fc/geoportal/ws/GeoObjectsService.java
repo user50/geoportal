@@ -38,10 +38,12 @@ public class GeoObjectsService {
         for (RequestGeoObject requestGeoObject : geoObjectsReq)
             layerIds.addAll(requestGeoObject.getLayerIds());
 
-        for (Long layerId : layerIds) {
-            if (!geoportalSecurity.isLayerEditor(layerId))
-                throw new AccessDeniedException("Current user has not access to layer "+layerId);
-        }
+        geoportalSecurity.checkLayersPermissions(layerIds);
+    }
+
+    private void checkPermissions(GeometryParameter params)
+    {
+        geoportalSecurity.checkLayersPermissions(params.getLayerIds());
     }
 
     public String createObjects(final List<RequestGeoObject> geoObjectsReq){
@@ -96,31 +98,37 @@ public class GeoObjectsService {
 
     public Long createPoint(RequestPoint rp)
     {
+        checkPermissions(rp);
         return geoObjectService.createAndSaveObject(rp);
     }
 
     public Long createLine(RequestLine rp)
     {
+        checkPermissions(rp);
         return geoObjectService.createAndSaveObject(rp);
     }
 
     public Long createPolygon(RequestPolygon rp)
     {
+        checkPermissions(rp);
         return geoObjectService.createAndSaveObject(rp);
     }
 
     public void updatePoint(Long id, RequestPoint request)
     {
+        checkPermissions(request);
         geoObjectService.updateObject(id, request);
     }
 
     public void updateLine(Long id, RequestLine request)
     {
+        checkPermissions(request);
         geoObjectService.updateObject(id, request);
     }
 
     public void updatePolygon(Long id, RequestPolygon request)
     {
+        checkPermissions(request);
         geoObjectService.updateObject(id, request);
     }
 
