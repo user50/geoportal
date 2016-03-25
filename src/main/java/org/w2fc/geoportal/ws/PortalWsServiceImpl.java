@@ -84,6 +84,9 @@ public class PortalWsServiceImpl implements PortalWsService {
                  .createGeoLayerUIAdapterList(serviceRegistry.getLayerDao().listByUserId(
                                 serviceRegistry.getUserDao().getCurrentGeoUser().getId()));
         }
+
+		Collections.sort(l, new GeoLayersByParentComparator());
+
         GetLayersResponse resp = new GetLayersResponse();
         resp.setList( new ArrayList<GeoLayerUI>(l));
         
