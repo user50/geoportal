@@ -255,7 +255,7 @@ $(document).ready(function() {
 	    window.open('report/layers.pdf',  '_blank');
     });
 	$('#show_report_is').button().click(function(){
-		window.open('report/integrational-service.pdf',  '_blank');
+		window.open('report/integration-service',  '_blank');
 	});
 
 	$('#add_layer').button().click(function(){
