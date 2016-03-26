@@ -20,7 +20,7 @@ public class MultiPointFactory implements GeometryParameterFactory {
     @Override
     public GeometryParameter create() {
         String name = reqGeoObject.getName();
-        Long layerId = reqGeoObject.getLayerId();
+        Set<Long> layerIds = reqGeoObject.getLayerIds();
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
         String reKey = reqGeoObject.getSpatialKey();
@@ -30,7 +30,7 @@ public class MultiPointFactory implements GeometryParameterFactory {
         String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
         List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
 
-        MultiPoint multiPoint = new MultiPoint(name, layerId, pointCoordinates.toArray(new PointCoordinates[pointCoordinates.size()]));
+        MultiPoint multiPoint = new MultiPoint(name, layerIds, pointCoordinates.toArray(new PointCoordinates[pointCoordinates.size()]));
         multiPoint.setWkt(wkt);
         multiPoint.setTags(tags);
         multiPoint.setSpatialKey(reKey);

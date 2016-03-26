@@ -1,8 +1,6 @@
 package org.w2fc.geoportal.dao;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.StandardBasicTypes;
@@ -242,7 +240,13 @@ public class GeoLayerDaoImpl extends AbstractDaoDefaulImpl<GeoLayer, Long> imple
 	}
 
 
+    @Override
+    public Set<GeoLayer> list(Set<Long> ids) {
+        List<GeoLayer> layers = (List<GeoLayer>) getCurrentSession()
+                .createQuery("Select l from GeoLayer l where l.id in (:ids)")
+                .setParameterList("ids", ids)
+                .list();
 
-
-    
+        return new HashSet<GeoLayer>(layers);
+    }
 }

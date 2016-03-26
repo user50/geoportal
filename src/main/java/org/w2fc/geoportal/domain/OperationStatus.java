@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Yevhen
@@ -47,31 +48,31 @@ public class OperationStatus implements Serializable{
     @Column (name = "date", nullable = false)
     private Date date;
 
-    @Column (name = "layer_id", nullable = true)
-    private Long layerId;
+    @Column (name = "layer_ids", nullable = true)
+    private String layerIds;
 
     public OperationStatus() {
     }
 
-    public OperationStatus(String guid, String pid, Long userId, Action action, Status status, Date date, Long layerId, String message) {
+    public OperationStatus(String guid, String pid, Long userId, Action action, Status status, Date date, String layerIds, String message) {
         this.guid = guid;
         this.pid = pid;
         this.userId = userId;
         this.action = action;
         this.status = status;
         this.date = date;
-        this.layerId = layerId;
+        this.layerIds = layerIds;
         this.message = message;
     }
 
-    public OperationStatus(String guid, String pid, Long userId, Action action, Status status, Date date, Long layerId) {
+    public OperationStatus(String guid, String pid, Long userId, Action action, Status status, Date date, String layerIds) {
         this.guid = guid;
         this.pid = pid;
         this.userId = userId;
         this.action = action;
         this.status = status;
         this.date = date;
-        this.layerId = layerId;
+        this.layerIds = layerIds;
     }
 
     public Long getId() {
@@ -138,12 +139,12 @@ public class OperationStatus implements Serializable{
         this.date = date;
     }
 
-    public Long getLayerId() {
-        return layerId;
+    public String getLayerIds() {
+        return layerIds;
     }
 
-    public void setLayerId(Long layerId) {
-        this.layerId = layerId;
+    public void setLayerIds(String layerIds) {
+        this.layerIds = layerIds;
     }
 
     public static enum Action {

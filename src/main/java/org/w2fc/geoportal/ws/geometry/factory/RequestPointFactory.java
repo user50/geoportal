@@ -22,7 +22,7 @@ public class RequestPointFactory implements GeometryParameterFactory {
     @Override
     public RequestPoint create() {
         String name = reqGeoObject.getName();
-        Long layerId = reqGeoObject.getLayerId();
+        Set<Long> layerIds = reqGeoObject.getLayerIds();
         String wkt = reqGeoObject.getWkt();
         Set<GeoObjectTag> tags = reqGeoObject.getTags();
         String reKey = reqGeoObject.getSpatialKey();
@@ -32,11 +32,11 @@ public class RequestPointFactory implements GeometryParameterFactory {
         RequestPoint requestPoint;
         if (reqGeoObject.getPointsCoordinates() == null){
             String address = reqGeoObject.getAddress();
-            requestPoint = new RequestPoint(name, layerId, address);
+            requestPoint = new RequestPoint(name, layerIds, address);
         } else  {
             String jsonCoordsArray = reqGeoObject.getPointsCoordinates();
             List<PointCoordinates> pointCoordinates = new PointCoordinatesFromJsonFactory().create(jsonCoordsArray);
-            requestPoint = new RequestPoint(name, layerId, pointCoordinates.get(0));
+            requestPoint = new RequestPoint(name, layerIds, pointCoordinates.get(0));
         }
 
         requestPoint.setWkt(wkt);

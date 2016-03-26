@@ -2,6 +2,7 @@ package org.w2fc.geoportal.auth;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.vividsolutions.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.w2fc.geoportal.gis.model.DeleteObjectsModel;
 import org.w2fc.geoportal.gis.model.GeoObjectJSONModel;
 import org.w2fc.geoportal.gis.model.PortalObjectModel;
 import org.w2fc.geoportal.utils.ServiceRegistry;
+import org.w2fc.geoportal.ws.exception.AccessDeniedException;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 
 @Component
@@ -154,5 +156,12 @@ public class GeoportalSecurity {
 		Long id = serviceRegistry.getGeoObjectDao().getGeoObjectId(guid, extSysId);
 
 		return id != null;
+	}
+
+	public void checkLayersPermissions(Set<Long> layerIds){
+		for (Long layerId : layerIds) {
+			if (!isLayerEditor(layerId))
+				throw new AccessDeniedException("Current user has not access to layer "+layerId);
+		}
 	}
 }

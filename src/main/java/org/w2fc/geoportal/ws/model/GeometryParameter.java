@@ -13,7 +13,7 @@ public interface GeometryParameter {
 
     Set<GeoObjectTag> getTags();
 
-    Long getLayerId();
+    Set<Long> getLayerIds();
 
     String getWkt();
 

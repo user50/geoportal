@@ -34,11 +34,20 @@ import com.lowagie.text.pdf.PdfWriter;
 public class Report1Controller {
 
     public static final String REPORT_URL_PATTERN = "/{pid}-report.pdf";
+    public static final String DEFAULT_REPORT_RAW_LIMIT = "10";
 
     @Autowired
     ServiceRegistry serviceRegistry;
 
-    
+    @RequestMapping(value = "/{name}")
+    public String generalPdfReport(@PathVariable String name, Model model) {
+        List<ReportRaw> list = serviceRegistry.getOperationStatusRepository().reports();
+
+        model.addAttribute("list", list);
+
+        return "report/" + name;
+    }
+
     @RequestMapping(value = "/layers.pdf")
     public String listAsPdf(@RequestParam(required = false) final List<Long> ids, Model model) {
         
@@ -141,7 +150,7 @@ public class Report1Controller {
     }
 
     @RequestMapping(value = REPORT_URL_PATTERN)
-    public String pdfReport(@PathVariable final String pid, Model model) {
+    public String pdfReportByPid(@PathVariable final String pid, Model model) {
 
         model.addAttribute(SimplePDFView.PDF_CALLBACK_IMPLEMENTATION_KEY, new SimplePDFView.PdfCallback() {
 
