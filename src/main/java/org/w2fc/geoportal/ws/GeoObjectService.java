@@ -113,6 +113,8 @@ public class GeoObjectService {
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
 
+        checkLayersExists(params.getLayerIds());
+
         Set<GeoLayer> layers = serviceRegistry.getLayerDao().list(params.getLayerIds());
 
         Geometry geometry = geometryBuilder.create(params);
@@ -177,16 +179,15 @@ public class GeoObjectService {
         if (layerIds == null)
             return;
 
+        checkLayersExists(layerIds);
+
         for (GeoLayer currentLayer : gisObject.getGeoLayers()) {
             serviceRegistry.getGeoObjectDao().deleteObjectListFromLayer(currentLayer.getId(), Arrays.asList(gisObject.getId()));
         }
 
         for (Long layerId : layerIds) {
-            GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
-            if (layer == null)
-                throw new MissingParameterException("Geo layer with id " + layerId +" does not exist");
             try {
-                serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layer.getId());
+                serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layerId);
             } catch (Exception e) {
                 throw new RuntimeException("Unable  to add to layer " + layerId);
             }
@@ -204,5 +205,12 @@ public class GeoObjectService {
 
         return refKeys;
     }
-    
+
+    private void checkLayersExists(Set<Long> layerIds){
+        for (Long layerId : layerIds) {
+            GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
+            if (layer == null)
+                throw new MissingParameterException("Geo layer with id " + layerId +" does not exist");
+        }
+    }
 }
