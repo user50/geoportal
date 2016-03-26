@@ -5,6 +5,7 @@ import org.w2fc.geoportal.domain.GeoObjectTag;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author yevhenlozov
@@ -25,8 +26,9 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
     @XmlElement(name = "type")
     private GeoObjectGeometryType type;
 
-    @XmlElement(name = "layerId", required=true)
-    private Long layerId;
+    @XmlElementWrapper(name="layers", required = true)
+    @XmlElement(name="layerId")
+    private Set<Long> layerIds;
 
     @XmlElement(name = "wkt")
     private String wkt;
@@ -79,13 +81,12 @@ public class RequestGeoObject implements Serializable, GeometryParameter {
         this.pointsCoordinates = pointsCoordinates;
     }
 
-    @Override
-    public Long getLayerId() {
-        return layerId;
+    public Set<Long> getLayerIds() {
+        return layerIds;
     }
 
-    public void setLayerId(Long layerId) {
-        this.layerId = layerId;
+    public void setLayersIds(Set<Long> layerIds) {
+        this.layerIds = layerIds;
     }
 
     @Override

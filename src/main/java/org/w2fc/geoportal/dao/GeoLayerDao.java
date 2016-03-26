@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoUser;
@@ -21,4 +22,5 @@ public interface GeoLayerDao extends AbstractDao<GeoLayer, Long> {
 	public Long getObjectsLastRevision(Long layerId);
 	public Long getObjectsLastDeleteRevision();
 	public Integer getHaveObjects(Long id);
+	public Set<GeoLayer> list(Set<Long> ids);
 }

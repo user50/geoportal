@@ -20,9 +20,9 @@ public class RequestLine implements Serializable, GeometryParameter{
     public RequestLine() {
     }
 
-    public RequestLine(String name, Long layerId, PointCoordinates[] pointsCoordinates) {
+    public RequestLine(String name, Set<Long> layerIds, PointCoordinates[] pointsCoordinates) {
         this.name = name;
-        this.layerId = layerId;
+        this.layerIds = layerIds;
         this.pointsCoordinates = pointsCoordinates;
     }
 
@@ -37,8 +37,7 @@ public class RequestLine implements Serializable, GeometryParameter{
     @XmlElement(name = "point")
     private PointCoordinates[] pointsCoordinates;
 
-    @XmlElement(name = "layerId", required=true)
-    private Long layerId;
+    private Set<Long> layerIds;
 
     @XmlElementWrapper(name="tags")
     @XmlElement(name="tag")
@@ -85,12 +84,15 @@ public class RequestLine implements Serializable, GeometryParameter{
         this.extSysId = extSysId;
     }
 
-    public Long getLayerId() {
-        return layerId;
+    @Override
+    public Set<Long> getLayerIds() {
+        return layerIds;
     }
-    public void setLayerId(Long layerId) {
-        this.layerId = layerId;
+
+    public void setLayerIds(Set<Long> layerIds) {
+        this.layerIds = layerIds;
     }
+
     public Set<GeoObjectTag> getTags() {
         return tags;
     }

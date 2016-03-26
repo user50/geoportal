@@ -73,8 +73,8 @@ public class SOAPReportGenerator {
                 PdfPCell message = new PdfPCell(new Paragraph(actionStatus.getMessage()));
                 PdfPCell date = new PdfPCell(new Paragraph(formatter.format(actionStatus.getDate())));
                 table2.addCell(id);
-                if (actionStatus.getLayerId() != null) {
-                    PdfPCell layer = new PdfPCell(new Paragraph(actionStatus.getLayerId().toString()));
+                if (actionStatus.getLayerIds() != null) {
+                    PdfPCell layer = new PdfPCell(new Paragraph(actionStatus.getLayerIds()));
                     table2.addCell(layer);
                 } else
                  table2.addCell(new PdfPCell(new Paragraph("#")));
