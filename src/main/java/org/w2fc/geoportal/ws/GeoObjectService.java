@@ -184,11 +184,11 @@ public class GeoObjectService {
         for (Long layerId : layerIds) {
             GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
             if (layer == null)
-                throw new MissingParameterException("Geo layer with id "+layerIds +" does not exist");
+                throw new MissingParameterException("Geo layer with id " + layerId +" does not exist");
             try {
                 serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layer.getId());
             } catch (Exception e) {
-                throw new RuntimeException("Unable  to add to layer ");
+                throw new RuntimeException("Unable  to add to layer " + layerId);
             }
         }
     }
