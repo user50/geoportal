@@ -62,4 +62,12 @@ public class GeoACLDaoImpl extends AbstractDaoDefaulImpl<GeoACL, Long> implement
                 .createQuery("Select acl.geoObject from GeoACL acl")
                 .list();
 	}
+
+    @Override
+    public List<GeoObject> listByUser(Long userId) {
+        return getCurrentSession()
+                .createQuery("Select acl.geoObject from GeoACL acl join acl.geoUsers u where u.id = :userId")
+                .setParameter("userId", userId)
+                .list();
+    }
 }
