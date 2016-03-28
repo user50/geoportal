@@ -60,6 +60,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/geoobjects/**"/>
             <mvc:mapping path="/layers/**"/>
+            <mvc:mapping path="/acl/**"/>
             <bean id="tokenHolderInterceptor" class="org.w2fc.geoportal.config.TokenHolderInterceptor">
             </bean>
         </mvc:interceptor>
