@@ -143,10 +143,9 @@ public class ReportAspect {
             returning= "result")
     public void afterDeleteRestSuccess(JoinPoint joinPoint, Object result) {
         Long id = (Long) joinPoint.getArgs()[0];
-        Set<Long> layerIds = getLayerIds(id);
 
         OperationStatus actionStatus = new OperationStatus(id.toString(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerIds.toString());
+                OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), null);
 
         repository.save(actionStatus);
     }
