@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ErrorCodeProvider {
 
-    private final int DEFAULT_ERROR_CODE = 11;
+    private final int DEFAULT_ERROR_CODE = 12;
 
     private Map<Class , ErrorCode>  codeMap = new HashMap<Class, ErrorCode>();
 
@@ -20,6 +20,7 @@ public class ErrorCodeProvider {
         codeMap.put(SRSDoesNotExistsException.class, new ErrorCode(7, SRSDoesNotExistsException.class, "Указаная система координат не существует"));
         codeMap.put(OutOfPermissionAreaException.class, new ErrorCode(8, OutOfPermissionAreaException.class, "Запрещено создание/редакт/удаление объектов вне полигона контроля прав."));
         codeMap.put(GeoObjectNotFoundException.class, new ErrorCode(10, GeoObjectNotFoundException.class, "В указанной внешней системе extSysId не найден объект с указанным guid"));
+        codeMap.put(NonUniqueIdentifierException.class, new ErrorCode(11, GeoObjectNotFoundException.class, "Не уникальный GUID"));
     }
 
     public int getCode(Throwable exception)
