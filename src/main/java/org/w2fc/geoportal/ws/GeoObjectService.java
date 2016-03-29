@@ -13,10 +13,7 @@ import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.domain.ReferenceSystemProj;
 import org.w2fc.geoportal.utils.ServiceRegistry;
-import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
-import org.w2fc.geoportal.ws.exception.LayerAccessDeniedException;
-import org.w2fc.geoportal.ws.exception.MissingParameterException;
-import org.w2fc.geoportal.ws.exception.NonUniqueIdentifierException;
+import org.w2fc.geoportal.ws.exception.*;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilder;
 import org.w2fc.geoportal.ws.geometry.builder.GeometryBuilderFactory;
 import org.w2fc.geoportal.ws.geometry.builder.TransformCoordinate;
@@ -113,6 +110,8 @@ public class GeoObjectService {
 
     private <T extends GeometryParameter > GeoObject createGeoObject(T params, GeometryBuilder<T> geometryBuilder) {
 
+        checkLayersExists(params.getLayerIds());
+
         Set<GeoLayer> layers = serviceRegistry.getLayerDao().list(params.getLayerIds());
 
         Geometry geometry = geometryBuilder.create(params);
@@ -149,7 +148,7 @@ public class GeoObjectService {
             try {
                 serviceRegistry.getGeoObjectDao().addToLayer(id, layer.getId());
             } catch (Exception e) {
-                throw new RuntimeException("Unable  to add to layer ");
+                throw new UnableToAddToLayerException("Unable  to add to layer ");
             }
         }
         return id;
@@ -177,18 +176,17 @@ public class GeoObjectService {
         if (layerIds == null)
             return;
 
+        checkLayersExists(layerIds);
+
         for (GeoLayer currentLayer : gisObject.getGeoLayers()) {
             serviceRegistry.getGeoObjectDao().deleteObjectListFromLayer(currentLayer.getId(), Arrays.asList(gisObject.getId()));
         }
 
         for (Long layerId : layerIds) {
-            GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
-            if (layer == null)
-                throw new MissingParameterException("Geo layer with id " + layerId +" does not exist");
             try {
-                serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layer.getId());
+                serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layerId);
             } catch (Exception e) {
-                throw new RuntimeException("Unable  to add to layer " + layerId);
+                throw new UnableToAddToLayerException("Unable  to add to layer " + layerId);
             }
         }
     }
@@ -204,5 +202,12 @@ public class GeoObjectService {
 
         return refKeys;
     }
-    
+
+    private void checkLayersExists(Set<Long> layerIds){
+        for (Long layerId : layerIds) {
+            GeoLayer layer = serviceRegistry.getLayerDao().get(layerId);
+            if (layer == null)
+                throw new UnableToAddToLayerException("Geo layer with id " + layerId +" does not exist");
+        }
+    }
 }

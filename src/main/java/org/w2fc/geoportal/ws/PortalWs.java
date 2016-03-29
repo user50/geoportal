@@ -2,17 +2,17 @@ package org.w2fc.geoportal.ws;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
-import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.ws.WebServiceContext;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
+import org.w2fc.geoportal.ws.error.ErrorDesc;
+import org.w2fc.geoportal.ws.error.ErrorsReport;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.io.IOException;
@@ -151,10 +151,17 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     }
 
     @WebMethod
-    public String getStatus(@XmlElement(required=true, name="pid") String pid){
+    public DeleteSoapResponse getStatus(@XmlElement(required=true, name="pid") String pid){
         autowire();
         basicAuthenticator.doAuthentication(webServiceContext);
-        return SOAPProcessStatus.INSTANCE.get(pid);
+        Object statusObj = SOAPProcessStatus.INSTANCE.get(pid);
+
+        if (statusObj instanceof String)
+            return new DeleteSoapResponse((String)statusObj);
+        else {
+            ErrorsReport errorsReport = (ErrorsReport) statusObj;
+            return new DeleteSoapResponse("error", errorsReport.getErrors());
+        }
     }
 
     @WebMethod

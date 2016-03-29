@@ -13,7 +13,8 @@ public class GeoPropertiesController {
 
     @RequestMapping(value = "/{id}/properties", method = RequestMethod.POST)
     @ResponseBody
-    public void update(@PathVariable Long id, @RequestBody GeoObjectDrawProperties drawProperties){
+    public Long update(@PathVariable Long id, @RequestBody GeoObjectDrawProperties drawProperties){
         service.save(id, drawProperties);
+        return id;
     }
 }

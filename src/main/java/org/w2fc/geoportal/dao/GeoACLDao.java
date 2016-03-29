@@ -11,4 +11,6 @@ public interface GeoACLDao extends AbstractDao<GeoACL, Long>{
 	GeoACL getByObjectId(Long id);
 
 	List<GeoObject> listAllUsedObjects();
+
+	List<GeoObject> listByUser(Long userId);
 }
