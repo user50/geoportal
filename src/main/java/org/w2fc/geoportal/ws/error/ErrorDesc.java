@@ -14,6 +14,9 @@ public class ErrorDesc {
     @XmlElement
     private String guid;
 
+    public ErrorDesc() {
+    }
+
     public ErrorDesc(int code, String guid) {
         this.code = code;
         this.guid = guid;
