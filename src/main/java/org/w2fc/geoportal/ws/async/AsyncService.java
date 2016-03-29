@@ -4,6 +4,7 @@ import org.w2fc.geoportal.config.ThreadPids;
 import org.w2fc.geoportal.config.ThreadTokens;
 import org.w2fc.geoportal.ws.Task;
 import org.w2fc.geoportal.ws.error.ErrorDesc;
+import org.w2fc.geoportal.ws.error.ErrorsReport;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class AsyncService {
                 runnable.run();
 
                 if (!runnable.getErrors().isEmpty())
-                    SOAPProcessStatus.INSTANCE.put(pid, runnable.getErrors());
+                    SOAPProcessStatus.INSTANCE.put(pid, new ErrorsReport(runnable.getErrors()) );
                 else
                     SOAPProcessStatus.INSTANCE.put(pid, "success");
 
