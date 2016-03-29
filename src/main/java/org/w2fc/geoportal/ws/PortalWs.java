@@ -151,7 +151,7 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     }
 
     @WebMethod
-    public String getStatus(@XmlElement(required=true, name="pid") String pid){
+    public Object getStatus(@XmlElement(required=true, name="pid") String pid){
         autowire();
         basicAuthenticator.doAuthentication(webServiceContext);
         return SOAPProcessStatus.INSTANCE.get(pid);

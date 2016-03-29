@@ -11,6 +11,7 @@ import org.w2fc.geoportal.dao.OperationStatusRepository;
 import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.OperationStatus;
+import org.w2fc.geoportal.ws.error.ErrorCodeProvider;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
 import org.w2fc.geoportal.ws.model.GeometryParameter;
 import org.w2fc.geoportal.ws.model.RequestGeoObject;
@@ -27,7 +28,7 @@ public class ReportAspect {
 
     final Logger logger = LoggerFactory.getLogger(ReportAspect.class);
 
-    private static final Long LAYER_ID = 1L; // todo getting layer
+    private ErrorCodeProvider errorCodeProvider = new ErrorCodeProvider();
 
     private OperationStatusRepository repository;
     private GeoUserDao geoUserDao;
@@ -142,10 +143,9 @@ public class ReportAspect {
             returning= "result")
     public void afterDeleteRestSuccess(JoinPoint joinPoint, Object result) {
         Long id = (Long) joinPoint.getArgs()[0];
-        Set<Long> layerIds = getLayerIds(id);
 
         OperationStatus actionStatus = new OperationStatus(id.toString(), getPid(), getCurrentUserId(),
-                OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), layerIds.toString());
+                OperationStatus.Action.DELETE, OperationStatus.Status.SUCCESS, new Date(), null);
 
         repository.save(actionStatus);
     }
@@ -222,7 +222,7 @@ public class ReportAspect {
     }
 
     private String getErrorMessage(Throwable error) {
-        return error.getClass() + ": " + error.getMessage();
+        return errorCodeProvider.getMessage(error);
     }
 
     private String getGuid(Long id) {

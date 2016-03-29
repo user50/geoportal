@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w2fc.geoportal.auth.GeoportalSecurity;
 import org.w2fc.geoportal.ws.async.AsyncService;
-import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
-import org.w2fc.geoportal.ws.exception.AccessDeniedException;
+import org.w2fc.geoportal.ws.async.Task;
+import org.w2fc.geoportal.ws.error.ErrorCodeProvider;
+import org.w2fc.geoportal.ws.error.ErrorDesc;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.util.*;
@@ -49,13 +50,15 @@ public class GeoObjectsService {
     public String createObjects(final List<RequestGeoObject> geoObjectsReq){
         checkPermissions(geoObjectsReq);
 
+        final ErrorCodeProvider codeProvider = new ErrorCodeProvider();
+
         Task runnable = new Task() {
             public void run() {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
                     try {
                         geoObjectService.createAndSaveObject(requestGeoObject);
                     } catch (Exception e) {
-                        setErrors(true);
+                        add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
                     }
                 }
             }
@@ -66,13 +69,15 @@ public class GeoObjectsService {
     public String updateObjects(final List<RequestGeoObject> geoObjectsReq) {
         checkPermissions(geoObjectsReq);
 
+        final ErrorCodeProvider codeProvider = new ErrorCodeProvider();
+
         Task runnable = new Task() {
             public void run() {
                 for (RequestGeoObject requestGeoObject : geoObjectsReq) {
                     try {
                         geoObjectService.updateObject(requestGeoObject);
                     } catch (Exception e) {
-                        setErrors(true);
+                        add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
                     }
                 }
             }
@@ -81,13 +86,17 @@ public class GeoObjectsService {
     }
 
     public String deleteObjects(final String extSysId, final List<String> guids){
+
+        final ErrorCodeProvider codeProvider = new ErrorCodeProvider();
+
         Task runnable = new Task() {
             public void run() {
                 for (String guid : guids) {
                     try {
                         geoObjectService.delete(extSysId, guid);
                     } catch (Exception e) {
-                        setErrors(true);
+
+                        add(new ErrorDesc(codeProvider.getCode(e), guid));
                     }
                 }
             }

@@ -18,6 +18,7 @@ import org.w2fc.geoportal.gis.model.PortalObjectModel;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.AccessDeniedException;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
+import org.w2fc.geoportal.ws.exception.OutOfPermissionAreaException;
 
 @Component
 public class GeoportalSecurity {
@@ -140,7 +141,7 @@ public class GeoportalSecurity {
 		if(permArea == null)
 			throw new RuntimeException("Permission area not specified for current user");
 
-		if(!permArea.contains(gisObject.getTheGeom()))throw new RuntimeException("The area is not available for editing");
+		if(!permArea.contains(gisObject.getTheGeom()))throw new OutOfPermissionAreaException("The area is not available for editing");
 	}
 
 	public void checkExists(Long id){
