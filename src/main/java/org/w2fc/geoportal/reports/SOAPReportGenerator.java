@@ -70,7 +70,7 @@ public class SOAPReportGenerator {
             if(actionStatus.getStatus()== OperationStatus.Status.FAILURE){
                 PdfPCell id = new PdfPCell(new Paragraph(actionStatus.getGuid()));
                 PdfPCell action = new PdfPCell(new Paragraph(actionStatus.getAction().toString()));
-                PdfPCell message = new PdfPCell(new Paragraph(actionStatus.getMessage()));
+                PdfPCell message = new PdfPCell(new Paragraph(actionStatus.getMessage(), new com.lowagie.text.Font(baseFont, 10)));
                 PdfPCell date = new PdfPCell(new Paragraph(formatter.format(actionStatus.getDate())));
                 table2.addCell(id);
                 if (actionStatus.getLayerIds() != null) {
