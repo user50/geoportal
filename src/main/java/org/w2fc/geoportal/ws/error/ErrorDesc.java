@@ -9,10 +9,10 @@ import javax.xml.bind.annotation.XmlElement;
 public class ErrorDesc {
 
     @XmlElement
-    int code;
+    private int code;
 
     @XmlElement
-    String guid;
+    private String guid;
 
     public ErrorDesc(int code, String guid) {
         this.code = code;

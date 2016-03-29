@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w2fc.geoportal.auth.GeoportalSecurity;
 import org.w2fc.geoportal.ws.async.AsyncService;
-import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
+import org.w2fc.geoportal.ws.async.Task;
 import org.w2fc.geoportal.ws.error.ErrorCodeProvider;
 import org.w2fc.geoportal.ws.error.ErrorDesc;
-import org.w2fc.geoportal.ws.exception.AccessDeniedException;
 import org.w2fc.geoportal.ws.model.*;
 
 import java.util.*;
@@ -59,7 +58,7 @@ public class GeoObjectsService {
                     try {
                         geoObjectService.createAndSaveObject(requestGeoObject);
                     } catch (Exception e) {
-                        add(new ErrorDesc(codeProvider.get(e), requestGeoObject.getGuid()));
+                        add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
                     }
                 }
             }
@@ -78,7 +77,7 @@ public class GeoObjectsService {
                     try {
                         geoObjectService.updateObject(requestGeoObject);
                     } catch (Exception e) {
-                        add(new ErrorDesc(codeProvider.get(e), requestGeoObject.getGuid()));
+                        add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
                     }
                 }
             }
@@ -97,7 +96,7 @@ public class GeoObjectsService {
                         geoObjectService.delete(extSysId, guid);
                     } catch (Exception e) {
 
-                        add(new ErrorDesc(codeProvider.get(e), guid));
+                        add(new ErrorDesc(codeProvider.getCode(e), guid));
                     }
                 }
             }

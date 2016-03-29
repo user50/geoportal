@@ -1,4 +1,4 @@
-package org.w2fc.geoportal.ws;
+package org.w2fc.geoportal.ws.async;
 
 import org.w2fc.geoportal.ws.error.ErrorDesc;
 

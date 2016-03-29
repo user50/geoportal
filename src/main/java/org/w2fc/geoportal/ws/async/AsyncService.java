@@ -2,7 +2,6 @@ package org.w2fc.geoportal.ws.async;
 
 import org.w2fc.geoportal.config.ThreadPids;
 import org.w2fc.geoportal.config.ThreadTokens;
-import org.w2fc.geoportal.ws.Task;
 import org.w2fc.geoportal.ws.error.ErrorDesc;
 import org.w2fc.geoportal.ws.error.ErrorsReport;
 
