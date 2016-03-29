@@ -7,13 +7,13 @@ public enum  SOAPProcessStatus {
 
     INSTANCE;
 
-    Map<String, String> statusByPid = new HashMap<String, String>();
+    Map<String, Object> statusByPid = new HashMap<String, Object>();
 
-    synchronized public void put(String pid, String status){
+    synchronized public void put(String pid, Object status){
         statusByPid.put(pid, status);
     }
 
-    public String get(String pid){
+    public Object get(String pid){
         return statusByPid.get(pid);
     }
 }

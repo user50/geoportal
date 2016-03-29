@@ -39,7 +39,7 @@ public class AsyncService {
                 runnable.run();
 
                 if (!runnable.getErrors().isEmpty())
-                    SOAPProcessStatus.INSTANCE.put(pid, stringify(runnable.getErrors()));
+                    SOAPProcessStatus.INSTANCE.put(pid, runnable.getErrors());
                 else
                     SOAPProcessStatus.INSTANCE.put(pid, "success");
 
@@ -47,24 +47,6 @@ public class AsyncService {
                 SOAPProcessStatus.INSTANCE.put(pid, "error");
             }
         }
-
-        private String stringify(List<ErrorDesc> errorDescs)
-        {
-            StringBuilder message = new StringBuilder();
-            message.append("<errors>");
-
-            for (ErrorDesc errorDesc : errorDescs) {
-                message.append("<error>");
-                message.append("<guid>").append(errorDesc.getGuid()).append("</guid>");
-                message.append("<code>").append(errorDesc.getCode()).append("</code>");
-                message.append("</error>");
-            }
-
-            message.append("</errors>");
-
-            return message.toString();
-        }
-
 
     }
 
