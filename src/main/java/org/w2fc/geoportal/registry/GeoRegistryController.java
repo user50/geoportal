@@ -34,7 +34,6 @@ public class GeoRegistryController extends AbstractController<GeoLayer, GeoLayer
     LayerController layerController;
     
     @Override
-    @Qualifier("GeoLayerDao")
     public void setAutowiredDao(GeoLayerDao dao) {
         setDao(dao);
     }

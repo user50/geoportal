@@ -45,7 +45,7 @@ public class SettingsController extends AbstractController<GeoSettings, GeoSetti
 	}
 
 	@Override
-	@Qualifier("GeoSettingsDao")
+	@Autowired
 	public void setAutowiredDao(GeoSettingsDao dao) {
 		setDao(dao);
 	}

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import javax.mail.Address;
@@ -88,12 +89,16 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @Autowired
     private ServiceRegistry serviceRegistry;
     
-    @Qualifier("GeoObjectDao")
     @Override
     public void setAutowiredDao(GeoObjectDao dao) {
         setDao(dao);
     }
-    
+
+	@PostConstruct
+	public void init() {
+		setAutowiredDao(serviceRegistry.getGeoObjectDao());
+	}
+
     @RequestMapping(value = "/list_by_layer_id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public @ResponseBody List<GeoObjectUI> getGisObjectsByIds(@RequestParam Long layerId) {
