@@ -24,6 +24,8 @@ import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
 
+import javax.annotation.PostConstruct;
+
 @Controller
 @RequestMapping(value = "/tmpl")
 public class TemplateRest extends AbstractController<AddnsPopupTemplate, AddnsPopupTemplateDao, Long>{
@@ -32,13 +34,15 @@ public class TemplateRest extends AbstractController<AddnsPopupTemplate, AddnsPo
 	@Autowired
 	private ServiceRegistry serviceRegistry;
 	 
-	@Qualifier("AddnsPopupTemplateDao")
 	@Override
     public void setAutowiredDao (AddnsPopupTemplateDao dao) {
 		setDao(dao);
 	}
 
-	
+    @PostConstruct
+    public void init() {
+        setAutowiredDao(serviceRegistry.getPopupTemplateDao());
+    }
 	 /*
      *      UI Templates
      */
