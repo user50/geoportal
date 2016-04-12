@@ -14,11 +14,17 @@ import org.w2fc.conf.model.SettingForm;
 import org.w2fc.conf.model.SettingsModel;
 import org.w2fc.geoportal.dao.GeoSettingsDao;
 import org.w2fc.geoportal.domain.GeoSettings;
+import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
+
+import javax.annotation.PostConstruct;
 
 @Controller
 @RequestMapping(value = "/settings")
 public class SettingsController extends AbstractController<GeoSettings, GeoSettingsDao, Long>{
+
+	@Autowired
+	ServiceRegistry serviceRegistry;
 
 	@RequestMapping(value = "/")
     @Transactional
@@ -45,9 +51,12 @@ public class SettingsController extends AbstractController<GeoSettings, GeoSetti
 	}
 
 	@Override
-	@Autowired
 	public void setAutowiredDao(GeoSettingsDao dao) {
 		setDao(dao);
 	}
-	
+
+	@PostConstruct
+	public void init() {
+		setAutowiredDao(serviceRegistry.getGeoSettingsDao());
+	}
 }

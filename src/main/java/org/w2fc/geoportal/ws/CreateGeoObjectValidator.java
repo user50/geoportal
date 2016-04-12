@@ -12,16 +12,20 @@ import org.w2fc.geoportal.ws.model.GeometryParameter;
 public class CreateGeoObjectValidator {
 
     public void validateCreate(GeometryParameter params){
-        validateUpdate(params);
+        if(params.getGuid() == null || params.getGuid().equals(""))
+            throw new MissingParameterGuid("\"guid\" parameter is required");
+
+        if(params.getExtSysId() == null || params.getExtSysId().equals(""))
+            throw new MissingParameterExtSysId("\"extSysId\" parameter is required");
+
+        if(params.getName() == null || params.getName().equals(""))
+            throw new MissingParameterName("\"name\" parameter is required");
 
         if(params.getLayerIds() == null)
             throw new MissingParameterException("\"layers\" parameter is required");
     }
 
     public void validateUpdate(GeometryParameter params){
-        if(params.getGuid() == null || params.getGuid().equals(""))
-            throw new MissingParameterGuid("\"guid\" parameter is required");
-
         if(params.getExtSysId() == null || params.getExtSysId().equals(""))
             throw new MissingParameterExtSysId("\"extSysId\" parameter is required");
 
