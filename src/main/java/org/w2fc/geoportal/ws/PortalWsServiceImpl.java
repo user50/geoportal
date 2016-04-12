@@ -1,9 +1,11 @@
 package org.w2fc.geoportal.ws;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,13 @@ import org.w2fc.geoportal.layer.GeoLayerUI;
 import org.w2fc.geoportal.layer.GeoLayerUIAdapter;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.geoportal.ws.exception.GeoObjectNotFoundException;
-import org.w2fc.geoportal.ws.model.*;
+import org.w2fc.geoportal.ws.model.GeoObjectFullAdapter;
+import org.w2fc.geoportal.ws.model.GetLayersResponse;
+import org.w2fc.geoportal.ws.model.GetObjectsResponse;
+import org.w2fc.geoportal.ws.model.RequestGeoObject;
+import org.w2fc.geoportal.ws.model.RequestLine;
+import org.w2fc.geoportal.ws.model.RequestPoint;
+import org.w2fc.geoportal.ws.model.RequestPolygon;
 
 
 @Service
@@ -28,7 +36,7 @@ public class PortalWsServiceImpl implements PortalWsService {
 	@Autowired
 	private GeoObjectsService geoObjectsService;
 
-    final Logger logger = LoggerFactory.getLogger(PortalWsServiceImpl.class);
+	final static Logger logger = LogManager.getLogger(PortalWsServiceImpl.class);
 
     @Override
     @PreAuthorize("@geoportalSecurity.isLayerReader(#layerId)")

@@ -1,6 +1,7 @@
 package org.w2fc.geoportal.user;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,8 +26,6 @@ import org.w2fc.geoportal.domain.GeoUserRole;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
 
-import javax.annotation.PostConstruct;
-
 
 @Controller
 @RequestMapping(value = "/admin/role")
@@ -39,15 +37,12 @@ public class UserRoleController extends AbstractController<GeoUserRole, GeoUserR
     @Autowired
     ServiceRegistry serviceRegistry;
     
+    @Autowired
     @Override
     public void setAutowiredDao(GeoUserRoleDao dao) {
         setDao(dao);
     }
-
-    @PostConstruct
-    public void init(){
-        setAutowiredDao(serviceRegistry.getUserRoleDao());
-    }
+    
     
     @RequestMapping(value="/new", method = {RequestMethod.POST, RequestMethod.GET})
     public String newForm(Model model){
@@ -111,6 +106,20 @@ public class UserRoleController extends AbstractController<GeoUserRole, GeoUserR
         return "admin/role";
     }
     
+    
+    @RequestMapping(value = "/sorted_list", method = RequestMethod.GET)
+	public @ResponseBody List<GeoUserRole> getSortedList() {
+		List<GeoUserRole> l = getDao().list();
+		Collections.sort(l, new Comparator<GeoUserRole>() {
+
+			@Override
+			public int compare(GeoUserRole o1, GeoUserRole o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+		});
+		return l;
+
+	}
     
     @SuppressWarnings("unchecked")
     @Transactional

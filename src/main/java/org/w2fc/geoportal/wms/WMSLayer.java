@@ -5,7 +5,10 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
@@ -21,15 +24,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w2fc.geoportal.domain.GeoObject;
+import org.w2fc.geoportal.gis.GeoObjectUIAdapter;
 import org.w2fc.geoportal.user.CustomUserDetails;
 import org.w2fc.geoportal.utils.CoordinateTransformer;
 import org.w2fc.geoportal.utils.ServiceRegistry;
@@ -66,7 +71,50 @@ public class WMSLayer {
 		return true;
 	}
 	
-	@Cacheable(value="WMSCache", key="#layers.concat(#height).concat(#width).concat(#bbox)")
+	@RequestMapping(value = "/identify/", method = RequestMethod.GET)
+	@Transactional
+	 public @ResponseBody
+	 	GeoObjectUIAdapter getIdentify(
+	    		@RequestParam(value = "query_layers") String layers,
+	    		@RequestParam(value = "lat") Double lat,
+				@RequestParam(value = "lng") Double lng,
+				@RequestParam(value = "SRS") String srs
+	    		){
+		//http://localhost:8080/zemresurs76/wms/identify/?service=WMS&request=GetFeatureInfo&version=1.1.1&layers=2&styles=&
+		//format=image%2Fjpeg&transparent=true&width=1680&height=468&srs=EPSG%3A3857&
+		//bbox=4275581.6141596185%2C7854821.900641282%2C4532410.029197811%2C7926366.959116207&query_layers=2&X=555&Y=263
+		
+		ParamsContainer params = new ParamsContainer();
+		params.maxx = Double.valueOf(lat);
+		params.maxy = Double.valueOf(lng);
+		params.minx = 0;
+		params.miny = 0;
+		try{
+			if(srs.equalsIgnoreCase("EPSG:3857")){
+				transformer.toWGS(params, srs);
+				lat = params.maxx;
+				lng = params.maxy;
+			}
+		}catch(Exception e){
+			logger.error(e.getLocalizedMessage(), e);
+		}
+		ArrayList<Long> layerList = new ArrayList<Long>();
+		layerList.add(Long.valueOf(layers));
+		List<GeoObject> objects = serviceRegistry.getGeoObjectDao().getByPointAndLayers(lat, lng, layerList);
+		if(objects.isEmpty() /*size() == 0*/){
+			return null;
+		}
+		GeoObjectUIAdapter obj = new GeoObjectUIAdapter(objects.get(0));
+		List<Map<String, String>> tags = obj.getTags();
+		Map<String,String> area = new HashMap();
+		area.put("id", "");
+		area.put("key", "oarea");
+		area.put("value", serviceRegistry.getGeoObjectDao().getArea(objects.get(0).getId()).toString());
+		tags.add(area );
+		return obj;
+	}
+	
+	//@Cacheable(value="WMSCache", key="#layers.concat(#height).concat(#width).concat(#bbox)")
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
 	@ResponseBody
 	public byte[] getLayer(@RequestParam(value = "BBOX") String bbox,
@@ -94,13 +142,7 @@ public class WMSLayer {
 		}*/
 		String[] layerIds = layers.split(",");
 		try {
-			for (int i = 0; i < layerIds.length; i++) {
-				Long layerId = Long.valueOf(layerIds[i]);
-				List<Layer> geoLayers = wms.getWmsLayers(layerId, servletContext);
-				for(Layer l: geoLayers){
-					map.addLayer(l);
-				}		
-			}
+			
 			ParamsContainer params = new ParamsContainer();
 			String[] box = bbox.split(",");
 			// BBOX=minx,miny,maxx,maxy
@@ -109,16 +151,26 @@ public class WMSLayer {
 			params.minx = Double.valueOf(box[0]);
 			params.miny = Double.valueOf(box[1]);
 
-			try{
+			try {
 				if(srs.equalsIgnoreCase("EPSG:3857")){
 					transformer.toWGS(params, srs);
 				}
-			}catch(Exception e){
+			} catch ( Exception e ) {
 				logger.error(e.getLocalizedMessage(), e);
 			}
 			
 			params.height = height;
 			params.width = width;
+			//Float[] zoom = new Float[]{new Float(params.maxx - params.minx), new Float(params.maxy - params.miny)};
+			
+			for (int i = 0; i < layerIds.length; i++) {
+				Long layerId = Long.valueOf(layerIds[i]);
+				List<Layer> geoLayers = wms.getWmsLayers(layerId, servletContext, params);
+				for(Layer l: geoLayers){
+					map.addLayer(l);
+				}
+			}
+
 			logger.debug("Preparing image to out");
 			return createImage(map, params);
 		} finally {
@@ -154,11 +206,11 @@ public class WMSLayer {
 		Geometry permAreaIslands = null;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Object user = auth.getPrincipal();
-    	if(user instanceof CustomUserDetails){
-    		permArea = ((CustomUserDetails)user).getPermissionArea().get("shell");
-    		permAreaIslands = ((CustomUserDetails)user).getPermissionArea().get("islands");
-    	}
-    	
+		if (user instanceof CustomUserDetails) {
+			permArea = ((CustomUserDetails) user).getPermissionArea().get( "shell");
+			permAreaIslands = ((CustomUserDetails) user).getPermissionArea().get("islands");
+		}
+
 		map.addLayers(wms.getAreaObject(permArea, permAreaIslands, servletContext));
 		try {
 			ParamsContainer params = new ParamsContainer();
@@ -186,15 +238,25 @@ public class WMSLayer {
 		ReferencedEnvelope mapBounds = new ReferencedEnvelope();
 		try { //
 			mapBounds = map.getMaxBounds();
-			mapBounds.init(paramsContainer.minx, paramsContainer.maxx,
-					paramsContainer.miny, paramsContainer.maxy);
-			imageBounds = new Rectangle(0, 0, paramsContainer.width,
+			mapBounds.init(
+					paramsContainer.minx,
+					paramsContainer.maxx,
+					paramsContainer.miny,
+					paramsContainer.maxy);
+
+			imageBounds = new Rectangle(
+					0, 
+					0, 
+					paramsContainer.width,
 					paramsContainer.height);
+			
 		} catch (Exception e) { // failed to access map layers
 			throw new ServletException(e);
 		}
-		BufferedImage image = new BufferedImage(imageBounds.width,
-				imageBounds.height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = new BufferedImage(
+				imageBounds.width,
+				imageBounds.height,
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gr = image.createGraphics();
 		try {
 			renderer.paint(gr, imageBounds, mapBounds);

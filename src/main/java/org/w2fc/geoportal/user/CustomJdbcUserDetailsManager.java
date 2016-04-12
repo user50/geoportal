@@ -20,7 +20,7 @@ public class CustomJdbcUserDetailsManager extends JdbcUserDetailsManager {
     private ServiceRegistry serviceRegistry;
     
     @Override
-    public List<UserDetails> loadUsersByUsername(String username) {
+    protected List<UserDetails> loadUsersByUsername(String username) {
         return getJdbcTemplate().query(getUsersByUsernameQuery(), new String[] {username}, new RowMapper<UserDetails>() {
             public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
                 String username = rs.getString(1);

@@ -19,21 +19,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geotools.geojson.feature.FeatureJSON;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.hibernate.Hibernate;
 import org.opengis.feature.simple.SimpleFeature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
@@ -84,21 +82,17 @@ import com.vividsolutions.jts.io.WKTReader;
 @RequestMapping(value = "/geo")
 public class GeoObjectController extends AbstractController<GeoObject, GeoObjectDao, Long> {
 
-    final Logger logger = LoggerFactory.getLogger(GeoObjectController.class);
+	final static Logger logger = LogManager.getLogger(GeoObjectController.class);
     
     @Autowired
     private ServiceRegistry serviceRegistry;
     
+    @Autowired
     @Override
     public void setAutowiredDao(GeoObjectDao dao) {
         setDao(dao);
     }
-
-	@PostConstruct
-	public void init() {
-		setAutowiredDao(serviceRegistry.getGeoObjectDao());
-	}
-
+    
     @RequestMapping(value = "/list_by_layer_id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public @ResponseBody List<GeoObjectUI> getGisObjectsByIds(@RequestParam Long layerId) {
@@ -115,13 +109,13 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
         serviceRegistry.getRatingDao().update(r, true);
 
         if(layer.getMetadata().getViewByObject()){
-        	List<GeoObject> listByLayerId = serviceRegistry.getGeoObjectDao().listByLayerIdPropertiesFetched(layerId);
+        	List<GeoObject> listByLayerId = getDao().listByLayerIdPropertiesFetched(layerId);
         	/*if(!layer.getMetadata().getCoordinateSystem().equalsIgnoreCase("WGS84")){
         		listByLayerId = CoordinateTransformer.transformFrom(layer.getMetadata().getCoordinateSystem(), listByLayerId);
         	}*/
         	return ObjectFactory.createGeoObjectUIAdapterList(listByLayerId);
         }else{
-        	List<GeoObject> listByLayerId = serviceRegistry.getGeoObjectDao().listByLayerIdNotManaged(layerId);
+        	List<GeoObject> listByLayerId = getDao().listByLayerIdNotManaged(layerId);
         	/*if(!layer.getMetadata().getCoordinateSystem().equalsIgnoreCase("WGS84")){
         		listByLayerId = CoordinateTransformer.transformFrom(layer.getMetadata().getCoordinateSystem(), listByLayerId);
         	}*/
@@ -137,7 +131,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @RequestMapping(value="/getdialog/{id}")
     @Transactional(readOnly=true)
     public String getObjectDialogById(@PathVariable Long id, Model model){
-        GeoObject object = serviceRegistry.getGeoObjectDao().getPropertiesFetched(id);
+        GeoObject object = getDao().getPropertiesFetched(id);
         GeoUser creator = object.getCreatedBy();
         if(creator != null){
             model.addAttribute("creatorName",  creator.getFullName());
@@ -183,7 +177,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @Transactional(readOnly=true)
     @ResponseBody
     public GeoObjectUIAdapter getObjectById(@PathVariable Long id){
-        GeoObject object = serviceRegistry.getGeoObjectDao().getPropertiesFetched(id);
+        GeoObject object = getDao().getPropertiesFetched(id);
         return new GeoObjectUIAdapter(object);
     }
     
@@ -323,7 +317,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 				layer.getGeoObjects().add(gisObject);
 				gisObject.setCreatedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
 				gisObject.setCreated(Calendar.getInstance().getTime());
-				serviceRegistry.getGeoObjectDao().add(gisObject);
+				getDao().add(gisObject);
 				return new GeoObjectUIAdapter(gisObject);
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -338,7 +332,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 	public @ResponseBody
 	String getShapeObject(@RequestParam Long id) {
 		//Way shape = cartographyService.getWayById(id);
-    	GeoObject shapeObj = serviceRegistry.getGeoObjectDao().get(id);
+    	GeoObject shapeObj = getDao().get(id);
 		Geometry g1 = shapeObj.getTheGeom();
 		GeometryJSON g = new GeometryJSON(10);
 		StringWriter writer = new StringWriter();
@@ -354,7 +348,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @Transactional
     public @ResponseBody
     List<Map<String, String>> getObjectProperties(@RequestParam Long id) {
-		GeoObject object = serviceRegistry.getGeoObjectDao().get(id);
+		GeoObject object = getDao().get(id);
 		List<Map<String, String>> tags = new GeoObjectUIAdapter(object).getTags();
 		Map<String,String> area = new HashMap<String, String>();
 		area.put("id", "");
@@ -368,7 +362,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @PreAuthorize("@geoportalSecurity.isObjectAllowed(#objModel)")
 	@Transactional
     public @ResponseBody GeoObjectUI updateObjectProperties(@ModelAttribute PortalObjectModel objModel) throws ParseException{
-    	GeoObject object = serviceRegistry.getGeoObjectDao().get(objModel.getId());
+    	GeoObject object = getDao().get(objModel.getId());
 		object.setName(objModel.getName());
 		object.setFiasCode(objModel.getFiasCode());
 		//object.clearTags();
@@ -434,7 +428,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 		checkArea(object);
 		object.setChanged(Calendar.getInstance().getTime());
 		object.setChangedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
-		serviceRegistry.getGeoObjectDao().update(object, true);
+		getDao().update(object, true);
 		
 		return new GeoObjectUIAdapter(object);
 	}
@@ -450,13 +444,13 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 			Reader reader = new StringReader(object.geojson);
 			try {
 					SimpleFeature forUpdate = fjson.readFeature( reader );
-					GeoObject gis = serviceRegistry.getGeoObjectDao().get(object.id);
+					GeoObject gis = getDao().get(object.id);
 					Geometry g1 = (Geometry) forUpdate.getDefaultGeometryProperty().getValue();
 					gis.setTheGeom(g1);
 					checkArea(gis);
 					gis.setChanged(Calendar.getInstance().getTime());
 					gis.setChangedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
-					serviceRegistry.getGeoObjectDao().update(gis);
+					getDao().update(gis);
 			} catch (IOException e) {
 				logger.error(e.getLocalizedMessage(), e);
 				return false; 
@@ -472,7 +466,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 	Boolean deleteGisObject(@RequestBody DeleteObjectsModel model) {
 		List<GeoObject> aclObjs = serviceRegistry.getACLDao().listAllUsedObjects();
     	for(Long id : model.getObjIds()){
-			GeoObject gis = serviceRegistry.getGeoObjectDao().get(id);
+			GeoObject gis = getDao().get(id);
 			checkArea(gis);
 			gis.setChanged(Calendar.getInstance().getTime());
 			gis.setChangedBy(serviceRegistry.getUserDao().getCurrentGeoUser());
@@ -486,15 +480,15 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 						iter.remove();
 					}
 				}
-				serviceRegistry.getGeoObjectDao().update(gis);
+				getDao().update(gis);
 			}else{
 				if(aclObjs.contains(gis)){
 					GeoACL acl = serviceRegistry.getACLDao().getByObjectId(gis.getId());
 					serviceRegistry.getACLDao().remove(acl.getId());
 				}
 				/*gis.setName("DELETED");
-				serviceRegistry.getGeoObjectDao().update(gis, true);*/
-				serviceRegistry.getGeoObjectDao().remove(id);
+				getDao().update(gis, true);*/
+				getDao().remove(id);
 			}
 		}
 		return true;
@@ -525,15 +519,15 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
    					}
    				}
    				objsIter.remove();
-   				serviceRegistry.getGeoObjectDao().update(gis);
+   				getDao().update(gis);
    			}else{
    				if(aclObjs.contains(gis)){
 					GeoACL acl = serviceRegistry.getACLDao().getByObjectId(gis.getId());
 					serviceRegistry.getACLDao().remove(acl.getId());
 				}
    				/*gis.setName("DELETED");
-   				serviceRegistry.getGeoObjectDao().update(gis, true);*/
-   				serviceRegistry.getGeoObjectDao().remove(gis.getId());
+   				getDao().update(gis, true);*/
+   				getDao().remove(gis.getId());
    			}
    		}
    		objs.clear();
@@ -544,7 +538,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @RequestMapping(value="/feedback/{id}")
     @Transactional
     public String getFeedbackDialogById(@PathVariable Long id, Model model){
-    	GeoObject gis = serviceRegistry.getGeoObjectDao().get(id);
+    	GeoObject gis = getDao().get(id);
         model.addAttribute("object", gis);
 		model.addAttribute("layers", ObjectFactory.createGeoLayerUIAdapterList(gis.getGeoLayers()));
 		GeoUser auth = serviceRegistry.getUserDao().getCurrentGeoUser();
@@ -568,7 +562,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
     @PreAuthorize("@geoportalSecurity.isLayerEditor(#layerId)")
     @Transactional
     public @ResponseBody boolean addObjectToLayerLink(@RequestParam Long objId, @RequestParam Long layerId){
-    	GeoObject gis = serviceRegistry.getGeoObjectDao().get(objId);
+    	GeoObject gis = getDao().get(objId);
     	checkArea(gis);
     	
     	Iterator<GeoLayer> iter = gis.getGeoLayers().iterator();
@@ -576,7 +570,7 @@ public class GeoObjectController extends AbstractController<GeoObject, GeoObject
 			if(iter.next().getId() == layerId)return true;
 		}
 		try{
-			serviceRegistry.getGeoObjectDao().addToLayer(objId, layerId);
+			getDao().addToLayer(objId, layerId);
 		}catch(Exception e){
 			logger.error(e.getMessage());
 		}

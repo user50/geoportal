@@ -3,7 +3,6 @@ package org.w2fc.geoportal.tagsdict;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -16,16 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w2fc.geoportal.dao.AddnsTagsDictionaryDao;
 import org.w2fc.geoportal.domain.AddnsTagsDictionary;
 import org.w2fc.geoportal.domain.AddnsTagsDictionaryValues;
-import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
-
-import javax.annotation.PostConstruct;
 
 
 @Controller
 @RequestMapping(value = "/tags")
 public class TagsDictionaryController extends AbstractController<AddnsTagsDictionary, AddnsTagsDictionaryDao, Long>{
+  
 
+    @Autowired
     @Override
     public void setAutowiredDao(AddnsTagsDictionaryDao dao) {
         setDao(dao);

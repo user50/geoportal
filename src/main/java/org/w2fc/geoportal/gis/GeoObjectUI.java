@@ -28,9 +28,6 @@ public abstract class GeoObjectUI {
 		geoObject = obj;
 	}
 
-	public GeoObjectUI() {
-	}
-
 	@XmlElement
 	public Date getCreatedDateTime() {
 		return geoObject.getCreated();

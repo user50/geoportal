@@ -179,14 +179,16 @@ public class GeoObjectService {
         checkLayersExists(layerIds);
 
         for (GeoLayer currentLayer : gisObject.getGeoLayers()) {
-            serviceRegistry.getGeoObjectDao().deleteObjectListFromLayer(currentLayer.getId(), Arrays.asList(gisObject.getId()));
+            if(!layerIds.contains(currentLayer.getId()))
+            	serviceRegistry.getGeoObjectDao().removeFromLayer(gisObject.getId(), currentLayer.getId());
         }
 
         for (Long layerId : layerIds) {
             try {
                 serviceRegistry.getGeoObjectDao().addToLayer(gisObject.getId(), layerId);
             } catch (Exception e) {
-                throw new UnableToAddToLayerException("Unable  to add to layer " + layerId);
+                if(!"Object is already related".equals(e.getMessage()))
+                	throw new UnableToAddToLayerException("Unable  to add to layer " + layerId);
             }
         }
     }

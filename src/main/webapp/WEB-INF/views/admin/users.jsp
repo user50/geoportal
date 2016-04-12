@@ -88,7 +88,7 @@ var userManagment = (function() {
             showMask();
             $.ajax({
                 type : "GET",
-                url : prefix + "rest/list"   //id
+                url : prefix + "sorted_list"   //id
             }).done(function(data) {
                 userManagmentData = data;
                 for(var i = 0; i < data.length; i++){

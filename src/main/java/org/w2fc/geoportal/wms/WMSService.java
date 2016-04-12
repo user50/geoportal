@@ -29,18 +29,18 @@ public class WMSService {
 		return true;
 	}
 
-	@CacheEvict(value="GeoPortalCache", key="#layerId")
+	//@CacheEvict(value="GeoPortalCache", key="#layerId")
+	@CacheEvict(value="GeoPortalCache", allEntries=true)
 	public boolean resetLayer(Long layerId) {
 		return true;
 	}
 
-	public List<Layer> getWmsLayers(Long layerId, ServletContext servletContext) {
-		return geoProcessor.getWmsLayers(layerId, servletContext);
+	public List<Layer> getWmsLayers(Long layerId, ServletContext servletContext, ParamsContainer params) {
+		return geoProcessor.getWmsLayers(layerId, servletContext, params);
 	}
 	
 	public Collection<Layer> getAreaObject(Geometry permobjects, Geometry permAreaIslands, ServletContext servletContext) {
 		return areaProcessor.getAreaObject(permobjects, permAreaIslands, servletContext);
 	}
-
 
 }

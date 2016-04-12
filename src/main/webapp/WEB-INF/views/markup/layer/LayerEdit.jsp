@@ -97,6 +97,7 @@
    	<td style="border-right: 1px solid #d1d1d1;padding-right: 10px;vertical-align: top;width: 150px;">
    		Тип слоя: <br/>
             <label><form:radiobutton style="width: auto;" path="typeId" value="1" /> Векторный слой (WFS)</label><br> 
+            <label><form:radiobutton style="width: auto;" path="typeId" value="6" /> Векторный слой (WMS)</label><br> 
    			<label><form:radiobutton style="width: auto;" path="typeId" value="2" /> WMS сервис</label><br>
    			<label><form:radiobutton style="width: auto;" path="typeId" value="3" /> Тайловый сервис</label><br>
    			<label><form:radiobutton style="width: auto;" path="typeId" value="5" /> Сервис ArcGIS</label><br>
@@ -106,7 +107,7 @@
   	</c:if>
   	<td>
   	<c:choose>
-        <c:when test="${portalLayer.typeId == 1}">
+        <c:when test="${portalLayer.typeId == 1 || portalLayer.typeId == 6}">
         	<c:set var="disp" value="block" scope="page"/>
         </c:when>
         <c:otherwise>

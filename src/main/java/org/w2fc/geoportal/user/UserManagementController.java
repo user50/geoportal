@@ -2,16 +2,18 @@ package org.w2fc.geoportal.user;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,8 +37,6 @@ import org.w2fc.geoportal.domain.GeoUserRole;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
 
-import javax.annotation.PostConstruct;
-
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -54,7 +54,7 @@ public class UserManagementController extends AbstractController<GeoUser, GeoUse
     public void setAutowiredDao(GeoUserDao dao) {
         setDao(dao);
     }
-
+    
     @PostConstruct
     public void init(){
         setAutowiredDao(serviceRegistry.getUserDao());
@@ -231,6 +231,20 @@ public class UserManagementController extends AbstractController<GeoUser, GeoUse
         return "admin/user";
     }
 
+    
+	@RequestMapping(value = "/sorted_list", method = RequestMethod.GET)
+	public @ResponseBody List<GeoUser> getSortedList() {
+		List<GeoUser> l = getDao().list();
+		Collections.sort(l, new Comparator<GeoUser>() {
+
+			@Override
+			public int compare(GeoUser o1, GeoUser o2) {
+				return o1.getLogin().compareToIgnoreCase(o2.getLogin());
+			}
+		});
+		return l;
+
+	}
     
     @SuppressWarnings("unchecked")
     @CacheEvict(value="layerPermanent", allEntries = true)

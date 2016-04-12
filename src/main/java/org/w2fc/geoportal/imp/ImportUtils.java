@@ -362,6 +362,10 @@ public class ImportUtils {
                     @Override protected String getWKT(){ImportUtils.logger.debug("MID/MIF: " + geometry); return geometry;}
                 };
 
+                if(in.getDefaultGeometryProperty().getValue() == null){
+                	//TODO: show report warning!
+                	continue;
+                }
                 impObj.geometry = in.getDefaultGeometryProperty().getValue().toString();
 
                 if(impObj.geometry.contains(POINT)){

@@ -31,16 +31,16 @@ public class GeoportalSecurity {
     }
     
     public boolean isLayerEditor(Long layerId, Long parentLayerId) {
-    	if (Constants.isAdministrator()) {
+    	if (Constants.isAdministrator() || Constants.isEditor()) {
 			return true;
 		}
-
+    	
     	if(null == layerId)
     	    layerId = parentLayerId;
-
+    	
     	if(null == layerId)
     	    return false;
-
+    	
         GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
         List<GeoUser> users = serviceRegistry.getLayerDao().getAllowedUsersByLayerId(layerId);
         return users.contains(user);
@@ -111,17 +111,17 @@ public class GeoportalSecurity {
 
 	@Transactional(readOnly=true)
 	public boolean checkLayerPermissions(long id){
-		GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
-		List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
-
-		GeoObject obj = serviceRegistry.getGeoObjectDao().get(id);
+    	GeoUser user = serviceRegistry.getUserDao().getCurrentGeoUser();
+    	List<GeoLayer> layers = serviceRegistry.getLayerDao().listTreeLayersEditable(user.getId());
+    	
+    	GeoObject obj = serviceRegistry.getGeoObjectDao().get(id);
 		if (obj == null)
 			throw new GeoObjectNotFoundException("Geo object with id #" + id + " does not exist");
 
 		for(GeoLayer l : obj.getGeoLayers()){
 			if(layers.contains(l)){
 				return true;
-			}
+    }
 		}
 
 		return false;

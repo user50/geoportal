@@ -22,7 +22,7 @@ public class CreateOrUpdateGeoTag {
             else
             {
                 geoObjectTag.setGeoObject(gisObject);
-                gisObject.addTag(geoObjectTag);
+                gisObject.getTags().add(geoObjectTag);
             }
         }
     }

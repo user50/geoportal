@@ -1,23 +1,29 @@
 package org.w2fc.geoportal.ws;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.ws.WebServiceContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w2fc.geoportal.ws.async.SOAPProcessStatus;
-import org.w2fc.geoportal.ws.error.ErrorDesc;
 import org.w2fc.geoportal.ws.error.ErrorsReport;
-import org.w2fc.geoportal.ws.model.*;
+import org.w2fc.geoportal.ws.model.DeleteObjectsRequest;
+import org.w2fc.geoportal.ws.model.DeleteSoapResponse;
+import org.w2fc.geoportal.ws.model.GeoObjectFullAdapter;
+import org.w2fc.geoportal.ws.model.GetLayersResponse;
+import org.w2fc.geoportal.ws.model.GetObjectsResponse;
+import org.w2fc.geoportal.ws.model.RequestGeoObject;
+import org.w2fc.geoportal.ws.model.SOAPOperationResponse;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Service
@@ -26,9 +32,6 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     
     @Autowired
     private PortalWsService portalWsService;
-
-    @Autowired
-    private  BasicAuthenticator basicAuthenticator;
 
     @Resource
     private WebServiceContext webServiceContext;
@@ -116,8 +119,7 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     @WebMethod
     public SOAPOperationResponse createObjects(List<RequestGeoObject> rp){
         autowire();
-        basicAuthenticator.doAuthentication(webServiceContext);
-
+        
         String pid = portalWsService.createObjects(rp);
 
         return new SOAPOperationResponse(pid);
@@ -126,7 +128,6 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     @WebMethod
     public SOAPOperationResponse updateObjects(List<RequestGeoObject> rp){
         autowire();
-        basicAuthenticator.doAuthentication(webServiceContext);
         String pid = portalWsService.updateObjects(rp);
 
         return new SOAPOperationResponse(pid);
@@ -135,8 +136,6 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     @WebMethod
     public SOAPOperationResponse deleteObjects(DeleteObjectsRequest deleteObjectsRequest){
         autowire();
-
-        basicAuthenticator.doAuthentication(webServiceContext);
 
         String[] idList;
         try {
@@ -153,7 +152,6 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     @WebMethod
     public DeleteSoapResponse getStatus(@XmlElement(required=true, name="pid") String pid){
         autowire();
-        basicAuthenticator.doAuthentication(webServiceContext);
         Object statusObj = SOAPProcessStatus.INSTANCE.get(pid);
 
         if (statusObj instanceof String)
@@ -167,7 +165,6 @@ public class PortalWs extends SpringBeanAutowiringSupport {
     @WebMethod
     public List<String> getSpatialRefSystems(){
         autowire();
-        basicAuthenticator.doAuthentication(webServiceContext);
         return portalWsService.getSpatialRefSystems();
     }
 

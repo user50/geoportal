@@ -1,6 +1,12 @@
 package org.w2fc.geoportal.dao;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.StandardBasicTypes;
@@ -239,6 +245,46 @@ public class GeoLayerDaoImpl extends AbstractDaoDefaulImpl<GeoLayer, Long> imple
 				.uniqueResult()).intValue();
 	}
 
+
+	@Override
+	public Map<Long, Integer> getHaveObjects() {
+		List<Map<Long,Integer>> countList = (List<Map<Long,Integer>>)getCurrentSession()
+				.createSQLQuery(getResourceSQL("GeoLayerDaoImpl.getHaveObjects"))
+				.addScalar("layer_id", StandardBasicTypes.LONG)
+				.addScalar("count_obj", StandardBasicTypes.INTEGER)
+				.setResultTransformer(new ResultTransformer() {
+
+					private static final long serialVersionUID = -3236182483196688615L;
+
+					@Override
+					public Object transformTuple(Object[] tuple, String[] aliases) {
+						Map<Long, Integer> l = new HashMap();
+						l.put((Long) tuple[0], (Integer) tuple[1]);
+						return l;
+					}
+
+					@Override
+					public List transformList(List collection) {
+						return collection;
+					}
+				})
+				.list();
+		Map<Long, Integer> res = new HashMap();
+		for(Map<Long, Integer> m : countList){
+			res.putAll(m);
+		}
+		return res;
+	}
+
+
+	@Override
+	@Cacheable(value = "GeoPortalCache", key="'layer_'.concat(#layerId)")
+	public GeoLayer getDetached(Long layerId) {
+		
+		GeoLayer l = get(layerId);
+		getCurrentSession().evict(l);
+		return l;
+	}
 
     @Override
     public Set<GeoLayer> list(Set<Long> ids) {

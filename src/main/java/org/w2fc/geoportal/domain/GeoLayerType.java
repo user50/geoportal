@@ -33,7 +33,7 @@ public class GeoLayerType extends AbstractDomain<GeoLayerType>{
     public static final Long TYPE_TILES = 3L;
     
     public static final Long TYPE_REGISTRY_LAYER = 4L;
-    
+	public static final Long TYPE_WMSWFS = 6L;
     
     @Id
     @Column (name = "id", unique = true, nullable = false)

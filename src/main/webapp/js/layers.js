@@ -50,7 +50,7 @@ var layers = (function(){
     	}else{
     		context.edit = false;
     	}
-    	if((isEditor() || node.metadata.permissions == 1) && node.metadata.typeId == 1){
+    	if((isEditor() || node.metadata.permissions == 1) && (node.metadata.typeId == 1 || node.metadata.typeId == 6)){
     		context.massedit = {
     				"label"				: "Редактировать в таблице",
                     "action"			: function(){
@@ -87,7 +87,7 @@ var layers = (function(){
     		context.rigths = false;
     	}
     	context.ccp = false;
-    	if((isEditor() || node.metadata.permissions == 1 || isAdmin()) && node.metadata.typeId == 1){
+    	if((isEditor() || node.metadata.permissions == 1 || isAdmin()) && (node.metadata.typeId == 1 || node.metadata.typeId == 6)){
     		context['clear'] = {
    				 "label" : "Удалить все объекты",
    				 "action"			: function(){
@@ -117,7 +117,7 @@ var layers = (function(){
     		};
     	}
     	
-    	if((isEditor() || node.metadata.permissions == 1 || isAdmin()) && node.metadata.typeId == 1){
+    	if((isEditor() || node.metadata.permissions == 1 || isAdmin()) && (node.metadata.typeId == 1 || node.metadata.typeId == 6)){
     		context['export'] = {
     				 "label" : "Экспорт",
     				 "action"            : function () {
@@ -148,7 +148,7 @@ var layers = (function(){
     	}else{
     		context['export'] = false;
     	}
-    	if((isEditor() || node.metadata.permissions == 1 || isAdmin()) && node.metadata.typeId == 1){
+    	if((isEditor() || node.metadata.permissions == 1 || isAdmin()) && (node.metadata.typeId == 1 || node.metadata.typeId == 6)){
     		context['import'] = {
     				"label" : "Импорт",
                     "action" : false,
@@ -223,7 +223,7 @@ var layers = (function(){
                         if(n.typeId == 3)node.data.icon = 'css/themes/classic/tile.png';
                         if(n.typeId == 2)node.data.icon = 'css/themes/classic/wms.png';
                         if(n.typeId == 5)node.data.icon = 'css/themes/classic/esri.png';*/
-                        if(n.typeId == 1 && n.haveObjects == 0){
+                        if((n.typeId == 1 || n.typeId == 6) && n.haveObjects == 0){
                         	node.attr['class'] = 'no-checkbox';
                         }
                         if(parentNode.attr.id == n.parentId){
@@ -472,6 +472,7 @@ var layers = (function(){
                 //if(parentId)$('input[name=parentId]').val(parentId);
                 $('input[name=typeId]').click(function() {
                         var val = $(this).val();
+                        if(val == 6)val = 1;
                         $("div[type=tab]").each(function(i, tab){
                         	if($(tab).attr('id') == 'tabs-'+val){
                         		$(tab).show();

@@ -53,7 +53,7 @@ h1{
 
 #tmpl_list .ui-selecting { background: #00a4d3; }
 #tmpl_list .ui-selected { background: #00a4d3; color: white; }
-#tmpl_list { list-style-type: none; margin: 0; padding: 0;}
+#tmpl_list { list-style-type: none; margin: 0; padding: 0; max-height: 800px; overflow: scroll;}
 #tmpl_list li { margin: 3px; padding: 0.4em; font-size: 12px; height: 18px; cursor: pointer;}
 
 .comment {

@@ -1,10 +1,12 @@
 package org.w2fc.geoportal.dao;
 
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w2fc.geoportal.domain.GeoACL;
 import org.w2fc.geoportal.domain.GeoUser;
 import org.w2fc.geoportal.domain.GeoUserRole;
@@ -41,5 +43,12 @@ public class GeoUserRoleDaoImpl extends AbstractDaoDefaulImpl<GeoUserRole, Long>
         
         s.delete(r);
         flushSession(s, forceFlush);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly=true)
+    @Override
+    public List<GeoUserRole> list() {
+        return getCurrentSession().createQuery("from GeoUserRole order by name").list();
     }
 }

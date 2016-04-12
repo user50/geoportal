@@ -4,7 +4,6 @@ package org.w2fc.geoportal.registry;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -34,6 +33,7 @@ public class GeoRegistryController extends AbstractController<GeoLayer, GeoLayer
     LayerController layerController;
     
     @Override
+    @Autowired
     public void setAutowiredDao(GeoLayerDao dao) {
         setDao(dao);
     }

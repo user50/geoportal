@@ -3,6 +3,8 @@ package org.w2fc.geoportal.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
@@ -11,8 +13,20 @@ import javax.persistence.Table;
         dynamicInsert = true        /* Optimize insert sql */
 )
 
+@NamedQueries({
+	@NamedQuery(
+			name  = GeoSettings.Query.BY_NAME,
+			query = "FROM GeoSettings gs"
+					+ " WHERE gs.key = ?")
+})
+
 @Table (name = "GEO_SETTINGS")
 public class GeoSettings  extends AbstractDomain<GeoSettings>{
+	
+	public static final class Query {
+		public static final String BY_NAME = "GeoSettings_BY_NAME";
+	}
+	
 	@Id
 	private Long id;
     

@@ -58,7 +58,8 @@ public class GeoObjectsService {
                     try {
                         geoObjectService.createAndSaveObject(requestGeoObject);
                     } catch (Exception e) {
-                        add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
+                        logger.error(e.getLocalizedMessage(), e);
+                    	add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
                     }
                 }
             }
@@ -77,6 +78,7 @@ public class GeoObjectsService {
                     try {
                         geoObjectService.updateObject(requestGeoObject);
                     } catch (Exception e) {
+                    	logger.error(e.getLocalizedMessage(), e);
                         add(new ErrorDesc(codeProvider.getCode(e), requestGeoObject.getGuid()));
                     }
                 }
@@ -95,7 +97,7 @@ public class GeoObjectsService {
                     try {
                         geoObjectService.delete(extSysId, guid);
                     } catch (Exception e) {
-
+                    	logger.error(e.getLocalizedMessage(), e);
                         add(new ErrorDesc(codeProvider.getCode(e), guid));
                     }
                 }

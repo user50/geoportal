@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w2fc.geoportal.domain.GeoACL;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoUser;
@@ -56,18 +57,24 @@ public class GeoACLDaoImpl extends AbstractDaoDefaulImpl<GeoACL, Long> implement
                 .uniqueResult();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<GeoObject> listAllUsedObjects(){
-		return getCurrentSession()
-                .createQuery("Select acl.geoObject from GeoACL acl")
-                .list();
+		return getCurrentSession().createQuery("Select acl.geoObject from GeoACL acl order by name").list();
 	}
 
-    @Override
-    public List<GeoObject> listByUser(Long userId) {
-        return getCurrentSession()
-                .createQuery("Select acl.geoObject from GeoACL acl join acl.geoUsers u where u.id = :userId")
-                .setParameter("userId", userId)
-                .list();
-    }
+	@Override
+	public List<GeoObject> listByUser(Long userId) {
+		return getCurrentSession()
+				.createQuery("Select acl.geoObject from GeoACL acl join acl.geoUsers u where u.id = :userId")
+				.setParameter("userId", userId).list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	@Override
+	public List<GeoACL> list() {
+		return getCurrentSession().createQuery("from GeoACL order by name").list();
+
+	}
 }

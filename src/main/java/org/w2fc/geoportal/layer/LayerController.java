@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
@@ -22,7 +21,6 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
@@ -61,15 +59,12 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
     @Autowired
     ServiceRegistry serviceRegistry;
     
+    @Autowired
     @Override
     public void setAutowiredDao(GeoLayerDao dao) {
         setDao(dao);
     }
-
-    @PostConstruct
-    public void init(){
-        setAutowiredDao(serviceRegistry.getLayerDao());
-    }
+    
     
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @Transactional(readOnly = true)
@@ -79,18 +74,27 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         if(Constants.isEditor()){
         	result = ObjectFactory
                     .createGeoLayerUIAdapterList(
-                            serviceRegistry.getLayerDao().list());
+                            getDao().list());
         }else{
         
         result = ObjectFactory
                 .createGeoLayerUIAdapterList(
-                        serviceRegistry.getLayerDao().listTreeLayers(
+                        getDao().listTreeLayers(
                                 serviceRegistry.getUserDao().getCurrentGeoUser().getId()));
         }
         
-        for(GeoLayerUIAdapter layer : result){
-        	if(layer.getTypeId() == 1)layer.setHaveObjects(serviceRegistry.getLayerDao().getHaveObjects(layer.getId()));
-        }
+        Map<Long, Integer> ho = getDao().getHaveObjects();
+		for (GeoLayerUIAdapter layer : result) {
+			if (layer.getTypeId() == GeoLayerType.TYPE_WFS
+					|| layer.getTypeId() == GeoLayerType.TYPE_WMSWFS) {
+
+				if (ho.containsKey(layer.getId()) && ho.get(layer.getId()) > 0) {
+					layer.setHaveObjects(1);
+				} else {
+					layer.setHaveObjects(0);
+				}
+			}
+		}
         
         return result;
     }
@@ -108,7 +112,7 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         double likes = 0d;
         Long spatialDataWeight = 0L;
         
-        GeoLayer layer = serviceRegistry.getLayerDao().get(id);
+        GeoLayer layer = getDao().get(id);
 
         if(null == layer){
             layer = new GeoLayer();
@@ -122,8 +126,8 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
                 likes = r.getLikes();
             }
 
-            if(layer.getTypeId() == GeoLayerType.TYPE_WFS){
-                spatialDataWeight = serviceRegistry.getLayerDao().getObjectsCount(layer.getId());
+            if(layer.getTypeId() == GeoLayerType.TYPE_WFS || layer.getTypeId() == GeoLayerType.TYPE_WMSWFS){
+                spatialDataWeight = getDao().getObjectsCount(layer.getId());
             }
         }
         
@@ -173,7 +177,7 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
             metadata = layer.getMetadata();
             
         }else{
-            layer = serviceRegistry.getLayerDao().get(layerUI.getId());
+            layer = getDao().get(layerUI.getId());
             metadata = layer.getMetadata();
             layer.copyValuesFrom(layerUI.getGeoLayer(), "icon", "treeIcon");
         }
@@ -184,7 +188,7 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         metadata.setChangedBy(currentGeoUser);
         metadata.setChanged(new Date());
         
-        serviceRegistry.getLayerDao().update(layer, true);
+        getDao().update(layer, true);
         
         return layer.getId();
     }
@@ -195,7 +199,7 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
     @PreAuthorize("@geoportalSecurity.isLayerEditor(#id)")
     public @ResponseBody Boolean deleteLayerById(@PathVariable Long id){
         
-        serviceRegistry.getLayerDao().remove(id, true);
+        getDao().remove(id, true);
         serviceRegistry.getRatingDao().remove(id, true);
         
         return true;
@@ -215,12 +219,12 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         if(null == layerUI.getId()){
             l = createGeoLayer(layerUI, serviceRegistry.getUserDao().getCurrentGeoUser());
         }else{
-            l = serviceRegistry.getLayerDao().get(layerUI.getId());
+            l = getDao().get(layerUI.getId());
         }
 
         Blob blob = Hibernate.createBlob(file.getInputStream());
         l.setIcon(blob);
-        serviceRegistry.getLayerDao().update(l, true);
+        getDao().update(l, true);
         serviceRegistry.getWms().resetLayer(l.getId());
         return l.getId();
     }
@@ -240,7 +244,7 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         geoUser.getLayerToUserReferences().add(ref);
         ref.setPermissions(Permission.MODE_WRITE);
         
-        serviceRegistry.getLayerDao().add(layer);
+        getDao().add(layer);
 
         AddnsRating r = new AddnsRating();
         r.setGeoLayer(layer);
@@ -588,12 +592,12 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         if(null == layerUI.getId()){
             l = createGeoLayer(layerUI, serviceRegistry.getUserDao().getCurrentGeoUser());
         }else{
-            l = serviceRegistry.getLayerDao().get(layerUI.getId());
+            l = getDao().get(layerUI.getId());
         }
 
         Blob blob = Hibernate.createBlob(treefile.getInputStream());
         l.setTreeIcon(blob);
-        serviceRegistry.getLayerDao().update(l, true);
+        getDao().update(l, true);
         //serviceRegistry.getWms().resetLayer(l.getId());
         return l.getId();
     }
@@ -610,12 +614,12 @@ public class LayerController extends AbstractController<GeoLayer, GeoLayerDao, L
         if(null == layerUI.getId()){
             return null;
         }else{
-            l = serviceRegistry.getLayerDao().get(layerUI.getId());
+            l = getDao().get(layerUI.getId());
         }
 
         //Blob blob = Hibernate.createBlob(treefile.getInputStream());
         l.setTreeIcon(null);
-        serviceRegistry.getLayerDao().update(l, true);
+        getDao().update(l, true);
         //serviceRegistry.getWms().resetLayer(l.getId());
         return l.getId();
     }

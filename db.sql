@@ -163,6 +163,8 @@ CREATE TABLE GEO_OBJECT (
     changed     timestamp NULL,
     fias_code   char(50) NULL,
     the_geom    geometry NOT NULL,
+	guid        varchar(255) NULL,
+	ext_sys_id        varchar(255) NULL,
     VERSION     int NOT NULL DEFAULT 0,
     PRIMARY KEY(id)
 )
@@ -236,6 +238,7 @@ CREATE TABLE GEO_USER (
     email       varchar(255) NULL,
     phone       varchar(25) NULL,
     VERSION     int NOT NULL DEFAULT 0,
+	token       varchar(255) NULL,
     PRIMARY KEY(id)
 )
 GO
@@ -280,6 +283,20 @@ CREATE TABLE geo_settings (
 		id bigserial NOT NULL,
 		key VARCHAR(255) NOT NULL,
 		value VARCHAR(1024)
+)
+GO
+
+CREATE TABLE operation_status ( 
+    id          bigint NOT NULL,
+    guid  		varchar(50) NULL,
+    message     text NULL,
+    action    	int NOT NULL,
+	status    	int NOT NULL,
+	user_id    	bigint NOT NULL,
+    date     	timestamp without time zone,
+    pid			varchar(50) NOT NULL,
+    layer_ids   varchar(50) NULL,
+    PRIMARY KEY(id)
 )
 GO
 

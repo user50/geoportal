@@ -36,12 +36,10 @@ public abstract class AbstractDaoDefaulImpl<T, I extends Serializable> implement
     
     
     @Autowired
-    SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
     
     @Autowired
-    SessionFactory sessionFactoryCartography;
-
-
+    private SessionFactory sessionFactoryCartography;
 
 
     /**
@@ -49,7 +47,7 @@ public abstract class AbstractDaoDefaulImpl<T, I extends Serializable> implement
      * 
      * @param genericType
      */
-    public AbstractDaoDefaulImpl(Class<T> genericType){
+    protected AbstractDaoDefaulImpl(Class<T> genericType){
         this.genericType = genericType;
         this.findAllHql = "from " + genericType.getName();
 

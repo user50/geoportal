@@ -33,7 +33,7 @@
 <script src="js/leaflet.zoomslider.js"></script>
 <script src="js/leaflet.mouseposition.js"></script>
 <script src="js/leaflet.rucadastre.js"></script>
-<script src="js/leaflet-routing-machine.min.js"></script>
+<script src="js/leaflet-routing-machine.js"></script>
 <script src="js/leaflet.markercluster-src.js"></script>
 <script src="js/esri-leaflet.js"></script>
 <script src="js/esri-leaflet-geocoder.js"></script>
@@ -41,6 +41,7 @@
 <script src="js/Google.js"></script>
 <script src="js/jquery.url.min.js"></script>
 <script src="js/Leaflet.Weather.js"></script>
+<script src="js/leaflet.wms.js"></script>
 <c:if test="${!anonymous}">
 	<script src="js/leaflet.print.js"></script>
 	<script src="js/leaflet-areaselect.js"></script>

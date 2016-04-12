@@ -1,5 +1,6 @@
 package org.w2fc.geoportal.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -40,9 +42,11 @@ import com.vividsolutions.jts.geom.Geometry;
 @Indexed
 @Audited
 @Table (name = "GEO_OBJECT")
-public class GeoObject extends AbstractDomain<GeoObject>{
+public class GeoObject extends AbstractDomain<GeoObject> implements Serializable{
     
-    @Id
+    private static final long serialVersionUID = -5142072634288961027L;
+
+	@Id
     @Column (name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -58,7 +62,7 @@ public class GeoObject extends AbstractDomain<GeoObject>{
     @Field
     @Column (name = "ext_sys_id", nullable = true)
     private String extSysId;
-
+    
     /*  GeoUser */
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED) 
     @OneToOne
@@ -96,9 +100,10 @@ public class GeoObject extends AbstractDomain<GeoObject>{
     
     
     /* GeoLayer */
-    @NotAudited
+    //@NotAudited
+    @AuditJoinTable(name="GEO_LAYER_TO_OBJECT_AUD")
     @JsonIgnore
-    @ManyToMany(mappedBy = "geoObjects", fetch = FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "geoObjects", fetch = FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     private Set<GeoLayer> geoLayers;
     
     /* GeoObjectTag */
@@ -213,11 +218,6 @@ public class GeoObject extends AbstractDomain<GeoObject>{
         this.tags = tags;
     }
 
-    public void addTag(GeoObjectTag tag)
-    {
-        this.tags.add(tag);
-    }
-
     public GeoObjectProperties getGeoObjectProperties() {
         return geoObjectProperties;
     }
@@ -225,7 +225,7 @@ public class GeoObject extends AbstractDomain<GeoObject>{
     public void setGeoObjectProperties(GeoObjectProperties geoObjectProperties) {
         this.geoObjectProperties = geoObjectProperties;
     }
-
+    
     public String getExtSysId() {
         return extSysId;
     }

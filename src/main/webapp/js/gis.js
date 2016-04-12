@@ -158,19 +158,19 @@ var map = (function() {
 			}).done(function(script, textStatus) {
 				if (geo_position_js.init()) {
 					  geo_position_js.getCurrentPosition(function (p) {
-						if(_home == null){
+						/*if(_home == null){
 							_home =  [p.coords.latitude, p.coords.longitude]; 
 							//_map.setView(_home, startZoom); 
 							_createHomeMarker(_home);
 						}else{
 							if(_home[0] != p.coords.latitude || _home[1] != p.coords.longitude){
-								confirmMessage('Мое местоположение', 'Определено новое месторасположение. Установить?', function(){
+								confirmMessage('Мое местоположение', 'Определено новое месторасположение. Установить?', function(){*/
 									_home =  [p.coords.latitude, p.coords.longitude]; 
-									_map.setView(_home, startZoom); 
+									//_map.setView(_home, startZoom); 
 									_createHomeMarker(_home);
-				    			});
+				    	/*		});
 							}
-						}
+						}*/
 		  			   }, function () {
 		  					alertMessage('Местоположение не определено.');
 		  			   });
@@ -617,7 +617,8 @@ var map = (function() {
 		}
 		pointObj.tmpl = pText;
 		var popup = L.popup({
-			offset : new L.Point(0,-33)
+			offset : new L.Point(0,-33),
+			maxWidth: 700
 		}).setLatLng([pointObj.lat, pointObj.lon]);//.setContent(pText);
 		var config = {};
 		if(layerId != _searchLayer && layerId != _routeLayer){
@@ -1063,6 +1064,77 @@ var map = (function() {
         		}).addTo(_map).bringToFront();
     			envLayers[id] = {layer:wms,metadata:metadata};
     		}
+			if(type == 6){
+				var options = {'transparent': true, crs: L.CRS.EPSG4326};
+				var wmsLayer = L.WMS.source("wms/", options);
+				var buttons = {};
+				
+				if((metadata && metadata.permissions == 1)  || isEditor())buttons["Сохранить"] = function(){
+					showMask();
+					$.post( 
+						'geo/update', 
+						$('#_ObjectEditForm_').serialize(),
+						'json' // I expect a JSON response
+					).done(function(res){
+						hideMask();
+						$('#pageDialog').dialog("close");
+						alertMessage("Данные сохранены успешно.");
+					}).fail(function(){
+						hideMask();
+						 alertMessage("Ошибка сохранения.");
+					});
+				};
+				var createContent = function(id, content, latlng){
+					if((metadata && metadata.permissions == 1) || isEditor()){
+						content += "<div><a class='opengis' href='#'>Открыть</a></div>";
+					}
+					var pp = L.popup().setLatLng(latlng).setContent(content).openOn(_map);
+					
+					$(pp._container).delegate('a.opengis', 'click', function(){
+						showMask();
+						$.get('geo/getdialog/' + id, function(phtml) {
+							hideMask();
+							$.showPageDialog("Объект", phtml, buttons, {width: 600, maxHeight: $(document).height()-70});
+							$('#tobuffer').button().click(function(){
+								var popupWin = window.open('about:blank', '_blank', "location,width=400,height=300,top=0");
+								var win_doc = popupWin.document;
+								win_doc.open();
+								win_doc.write($('.obj_geom')[0].innerHTML);
+								win_doc.close();
+								popupWin.focus(); // передаём фокус новому окну
+							});
+						});
+						_map.closePopup(pp);
+					});
+				};
+				wmsLayer.ajax = function(url, callback) {
+					$.ajax(url.replace("wms/", "wms/identify/"), {
+						'context': this,
+						'success': function(result) {
+							if(result == ''){
+								callback.call(this, null);
+								return;
+							}
+							callback.call(this, result);
+						 }
+					});
+				}; 
+				wmsLayer.showFeatureInfo = function(latlng, info){
+					var content = info.name;
+					if(metadata.tmpl){
+						console.log(info);
+						for(var p in info.tags){
+							info[info.tags[p].key] = info.tags[p].value; 
+						}
+						content = $.templates({markup:metadata.tmpl, allowCode: true }).render(info);
+					}
+					createContent(info.id, content, latlng);
+				};
+				wmsLayer.addSubLayer(id);
+				wmsLayer.addTo(_map);
+				envLayers[id] = {layer:wmsLayer,metadata:metadata};
+				
+			}
     	},
     	removeEnvLayer : function(id){
     		if(_isEditing == id)_removeEditor();

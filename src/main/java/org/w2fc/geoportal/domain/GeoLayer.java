@@ -21,6 +21,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.hibernate.envers.AuditJoinTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -29,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
         dynamicUpdate = true,     /* Optimize update sql */
         dynamicInsert = true        /* Optimize insert sql */
 )
-
+@Audited
 @Table (name = "GEO_LAYER")
 public class GeoLayer extends AbstractDomain<GeoLayer>{
 
@@ -80,17 +84,19 @@ public class GeoLayer extends AbstractDomain<GeoLayer>{
     
     /* GeoUser */
     @JsonIgnore
+    @NotAudited
     @OneToMany(cascade=CascadeType.ALL, mappedBy="referenceId.geoLayer", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<GeoLayerToUserReference> layerToUserReferences;
     
     /* GeoUserRole */
     @JsonIgnore
+    @NotAudited
     @OneToMany(cascade=CascadeType.ALL, mappedBy="referenceId.geoLayer", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<GeoLayerToRoleReference> layerToRoleReferences;
         
     /* GeoObject */
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)  
     @JoinTable(
             name = "GEO_LAYER_TO_OBJECT", 
             joinColumns = {
@@ -98,16 +104,19 @@ public class GeoLayer extends AbstractDomain<GeoLayer>{
             inverseJoinColumns = {
                     @JoinColumn(name = "object_id", nullable = false, updatable = false)}
     )  
+    @AuditJoinTable(name="GEO_LAYER_TO_OBJECT_AUD")
     private Set<GeoObject> geoObjects;
 
     /* GeoLayerMetadata */
     @JsonIgnore
+    @NotAudited
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private GeoLayerMetadata metadata;
     
     /*Template*/
     @JsonIgnore
+    @NotAudited
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinColumn(name="tmpl_id")
     private AddnsPopupTemplate popupTemplate;

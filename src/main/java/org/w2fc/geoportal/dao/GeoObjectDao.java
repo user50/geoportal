@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoUser;
+import org.w2fc.geoportal.wms.ParamsContainer;
 
 
 public interface GeoObjectDao extends AbstractDao<GeoObject, Long> {
@@ -29,6 +30,7 @@ public interface GeoObjectDao extends AbstractDao<GeoObject, Long> {
 	public List<GeoObject> getByPointOrFias(Double lat, Double lng, String fias, List<Long> layersIds);
 
 	public void addToLayer(Long objId, Long layerId) throws Exception;
+	public void removeFromLayer(Long objId, Long layerId);
 
 	public Integer countByLayerAndIds(Long layerId, List<Long> objIds);
 
@@ -63,6 +65,8 @@ public interface GeoObjectDao extends AbstractDao<GeoObject, Long> {
 	public Integer getLastRevision(Long id);
 
 	public Double getArea(Long id);
+
+	List<GeoObject> listByLayerIdGeneralized(Long layerId, ParamsContainer params, Float g);
 
 	public Long getGeoObjectId(String guid, String extSysId);
 

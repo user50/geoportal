@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +23,6 @@ import org.w2fc.geoportal.domain.GeoLayer;
 import org.w2fc.geoportal.utils.ServiceRegistry;
 import org.w2fc.spring.AbstractController;
 
-import javax.annotation.PostConstruct;
-
 @Controller
 @RequestMapping(value = "/tmpl")
 public class TemplateRest extends AbstractController<AddnsPopupTemplate, AddnsPopupTemplateDao, Long>{
@@ -34,15 +31,13 @@ public class TemplateRest extends AbstractController<AddnsPopupTemplate, AddnsPo
 	@Autowired
 	private ServiceRegistry serviceRegistry;
 	 
+	@Autowired
 	@Override
     public void setAutowiredDao (AddnsPopupTemplateDao dao) {
 		setDao(dao);
 	}
 
-    @PostConstruct
-    public void init() {
-        setAutowiredDao(serviceRegistry.getPopupTemplateDao());
-    }
+	
 	 /*
      *      UI Templates
      */
@@ -61,7 +56,7 @@ public class TemplateRest extends AbstractController<AddnsPopupTemplate, AddnsPo
        		throw new AuthorizationServiceException("Доступ разрешен только пользователям с правами редактора");
        	}
         
-       	model.addAttribute("templates", serviceRegistry.getGeoObjectDao().list());
+       	model.addAttribute("templates", getDao().list());
         return "markup/layer/TemplatesEdit";
     }
     

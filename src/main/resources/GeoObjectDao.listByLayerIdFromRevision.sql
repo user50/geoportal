@@ -32,6 +32,8 @@ select
     o.version
 from
     geo_object_aud o
+inner join
+    geo_layer_to_object_aud lo
+        on lo.object_id = o.id and lo.revtype = 2
 where
-    o.revtype = 2
-    and o.rev > :revId
+    o.rev > :revId and lo.layer_id = :layerId

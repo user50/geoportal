@@ -25,6 +25,18 @@ public class ReferenceSystemProj extends AbstractDomain<ReferenceSystemProj>{
     @Column(name = "wkt")
     private String wkt;
 
+    @Column(name = "provided_sr")
+    private String providedSpatialReference;
+    
+    @Column(name = "dx")
+    private Double dx;
+    
+    @Column(name = "dy")
+    private Double dy;
+    
+    @Column(name = "q")
+    private Double Q;
+    
 	public String getKey() {
 		return key;
 	}
@@ -47,5 +59,37 @@ public class ReferenceSystemProj extends AbstractDomain<ReferenceSystemProj>{
 
 	public void setWkt(String wkt) {
 		this.wkt = wkt;
+	}
+
+	public String getProvidedSpatialReference() {
+		return providedSpatialReference;
+	}
+
+	public void setProvidedSpatialReference(String providedSpatialReference) {
+		this.providedSpatialReference = providedSpatialReference;
+	}
+
+	public Double getDx() {
+		return dx;
+	}
+
+	public void setDx(Double dx) {
+		this.dx = dx;
+	}
+
+	public Double getQ() {
+		return Q;
+	}
+
+	public void setQ(Double q) {
+		Q = q;
+	}
+
+	public Double getDy() {
+		return dy;
+	}
+
+	public void setDy(Double dy) {
+		this.dy = dy;
 	}
 }

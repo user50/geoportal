@@ -8,9 +8,9 @@
 	<packaging>war</packaging>
 	<version>2.1.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>1.6</java-version>
+		<java-version>1.7</java-version>
 		<org.springframework-version>3.2.11.RELEASE</org.springframework-version>
-		<org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
+		<org.springframework.security-version>3.2.9.RELEASE</org.springframework.security-version>
 		
 		<org.hibernate3-version>3.6.10.Final</org.hibernate3-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
@@ -18,6 +18,7 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<geotools.version>11.0</geotools.version>
         <cxfVersion>2.7.18</cxfVersion>
+        <log4j2.version>2.5</log4j2.version>
 	</properties>
 <profiles>
     <profile>
@@ -30,7 +31,7 @@
             </properties>
             <build>
                 <plugins>
-				<plugin>
+                    			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
@@ -72,6 +73,14 @@
 								<include>${properyFile}</include>
 							</includes>
 							<targetPath>WEB-INF/spring</targetPath>
+						</resource>		
+						<resource>
+							<directory>${basedir}/src/main/resources</directory>
+							<filtering>true</filtering>
+							<includes>
+								<include>log4j2.xml</include>
+							</includes>
+							<targetPath>WEB-INF/classes</targetPath>
 						</resource>					
 					</webResources>
 				</configuration>
@@ -110,7 +119,6 @@
 					<excludes>
 						<exclude>**/jquery-migrate-1.2.1.min.js</exclude>
 						<exclude>**/jquery.form.min.js</exclude>
-						<exclude>**/leaflet-routing-machine.min.js</exclude>
 						<exclude>**/esri-leaflet-geocoder.js</exclude>
 						<exclude>**/esri-leaflet.js</exclude>
 						<exclude>**/handsontable.full.min.js</exclude>
@@ -137,7 +145,6 @@
 							<includes>
 								<include>jquery-migrate-1.2.1.min.js</include>
 								<include>jquery.form.min.js</include>
-								<include>leaflet-routing-machine.min.js</include>																
 								<include>esri-leaflet-geocoder.js</include>
 								<include>esri-leaflet.js</include>
 								<include>handsontable.full.min.js</include>
@@ -165,7 +172,15 @@
 								<include>${properyFile}</include>
 							</includes>
 							<targetPath>WEB-INF/spring</targetPath>
-						</resource>					
+						</resource>	
+						<resource>
+							<directory>${basedir}/src/main/resources</directory>
+							<filtering>true</filtering>
+							<includes>
+								<include>log4j2.xml</include>
+							</includes>
+							<targetPath>WEB-INF/classes</targetPath>
+						</resource>						
 					</webResources>
 				</configuration>
 			</plugin>              
@@ -213,7 +228,7 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${org.springframework.security-version}</version>
 		</dependency>
-
+        
 		<!-- Spring AOP + AspectJ -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -276,6 +291,12 @@
 			<artifactId>hibernate-core</artifactId>
 			<!-- version>${org.hibernate4-version}</version-->
 			<version>${org.hibernate3-version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
         
         <dependency>
@@ -288,6 +309,12 @@
             <groupId>org.hibernate</groupId>    
             <artifactId>hibernate-envers</artifactId>    
             <version>${org.hibernate3-version}</version>
+            <exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
        
 		<dependency>
@@ -302,7 +329,7 @@
             <artifactId>httpcore</artifactId>
             <version>4.2.2</version>
         </dependency>
-		<dependency>
+        <dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.2.2</version>
@@ -316,6 +343,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
             <version>3.4.2.Final</version>
+            <exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
 
 		<!-- Jackson JSON Mapper -->
@@ -354,6 +387,12 @@
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
             <version>2.6.6</version>
+            <exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
         
         <!-- Servlet -->
@@ -379,6 +418,12 @@
         <artifactId>cxf-rt-frontend-jaxws</artifactId>
         <version>${cxfVersion}</version>
     </dependency>
+    <dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+    
     <dependency>
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-rt-transports-http</artifactId>
@@ -457,59 +502,26 @@
         </dependency>
     
 		<!-- Logging -->
-		<dependency> 
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j-version}</version>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.jms</groupId>
-					<artifactId>jms</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jdmk</groupId>
-					<artifactId>jmxtools</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jmx</groupId>
-					<artifactId>jmxri</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>runtime</scope>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
     		<groupId>com.drewnoakes</groupId>
     		<artifactId>metadata-extractor</artifactId>
     		<version>2.8.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>
-
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
@@ -533,8 +545,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<encoding>UTF-8</encoding>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>

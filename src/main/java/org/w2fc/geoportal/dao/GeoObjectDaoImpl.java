@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -28,13 +29,20 @@ import org.springframework.stereotype.Service;
 import org.w2fc.geoportal.domain.GeoObject;
 import org.w2fc.geoportal.domain.GeoObjectTag;
 import org.w2fc.geoportal.domain.GeoUser;
+import org.w2fc.geoportal.wms.ParamsContainer;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 @Service
 @Repository
 public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> implements GeoObjectDao {
 
+	private final static GeometryFactory factory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);//SRID
 	
 	protected GeoObjectDaoImpl() {
         super(GeoObject.class);
@@ -50,8 +58,8 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
                 .list();
                 
     }
-
-	@SuppressWarnings("unchecked")
+    
+    @SuppressWarnings("unchecked")
 	public GeoObject getWithTags(Long id) {
 		return (GeoObject) getCurrentSession()
 				.createQuery("Select o from GeoObject o left join fetch o.tags where o.id = :id")
@@ -123,7 +131,7 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 				addScalar("created", StandardBasicTypes.DATE).
 				addScalar("changed", StandardBasicTypes.DATE).
 				addScalar("fias_code", StandardBasicTypes.STRING).
-				addScalar("the_geom", GeometryUserType.TYPE).
+				addScalar("the_geom",  GeometryUserType.TYPE).
 				addScalar("version", StandardBasicTypes.INTEGER).
 				setLong("id", identifier).
 	            list();
@@ -165,12 +173,7 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
                 .uniqueResult();
 	}
 	
-	@Override
-	@CacheEvict(value="objectPermanent", allEntries=true)
-	public GeoObject update(GeoObject object, boolean... forceFlush) {
-		return super.update(object, forceFlush);
-	}
-
+	  
 	@Override
 	@CacheEvict(value="objectPermanent", allEntries=true)
 	public GeoObject mergeUpdate(GeoObject object, boolean... forceFlush)
@@ -179,6 +182,12 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 		s.merge(object);
 		flushSession(s, forceFlush);
 		return object;
+	}
+	
+	@Override
+	@CacheEvict(value="objectPermanent", allEntries=true)
+	public GeoObject update(GeoObject object, boolean... forceFlush) {
+		return super.update(object, forceFlush);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -243,6 +252,11 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 		getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object (layer_id, object_id) VALUES(:lId, :oId)")
 		.setLong("oId", objId)
 		.setLong("lId", layerId)
+		.executeUpdate();
+		getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object_aud (layer_id, object_id, rev, revtype) VALUES(:lId, :oId, :rev, 0)")
+		.setLong("oId", objId)
+		.setLong("lId", layerId)
+		.setLong("rev", AuditReaderFactory.get(getCurrentSession()).getRevisionNumberForDate(Calendar.getInstance().getTime()).longValue())
 		.executeUpdate();
 		
 	}
@@ -327,6 +341,40 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<GeoObject> listByLayerIdFromRevision(Long layerId, Long revId) {
+		/*List<GeoObject> objs = new ArrayList<GeoObject>();
+		String sql = getResourceSQL("GeoObjectDao.listByLayerIdFromRevision");
+		List<Object[]> rows = getCurrentSession().createSQLQuery(sql.toString()).
+				addScalar("id", StandardBasicTypes.LONG).
+				addScalar("name", StandardBasicTypes.STRING).
+				addScalar("created_by", StandardBasicTypes.LONG).
+				addScalar("changed_by", StandardBasicTypes.LONG).
+				addScalar("created", StandardBasicTypes.DATE).
+				addScalar("changed", StandardBasicTypes.DATE).
+				addScalar("fias_code", StandardBasicTypes.STRING).
+				addScalar("the_geom",  GeometryUserType.TYPE).
+				addScalar("version", StandardBasicTypes.INTEGER).
+				setLong("layerId", layerId).
+				setLong("revId", revId).
+	            list();
+		if (rows != null && rows.size() > 0) {
+			GeoObject[] objects = new GeoObject[rows.size()];
+			for(int j = 0; j < rows.size() ; j++){
+				GeoObject obj = new GeoObject();
+				Object[] row = rows.get(j);
+				obj.setId((Long)row[0]);
+				obj.setVersion((Integer)row[8]);
+				Geometry geom = (Geometry) row[7];
+				obj.setTheGeom(geom);
+                obj.setName((String)row[1]);
+                obj.setChanged((Date)row[5]);
+                obj.setCreated((Date)row[4]);
+                obj.setFiasCode((String)row[6]);
+                objects[j] = obj;
+			}
+			objs = Arrays.asList(objects);
+		}*/
+		
+		
 		List<GeoObject> objs = (List<GeoObject>) getCurrentSession()
 				.createSQLQuery(getResourceSQL("GeoObjectDao.listByLayerIdFromRevision"))
 				.addEntity(GeoObject.class)
@@ -334,26 +382,38 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 				.setLong("revId", revId)
 				.list();
 		if(objs.size() == 0)return objs;
-		
-		List<GeoObjectTag> tags = getCurrentSession().createQuery("from GeoObjectTag t where t.geoObject in :objs").setParameterList("objs", objs).list();
+		final Map<Long, GeoObject> mappedObj = new HashMap<Long, GeoObject>(); 
 		for(GeoObject obj : objs){
+			if(!"DELETED".equals(obj.getName()))mappedObj.put(obj.getId(), obj);
 			HashSet<GeoObjectTag> fetchedTags = new HashSet<GeoObjectTag>();
-			for(GeoObjectTag tag :tags){
-				if(tag.getGeoObject().getId() == obj.getId()){
-					fetchedTags.add(tag);
-				}
-			}
 			obj.setTags(fetchedTags);
 		}
-		return objs;
+		if(mappedObj.size() > 0)getCurrentSession().createSQLQuery("select object_id, key, value from geo_object_tag where object_id in :objs").setParameterList("objs", mappedObj.keySet()).
+				setResultTransformer(new BasicTransformerAdapter(){
+					@Override
+					public Object transformTuple(Object[] tuple, String[] aliases) {
+						GeoObjectTag result = new GeoObjectTag();
+						for ( int i=0; i<tuple.length; i++ ) {
+							String alias = aliases[i];
+							if(alias.equals("key")){
+								result.setKey(tuple[i].toString());
+							}
+							if(alias.equals("value")){
+								result.setValue(String.valueOf(tuple[i]));
+							}
+							if(alias.equals("object_id")){
+								result.setGeoObject(mappedObj.get(((Number)tuple[i]).longValue()));
+								Set<GeoObjectTag> fetchedTags = mappedObj.get(((Number)tuple[i]).longValue()).getTags();
+								fetchedTags.add(result);
+							}							
+						}
+						return result;
+					}
+				}).
+				
+				list();
 		
-		/*
-		for(GeoObject obj : objs){
-			 List<GeoObjectTag> tags = getCurrentSession().createQuery("from GeoObjectTag t where t.geoObject = :obj").setEntity("obj", obj).list();
-			 obj.setTags(new HashSet<GeoObjectTag>(tags));
-		}
 		return objs;
-		*/
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -383,7 +443,13 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 	@CacheEvict(value="objectPermanent", allEntries=true)
 	public void moveObjectListToLayer(List<Long> objList, Long sourceLayerId,
 			Long targetLayerId) {
+		Number rev = AuditReaderFactory.get(getCurrentSession()).getRevisionNumberForDate(Calendar.getInstance().getTime());
 		//Чтобы не было дубликатов сначала удалим уже существующие связи с целевым слоем
+		getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object_aud (layer_id, object_id, rev, revtype) SELECT layer_id, object_id, :rev, 2 FROM geo_layer_to_object where layer_id = :layerId and object_id in (:objList)")
+		.setLong("layerId", targetLayerId)
+		.setParameterList("objList", objList)
+		.setLong("rev", rev.longValue())
+		.executeUpdate();
 		getCurrentSession().createSQLQuery("DELETE FROM geo_layer_to_object where layer_id = :layerId and object_id in (:objList) ")
 		.setLong("layerId", targetLayerId)
 		.setParameterList("objList", objList)
@@ -394,6 +460,12 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 		.setLong("sourceId", sourceLayerId)
 		.setParameterList("objList", objList)
 		.executeUpdate();
+		getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object_aud (layer_id, object_id, rev, revtype) SELECT layer_id, object_id, :rev, 1 FROM geo_layer_to_object where layer_id = :targetId and object_id in (:objList)")
+		.setLong("targetId", targetLayerId)
+		.setParameterList("objList", objList)
+		.setLong("rev", rev.longValue())
+		.executeUpdate();
+		
 		
 	}
 
@@ -419,6 +491,11 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 			.setLong("oId", add(obj).getId())
 			.setLong("lId", targetLayerId)
 			.executeUpdate();
+			getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object_aud (layer_id, object_id, rev, revtype) VALUES(:lId, :oId, :rev, 0)")
+			.setLong("oId", add(obj).getId())
+			.setLong("lId", targetLayerId)
+			.setLong("rev", AuditReaderFactory.get(getCurrentSession()).getRevisionNumberForDate(Calendar.getInstance().getTime()).longValue())
+			.executeUpdate();
 		}
 	}
 	
@@ -426,9 +503,32 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 	@Override
 	@CacheEvict(value="objectPermanent", allEntries=true)
 	public void deleteObjectListFromLayer(Long currentLayerId, List<Long> checked_objs) {
+		Number rev = AuditReaderFactory.get(getCurrentSession()).getRevisionNumberForDate(Calendar.getInstance().getTime());
+		getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object_aud (layer_id, object_id, rev, revtype) SELECT layer_id, object_id, :rev, 2 FROM geo_layer_to_object where layer_id = :layerId and object_id in (:objList)")
+		.setLong("layerId", currentLayerId)
+		.setParameterList("objList", checked_objs)
+		.setLong("rev", rev.longValue())
+		.executeUpdate();
+		
 		getCurrentSession().createSQLQuery("DELETE FROM geo_layer_to_object where layer_id = :layerId and object_id in (:objList) ")
 		.setLong("layerId", currentLayerId)
 		.setParameterList("objList", checked_objs)
+		.executeUpdate();
+	}
+	
+	@Override
+	@CacheEvict(value="objectPermanent", allEntries=true)
+	public void removeFromLayer(Long objId, Long currentLayerId) {
+		Number rev = AuditReaderFactory.get(getCurrentSession()).getRevisionNumberForDate(Calendar.getInstance().getTime());
+		getCurrentSession().createSQLQuery("INSERT INTO geo_layer_to_object_aud (layer_id, object_id, rev, revtype) VALUES(:lId, :oId, :rev, 2)")
+		.setLong("lId", currentLayerId)
+		.setLong("oId", objId)
+		.setLong("rev", rev.longValue())
+		.executeUpdate();
+		
+		getCurrentSession().createSQLQuery("DELETE FROM geo_layer_to_object where layer_id = :layerId and object_id = :objId ")
+		.setLong("layerId", currentLayerId)
+		.setLong("objId", objId)
 		.executeUpdate();
 	}
 
@@ -489,6 +589,49 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 	}
 
 	@Override
+	public List<GeoObject> listByLayerIdGeneralized(Long layerId, ParamsContainer params, Float generalization) {
+
+		Coordinate[] bounds = new Coordinate[] {
+				new Coordinate(params.maxx,params.maxy),
+				new Coordinate(params.minx,params.maxy),
+				new Coordinate(params.minx,params.miny),
+				new Coordinate(params.maxx,params.miny),
+				new Coordinate(params.maxx,params.maxy)
+		};
+		LinearRing contour = factory.createLinearRing(bounds);
+		Polygon bbox = factory.createPolygon(contour, null  );
+		
+		String sql = getResourceSQL("GeoObjectDao.listByLayerIdGeneralized");
+		List<Object[]> rows = (List<Object[]>)getCurrentSession()
+				.createSQLQuery(sql)
+				.addScalar("id", StandardBasicTypes.LONG)
+				.addScalar("name", StandardBasicTypes.STRING)
+				.addScalar("the_geom",  GeometryUserType.TYPE)
+				.setLong("layerId", layerId)
+				.setString("bbox", "SRID=4326;" + bbox.toText())
+				.setFloat("genFact", generalization)
+				.list();
+		if (rows != null && !rows.isEmpty() /*rows.size() > 0*/) {
+			GeoObject[] objects = new GeoObject[rows.size()];
+			for(int j = 0; j < rows.size() ; j++){
+				GeoObject obj = new GeoObject();
+				Object[] row = rows.get(j);
+				obj.setId((Long)row[0]);
+				
+				Geometry geom = (Geometry) row[2];
+				obj.setTheGeom(geom);
+				obj.setName((String)row[1]);
+				objects[j] = obj;
+			}
+			return Arrays.asList(objects);
+		}
+		
+		return new ArrayList<GeoObject>();		
+	}
+
+	
+
+	@Override
 	public Long getGeoObjectId(String guid, String extSysId) {
 		BigInteger id = (BigInteger) getCurrentSession()
 				.createSQLQuery("SELECT id from geo_object where guid = :guid and ext_sys_id = :extSysId")
@@ -498,4 +641,7 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
 
 		return id != null ? id.longValue() : null;
 	}
+
+
+
 }

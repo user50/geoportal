@@ -8,8 +8,8 @@ INSERT INTO GEO_USER (id, ext_system, login, password, enabled, first_name, last
     VALUES(0, 'local', 'Anonymous', 'NONE', false, 'Все', '', '', '')
 GO
 
-INSERT INTO GEO_USER (id, ext_system, login, password, enabled, first_name, last_name, email, phone) 
-    VALUES(1, 'local', 'Admin', '$2a$10$n/g1pI59EAOh24sAZjbMB.dDLVTodF9iuUO1x098g4OugzRd0und6', true, 'Администратор', '', '', '')
+INSERT INTO GEO_USER (id, ext_system, login, password, enabled, first_name, last_name, email, phone, token) 
+    VALUES(1, 'local', 'Admin', '$2a$10$n/g1pI59EAOh24sAZjbMB.dDLVTodF9iuUO1x098g4OugzRd0und6', true, 'Администратор', '', '', '', 'admin-token')
 GO
 
 

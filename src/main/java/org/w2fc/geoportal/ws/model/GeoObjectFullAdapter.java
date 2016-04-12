@@ -17,14 +17,21 @@ import org.w2fc.geoportal.layer.GeoLayerUIAdapter;
 public class GeoObjectFullAdapter extends GeoObjectUI {
 
 	  private final HashSet<GeoObjectTag> tags;
+	private List<GeoLayerUIAdapter> layers;
 
-	public GeoObjectFullAdapter() {
+	/*public GeoObjectFullAdapter() {
 		tags = new HashSet<GeoObjectTag>();
-	}
+	}*/
 
 	public GeoObjectFullAdapter(GeoObject o) {
 	        super(o);
 	        tags = new HashSet<GeoObjectTag>(geoObject.getTags());
+	        if (geoObject.getGeoLayers() != null){
+			   layers = new ArrayList<GeoLayerUIAdapter>();
+			   for (GeoLayer geoLayer : geoObject.getGeoLayers()) {
+				   layers.add(new GeoLayerUIAdapter(geoLayer));
+			   }
+	        }
 	    }
 	    
 	    @XmlElement
@@ -81,13 +88,7 @@ public class GeoObjectFullAdapter extends GeoObjectUI {
 	    }
 
 	   public List<GeoLayerUIAdapter> getLayers(){
-		   if (geoObject.getGeoLayers() == null){
-			   return null;
-		   }
-		   List<GeoLayerUIAdapter> layers = new ArrayList<GeoLayerUIAdapter>();
-		   for (GeoLayer geoLayer : geoObject.getGeoLayers()) {
-			   layers.add(new GeoLayerUIAdapter(geoLayer));
-		   }
+		  
 		   return layers;
 	   }
 

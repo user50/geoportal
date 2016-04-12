@@ -32,7 +32,7 @@ import org.w2fc.geoportal.domain.AbstractDomain;
 public abstract class AbstractController<T, D extends AbstractDao<T, I>, I extends Serializable> {
 
 
-    protected D dao = null;
+    private D dao = null;
 
 
     /**

@@ -27,7 +27,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
@@ -56,7 +55,7 @@ public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> impleme
     @Transactional(readOnly=true)
     @Override
     public List<GeoUser> list() {
-        return getCurrentSession().createQuery("from GeoUser where enabled=true or id=0").list();
+        return getCurrentSession().createQuery("from GeoUser where enabled=true or id=0 order by login").list();
     }
     
     
@@ -147,7 +146,7 @@ public class GeoUserDaoImpl extends AbstractDaoDefaulImpl<GeoUser, Long> impleme
 
 	@Override
 	public GeoUser getByToken(String token) {
-		return (GeoUser) sessionFactory.getCurrentSession().createQuery("from GeoUser where enabled=true and token=:token")
+		return (GeoUser) getCurrentSession().createQuery("from GeoUser where enabled=true and token=:token")
 				.setString("token", token).uniqueResult();
 	}
 }
