@@ -67,6 +67,16 @@ public abstract class GeoObjectUI {
 	}
 
 	@XmlElement
+	public String getExtSysId() {
+		return geoObject.getExtSysId();
+	}
+
+	@XmlElement
+	public String getGuid() {
+		return geoObject.getGuid();
+	}
+
+	@XmlElement
 	public String getGeoJSON() throws ParseException, IOException {
 		Geometry g1 = new WKTReader().read(getWkt());
 		GeometryJSON g = new GeometryJSON(10);
