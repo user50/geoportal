@@ -19,9 +19,9 @@ public class GeoObjectFullAdapter extends GeoObjectUI {
 	  private final HashSet<GeoObjectTag> tags;
 	private List<GeoLayerUIAdapter> layers;
 
-	/*public GeoObjectFullAdapter() {
+	public GeoObjectFullAdapter() {
 		tags = new HashSet<GeoObjectTag>();
-	}*/
+	}
 
 	public GeoObjectFullAdapter(GeoObject o) {
 	        super(o);

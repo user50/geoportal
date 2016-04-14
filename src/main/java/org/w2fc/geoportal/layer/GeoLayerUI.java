@@ -21,6 +21,9 @@ public class GeoLayerUI {
 	@XmlTransient
 	protected GeoLayerMetadata metadata = null;
 
+	public GeoLayerUI() {
+	}
+
 	public GeoLayerUI(GeoLayer layer) {
 		this.layer = layer;
 		if(layer.getMetadata() != null){

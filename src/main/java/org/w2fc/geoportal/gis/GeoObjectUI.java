@@ -24,6 +24,9 @@ public abstract class GeoObjectUI {
 	@XmlTransient
 	protected GeoObject geoObject = null;
 
+	public GeoObjectUI() {
+	}
+
 	public GeoObjectUI(GeoObject obj) {
 		geoObject = obj;
 	}
