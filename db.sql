@@ -130,6 +130,15 @@ CREATE TABLE GEO_LAYER_TO_OBJECT (
 )
 GO
 
+CREATE TABLE GEO_LAYER_TO_OBJECT_AUD (
+  layer_id    int8 NOT NULL,
+  object_id   int8 NOT NULL,
+  REV         integer NOT NULL,
+  REVTYPE     int NULL,
+  PRIMARY KEY(layer_id, object_id, REV)
+)
+GO
+
 CREATE TABLE GEO_LAYER_TO_ROLE ( 
     layer_id    int8 NOT NULL,
     role_id     int8 NOT NULL,
