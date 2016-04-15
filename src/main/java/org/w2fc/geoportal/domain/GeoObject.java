@@ -44,7 +44,7 @@ import com.vividsolutions.jts.geom.Geometry;
 @Table (name = "GEO_OBJECT")
 public class GeoObject extends AbstractDomain<GeoObject> implements Serializable{
     
-    private static final long serialVersionUID = -5142072634288961027L;
+//    private static final long serialVersionUID = -5142072634288961027L;
 
 	@Id
     @Column (name = "id", unique = true, nullable = false)
