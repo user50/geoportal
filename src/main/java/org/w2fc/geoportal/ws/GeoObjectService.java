@@ -78,9 +78,15 @@ public class GeoObjectService {
         if (id == null)
             throw new GeoObjectNotFoundException("Geo object does not exist");
 
-        GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
-        GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
-        updateGeoObject(id, geometryParameter, geometryBuilder);
+        if (requestGeoObject.getType() != null)
+        {
+            GeometryParameter geometryParameter = new ByTypeGeometryParameterFactory(requestGeoObject).create();
+            GeometryBuilder geometryBuilder = new GeometryBuilderFactory(serviceRegistry.getGeoCoder(), serviceRegistry.getReferenceSystemProjDao()).create(geometryParameter);
+            updateGeoObject(id, geometryParameter, geometryBuilder);
+        }else
+        {
+            updateGeoObject(id, requestGeoObject, null);
+        }
     }
 
     public void updateObject(Long id, GeometryParameter geometryParameter){
@@ -161,11 +167,16 @@ public class GeoObjectService {
         if (gisObject == null)
             throw new IllegalArgumentException("Geo object with id "+id+" doesn't exist");
 
-        updateObjectLayer(gisObject, params.getLayerIds());
+        if (params.getLayerIds() != null )
+            updateObjectLayer(gisObject, params.getLayerIds());
 
-        gisObject.setName(params.getName());
+        if(params.getName() != null)
+            gisObject.setName(params.getName());
+
         new CreateOrUpdateGeoTag().createUpdate(gisObject, params.getTags());
-        gisObject.setTheGeom(geometryBuilder.create(params));
+
+        if (geometryBuilder != null)
+            gisObject.setTheGeom(geometryBuilder.create(params));
 
         geoportalSecurity.checkArea(gisObject);
 
