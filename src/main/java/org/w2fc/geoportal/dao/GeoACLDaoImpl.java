@@ -60,7 +60,7 @@ public class GeoACLDaoImpl extends AbstractDaoDefaulImpl<GeoACL, Long> implement
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<GeoObject> listAllUsedObjects(){
-		return getCurrentSession().createQuery("Select acl.geoObject from GeoACL acl order by name").list();
+		return getCurrentSession().createQuery("Select acl.geoObject from GeoACL acl order by acl.name").list();
 	}
 
 	@Override

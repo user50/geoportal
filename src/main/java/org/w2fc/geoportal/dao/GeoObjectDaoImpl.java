@@ -62,7 +62,7 @@ public class GeoObjectDaoImpl extends AbstractDaoDefaulImpl<GeoObject, Long> imp
     @SuppressWarnings("unchecked")
 	public GeoObject getWithTags(Long id) {
 		return (GeoObject) getCurrentSession()
-				.createQuery("Select o from GeoObject o left join fetch o.tags where o.id = :id")
+				.createQuery("Select o from GeoObject o left join fetch o.tags left join fetch o.geoLayers where o.id = :id")
 				.setLong("id", id)
 				.uniqueResult();
 
